@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!-- Toolbar theme -->
+<style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+    <item name="colorControlNormal">?attr/colorOnPrimary</item>
+</style>
+
+</resources>

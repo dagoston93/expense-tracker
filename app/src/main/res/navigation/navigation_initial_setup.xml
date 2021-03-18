@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_initial_setup"
+    app:startDestination="@id/welcomeFragment">
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.diamont.expense.tracker.initialSetup.WelcomeFragment"
+        android:label="fragment_welcome"
+        tools:layout="@layout/fragment_welcome" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_askAuthenticationFragment"
+            app:destination="@id/askAuthenticationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/askAuthenticationFragment"
+        android:name="com.diamont.expense.tracker.initialSetup.AskAuthenticationFragment"
+        android:label="fragment_ask_authentication"
+        tools:layout="@layout/fragment_ask_authentication" >
+        <action
+            android:id="@+id/action_askAuthenticationFragment_to_createPinFragment"
+            app:destination="@id/createPinFragment" />
+        <action
+            android:id="@+id/action_askAuthenticationFragment_to_chooseCurrencyFragment"
+            app:destination="@id/chooseCurrencyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createPinFragment"
+        android:name="com.diamont.expense.tracker.initialSetup.CreatePinFragment"
+        android:label="fragment_create_pin"
+        tools:layout="@layout/fragment_create_pin" >
+        <action
+            android:id="@+id/action_createPinFragment_to_askFingerprintFragment"
+            app:destination="@id/askFingerprintFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/askFingerprintFragment"
+        android:name="com.diamont.expense.tracker.initialSetup.AskFingerprintFragment"
+        android:label="fragment_ask_fingerprint"
+        tools:layout="@layout/fragment_ask_fingerprint" >
+        <action
+            android:id="@+id/action_askFingerprintFragment_to_chooseCurrencyFragment"
+            app:destination="@id/chooseCurrencyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseCurrencyFragment"
+        android:name="com.diamont.expense.tracker.initialSetup.ChooseCurrencyFragment"
+        android:label="fragment_choose_currency"
+        tools:layout="@layout/fragment_choose_currency" />
+</navigation>
