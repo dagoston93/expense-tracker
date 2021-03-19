@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Attributes for PinCodeInputView -->
+    <declare-styleable name="PinCodeInputView">
+        <attr name="pinCodeInputLength" format="integer"/>
+        <attr name="pinCodeInputDelayMillis" format="integer"/>
+        <attr name="pinCodeInputVibrationEnabled" format="boolean"/>
+        <attr name="pinCodeInputButtonTextStyle" format="reference"/>
+        <attr name="pinCodeInputStarsTextStyle" format="reference"/>
+        <attr name="pinCodeInputPinTextStyle" format="reference"/>
+        <attr name="pinCodeInputStyle" format="reference"/>
+        <attr name="pinCodeInputButtonColor" format="color"/>
+    </declare-styleable>
+</resources>

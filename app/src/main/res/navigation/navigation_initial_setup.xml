@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_createPinFragment_to_askFingerprintFragment"
             app:destination="@id/askFingerprintFragment" />
+        <action
+            android:id="@+id/action_createPinFragment_to_chooseCurrencyFragment"
+            app:destination="@id/chooseCurrencyFragment" />
     </fragment>
     <fragment
         android:id="@+id/askFingerprintFragment"

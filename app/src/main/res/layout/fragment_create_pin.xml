@@ -16,7 +16,7 @@
     <com.diamont.expense.tracker.util.view.PinCodeInputView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="20dp" />
 
     <Button
         android:layout_width="match_parent"

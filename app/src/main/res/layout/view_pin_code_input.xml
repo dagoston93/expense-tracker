@@ -6,253 +6,244 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvPinCodeInputViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PIN:"
-        android:textColor="@color/black"
-        android:textSize="24sp"
+        android:text="@string/pin_colon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvPinCodeInputStars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/tvPinCodeInputViewTitle"
         tools:text="****" />
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputView3"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        app:layout_constraintStart_toEndOf="@+id/llPinCodeInputView2"
+        app:layout_constraintTop_toBottomOf="@+id/tvPinCodeInputStars">
 
         <TextView
+            android:id="@+id/tvPinCodeInput3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
+            android:text="3" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputView2"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toStartOf="@+id/llPinCodeInputView3"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        app:layout_constraintStart_toEndOf="@+id/llPinCodeInputView1"
+        app:layout_constraintTop_toBottomOf="@+id/tvPinCodeInputStars">
 
         <TextView
+            android:id="@+id/tvPinCodeInput2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
+            android:text="2" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputView1"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/llPinCodeInputView2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        app:layout_constraintTop_toBottomOf="@+id/tvPinCodeInputStars">
 
         <TextView
+            android:id="@+id/tvPinCodeInput1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
+            android:text="1" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout6"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputView6"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout4"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout4">
+        app:layout_constraintStart_toEndOf="@+id/llPinCodeInputView5"
+        app:layout_constraintTop_toTopOf="@+id/llPinCodeInputView5">
 
         <TextView
+            android:id="@+id/tvPinCodeInput6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="6"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
+            android:text="6" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputView5"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_marginTop="16dp"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout6"
+        app:layout_constraintEnd_toStartOf="@+id/llPinCodeInputView6"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout5"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintStart_toEndOf="@+id/llPinCodeInputView4"
+        app:layout_constraintTop_toBottomOf="@+id/llPinCodeInputView2">
 
         <TextView
+            android:id="@+id/tvPinCodeInput5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
+            android:text="5" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout5"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputView4"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout4">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout8"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="@drawable/bg_circle"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout7"
+        app:layout_constraintEnd_toStartOf="@+id/llPinCodeInputView5"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout7">
+        app:layout_constraintTop_toTopOf="@+id/llPinCodeInputView5">
 
         <TextView
+            android:id="@+id/tvPinCodeInput4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="7"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
+            android:text="4" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout7"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputView7"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout9"
+        app:layout_constraintEnd_toStartOf="@+id/llPinCodeInputView8"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout8"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/llPinCodeInputView8">
 
         <TextView
+            android:id="@+id/tvPinCodeInput7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="8"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
+            android:text="7" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout9"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputView8"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_circle"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/llPinCodeInputView9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llPinCodeInputView7"
+        app:layout_constraintTop_toBottomOf="@+id/llPinCodeInputView5">
+
+        <TextView
+            android:id="@+id/tvPinCodeInput8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llPinCodeInputView9"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout7"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout7">
+        app:layout_constraintStart_toEndOf="@+id/llPinCodeInputView8"
+        app:layout_constraintTop_toTopOf="@+id/llPinCodeInputView8">
 
         <TextView
+            android:id="@+id/tvPinCodeInput9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="9"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
+            android:text="9" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout10"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputView0"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_marginTop="16dp"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout7"
+        app:layout_constraintEnd_toEndOf="@+id/llPinCodeInputView8"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout7"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
+        app:layout_constraintStart_toStartOf="@+id/llPinCodeInputView8"
+        app:layout_constraintTop_toBottomOf="@+id/llPinCodeInputView8">
 
         <TextView
+            android:id="@+id/tvPinCodeInput0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="36sp" />
+            android:text="0" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/llPinCodeInputViewDel"
+        android:layout_width="@dimen/pinInputButtonSize"
+        android:layout_height="@dimen/pinInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout9"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout9"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout10">
+        app:layout_constraintEnd_toEndOf="@+id/llPinCodeInputView9"
+        app:layout_constraintStart_toStartOf="@+id/llPinCodeInputView9"
+        app:layout_constraintTop_toTopOf="@+id/llPinCodeInputView0">
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/ic_backspace"
-            app:tint="?attr/colorPrimary" />
+            android:id="@+id/ivPinCodeInputViewDel"
+            android:layout_width="@dimen/pinInputDelIconSize"
+            android:layout_height="@dimen/pinInputDelIconSize"
+            android:src="@drawable/ic_backspace" />
 
     </LinearLayout>
 

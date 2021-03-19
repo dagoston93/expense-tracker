@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <stroke android:color="?attr/colorPrimary" android:width="2dp"/>
+    android:shape="ring"
+    android:thicknessRatio="40"
+    android:innerRadiusRatio="2.1"
+    android:useLevel="false"
+    android:opticalInsetBottom="0dp"
+    android:opticalInsetLeft="0dp"
+    android:opticalInsetRight="0dp"
+    android:opticalInsetTop="0dp">
+    <solid android:color="#000000" android:width="2dp"/>
 </shape>

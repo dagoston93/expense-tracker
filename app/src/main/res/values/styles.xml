@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<!-- Toolbar theme -->
-<style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-    <item name="colorControlNormal">?attr/colorOnPrimary</item>
-</style>
+    <!-- Toolbar theme -->
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">?attr/colorOnPrimary</item>
+    </style>
+
+    <!-- Style for the PinCodeInputView -->
+    <style name="Theme.ExpenseTracker.Widget.PinCodeInputView" parent="">
+        <item name="pinCodeInputButtonTextStyle">@style/Theme.ExpenseTracker.TextAppearance.PinCodeInputButtonText</item>
+        <item name="pinCodeInputPinTextStyle">@style/Theme.ExpenseTracker.TextAppearance.PinCodeInputPinText</item>
+        <item name="pinCodeInputStarsTextStyle">@style/Theme.ExpenseTracker.TextAppearance.PinCodeInputStarsText</item>
+        <item name="pinCodeInputButtonColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker.TextAppearance.PinCodeInputButtonText" parent="">
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker.TextAppearance.PinCodeInputPinText" parent="">
+        <item name="android:textSize">24sp</item>
+
+    </style>
+
+    <style name="Theme.ExpenseTracker.TextAppearance.PinCodeInputStarsText" parent="">
+        <item name="android:textSize">36sp</item>
+    </style>
 
 </resources>

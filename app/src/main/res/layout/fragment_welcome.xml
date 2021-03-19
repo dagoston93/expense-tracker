@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:text="Welcome "
+            android:text="@string/welcome"
             android:textSize="40sp" />
 
         <TextView
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="to Expense Tracker!"
+            android:text="@string/to_expense_tracker"
             android:textSize="34sp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
-            android:text="Before you start using the app you need to complete a few simple steps."
+            android:text="@string/initial_setup_needed"
             android:textAlignment="center"
             android:textSize="24sp" />
 
@@ -38,7 +38,7 @@
             android:id="@+id/btnStartInitialSetup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start" />
+            android:text="@string/start" />
 
     </LinearLayout>
 </layout>

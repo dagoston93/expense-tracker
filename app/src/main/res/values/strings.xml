@@ -1,5 +1,21 @@
 <resources>
     <string name="app_name">Expense tracker</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Strings for the initial setup pages -->
+    <string name="welcome">Welcome</string>
+    <string name="to_expense_tracker">to Expense Tracker!</string>
+    <string name="initial_setup_needed">Before you start using the app you need to complete a few simple steps.</string>
+    <string name="start">Start</string>
+    <string name="authentication">Authentication</string>
+    <string name="want_create_pin">Would you like to create a pin code to protect your data?</string>
+    <string name="recommended">(Recommended)</string>
+    <string name="no_thanks">No, thanks.</string>
+    <string name="yes">Yes</string>
+    <string name="pin_colon">PIN:</string>
+
+    <!-- Strings for the PinCodeInputView -->
+
 </resources>
