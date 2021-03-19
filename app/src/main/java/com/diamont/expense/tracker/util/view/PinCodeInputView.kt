@@ -29,11 +29,11 @@ class PinCodeInputView(context: Context, attrs: AttributeSet) : LinearLayout(con
     private var inputLength : Int = 0
     private var delay : Long = 0
     private var isVibrationEnabled : Boolean = true
-    private var pinCodeEntered : String = ""
-    private var _inputStarsString : String = ""
-    val inputStarsString : String
-        get() = _inputStarsString
+    private var _pinCodeEntered : String = ""
+    val pinCodeEntered : String
+        get() = _pinCodeEntered
 
+    private var _inputStarsString : String = ""
     private val _isInputComplete = MutableLiveData<Boolean>(false)
     val isInputComplete : LiveData<Boolean>
         get() = _isInputComplete
@@ -155,16 +155,16 @@ class PinCodeInputView(context: Context, attrs: AttributeSet) : LinearLayout(con
     /** This method attaches a character to the entered PIN */
     private fun addCharacter(c : String){
         /** If max length reached we do nothing */
-        if(inputLength == pinCodeEntered.length) return
+        if(inputLength == _pinCodeEntered.length) return
 
         /**
          *  Hide the previously entered digits.
          *  We need to do this because if the user enters the next digit before the
          *  last character is hidden, it remains visible
          */
-        if(pinCodeEntered.isNotEmpty()){
+        if(_pinCodeEntered.isNotEmpty()){
             _inputStarsString = ""
-            for(i in pinCodeEntered.indices){
+            for(i in _pinCodeEntered.indices){
                 _inputStarsString += "*"
             }
         }
@@ -173,7 +173,7 @@ class PinCodeInputView(context: Context, attrs: AttributeSet) : LinearLayout(con
         tvPinCodeInputStars.removeCallbacks(hideLastCharRunnable)
 
         /** Append the character to the pin and show an extra star */
-        pinCodeEntered += c
+        _pinCodeEntered += c
         _inputStarsString += c
         tvPinCodeInputStars.text = _inputStarsString
 
@@ -184,7 +184,7 @@ class PinCodeInputView(context: Context, attrs: AttributeSet) : LinearLayout(con
         )
 
         /** If we reach max input length we change live data value */
-        if(inputLength == pinCodeEntered.length){
+        if(inputLength == _pinCodeEntered.length){
             _isInputComplete.value = true
         }
 
@@ -200,8 +200,8 @@ class PinCodeInputView(context: Context, attrs: AttributeSet) : LinearLayout(con
 
     /** This method deletes the last character of the entered PIN */
     private fun deleteLastCharacter(){
-        if(pinCodeEntered.isNotEmpty()){
-            pinCodeEntered = removeLastChar(pinCodeEntered)
+        if(_pinCodeEntered.isNotEmpty()){
+            _pinCodeEntered = removeLastChar(_pinCodeEntered)
             _inputStarsString = removeLastChar(_inputStarsString)
             tvPinCodeInputStars.text = _inputStarsString
 
@@ -236,6 +236,16 @@ class PinCodeInputView(context: Context, attrs: AttributeSet) : LinearLayout(con
                 vibrator.vibrate(VIBRATION_LENGTH)
             }
         }
+    }
+
+    /**
+     * Call this method to reset the view
+     */
+    fun reset(){
+        _inputStarsString = ""
+        tvPinCodeInputStars.text = ""
+        _pinCodeEntered = ""
+        _isInputComplete.value = false
     }
 
     companion object{

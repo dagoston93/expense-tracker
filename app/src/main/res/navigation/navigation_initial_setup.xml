@@ -51,5 +51,14 @@
         android:id="@+id/chooseCurrencyFragment"
         android:name="com.diamont.expense.tracker.initialSetup.ChooseCurrencyFragment"
         android:label="fragment_choose_currency"
-        tools:layout="@layout/fragment_choose_currency" />
+        tools:layout="@layout/fragment_choose_currency" >
+        <action
+            android:id="@+id/action_chooseCurrencyFragment_to_setupCompleteFragment"
+            app:destination="@id/setupCompleteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/setupCompleteFragment"
+        android:name="com.diamont.expense.tracker.initialSetup.SetupCompleteFragment"
+        android:label="fragment_setup_complete"
+        tools:layout="@layout/fragment_setup_complete" />
 </navigation>

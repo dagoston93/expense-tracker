@@ -3,6 +3,7 @@
     package="com.diamont.expense.tracker">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
 
     <application
         android:allowBackup="true"

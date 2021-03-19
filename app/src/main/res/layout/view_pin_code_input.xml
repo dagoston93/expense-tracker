@@ -27,8 +27,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView3"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
@@ -47,8 +47,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView2"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
@@ -67,8 +67,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView1"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
@@ -87,8 +87,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView6"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
@@ -107,8 +107,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView5"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_circle"
         android:gravity="center"
@@ -128,8 +128,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView4"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
@@ -148,8 +148,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView7"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
@@ -168,8 +168,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView8"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_circle"
         android:gravity="center"
@@ -189,8 +189,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView9"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
@@ -209,8 +209,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputView0"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_circle"
         android:gravity="center"
@@ -230,8 +230,8 @@
 
     <LinearLayout
         android:id="@+id/llPinCodeInputViewDel"
-        android:layout_width="@dimen/pinInputButtonSize"
-        android:layout_height="@dimen/pinInputButtonSize"
+        android:layout_width="?attr/pinCodeInputButtonSize"
+        android:layout_height="?attr/pinCodeInputButtonSize"
         android:background="@drawable/bg_circle"
         android:gravity="center"
         android:orientation="vertical"
@@ -241,8 +241,8 @@
 
         <ImageView
             android:id="@+id/ivPinCodeInputViewDel"
-            android:layout_width="@dimen/pinInputDelIconSize"
-            android:layout_height="@dimen/pinInputDelIconSize"
+            android:layout_width="?attr/pinCodeInputDelIconSize"
+            android:layout_height="?attr/pinCodeInputDelIconSize"
             android:src="@drawable/ic_backspace" />
 
     </LinearLayout>

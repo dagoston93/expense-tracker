@@ -32,6 +32,7 @@ class WelcomeFragment : Fragment() {
     ): View? {
         /** Inflate the layout for this fragment */
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_welcome, container, false)
+        binding.lifecycleOwner = this
 
         /** Set onClickListener for the start button */
         binding.btnStartInitialSetup.setOnClickListener {

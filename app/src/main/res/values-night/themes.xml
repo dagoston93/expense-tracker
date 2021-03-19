@@ -11,6 +11,10 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+
         <!-- Customize your theme here. -->
+        <item name="pinCodeInputStyle">@style/Theme.ExpenseTracker.Widget.PinCodeInputView</item>
+        <item name="pinCodeInputButtonSize">@dimen/pinInputButtonSize</item>
+        <item name="pinCodeInputDelIconSize">@dimen/pinInputDelIconSize</item>
     </style>
 </resources>

@@ -4,6 +4,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- Strings for the PinCodeInputView -->
+    <string name="pin_colon">PIN:</string>
+
     <!-- Strings for the initial setup pages -->
     <string name="welcome">Welcome</string>
     <string name="to_expense_tracker">to Expense Tracker!</string>
@@ -14,8 +17,15 @@
     <string name="recommended">(Recommended)</string>
     <string name="no_thanks">No, thanks.</string>
     <string name="yes">Yes</string>
-    <string name="pin_colon">PIN:</string>
-
-    <!-- Strings for the PinCodeInputView -->
+    <string name="set_pin_code">Set Pin Code</string>
+    <string name="confirm_pin_code">Confirm Pin Code</string>
+    <string name="pin_entry_error">The entered codes don\'t match. \n Please try again!</string>
+    <string name="fingerprint">Fingerprint</string>
+    <string name="ask_fingerprint_auth">Would you like to enable authentication using your fingerprint?</string>
+    <string name="we_are_ready">We are ready!</string>
+    <string name="initial_setup_complete">Initial setup is complete. Now you are ready to use the app. Thank you for your time!</string>
+    <string name="finish">Finish</string>
+    <string name="choose_currency">Choose currency</string>
+    <string name="currency">Currency</string>
 
 </resources>

@@ -10,5 +10,7 @@
         <attr name="pinCodeInputPinTextStyle" format="reference"/>
         <attr name="pinCodeInputStyle" format="reference"/>
         <attr name="pinCodeInputButtonColor" format="color"/>
+        <attr name="pinCodeInputButtonSize" format="dimension"/>
+        <attr name="pinCodeInputDelIconSize" format="dimension"/>
     </declare-styleable>
 </resources>

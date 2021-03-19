@@ -1,26 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".initialSetup.CreatePinFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Set Pin Code"
-        android:textSize="34sp" />
+    <data>
+        <variable
+            name="viewModel"
+            type="com.diamont.expense.tracker.initialSetup.InitialSetupFragmentViewModel" />
+    </data>
 
-    <com.diamont.expense.tracker.util.view.PinCodeInputView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".initialSetup.CreatePinFragment">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Set pin code" />
 
-</LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@{viewModel.setOrConfirmPinStr}"
+            android:textSize="34sp"
+            tools:text="@string/confirm_pin_code"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_red_dark"
+            android:text="@string/pin_entry_error"
+            android:visibility="@{viewModel.isPinEntryErrorMessageVisible}"
+            tools:visibility="visible"
+            android:textAlignment="center"/>
+
+        <com.diamont.expense.tracker.util.view.PinCodeInputView
+            android:id="@+id/pciCreatePin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" />
+
+        <Button
+            android:id="@+id/btnCreatePin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.setOrConfirmPinStr}"
+            tools:text="@string/confirm_pin_code"/>
+
+    </LinearLayout>
+</layout>
