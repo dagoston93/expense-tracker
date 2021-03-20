@@ -16,5 +16,6 @@
         <item name="pinCodeInputStyle">@style/Theme.ExpenseTracker.Widget.PinCodeInputView</item>
         <item name="pinCodeInputButtonSize">@dimen/pinInputButtonSize</item>
         <item name="pinCodeInputDelIconSize">@dimen/pinInputDelIconSize</item>
+        <item name="dotIndicatorStyle">@style/Theme.ExpenseTracker.Widget.DotIndicator</item>
     </style>
 </resources>

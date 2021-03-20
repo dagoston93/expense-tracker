@@ -31,7 +31,11 @@
     <!-- Style for the DotIndicator -->
     <style name="Theme.ExpenseTracker.Widget.DotIndicator" parent="">
         <item name="dotIndicatorInactiveDotSize">12dp</item>
-        <item name="dotIndicatorActiveDotSize">32dp</item>
+        <item name="dotIndicatorActiveDotSize">16dp</item>
         <item name="dotIndicatorDotSpacing">8dp</item>
+        <item name="dotIndicatorActiveDotColor">?attr/colorPrimary</item>
+        <item name="dotIndicatorCompletedDotColor">?attr/colorPrimaryDark</item>
+        <item name="dotIndicatorInactiveDotColor">@android:color/darker_gray</item>
     </style>
+
 </resources>

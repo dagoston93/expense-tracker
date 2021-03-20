@@ -39,6 +39,10 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     val isPinCodeSaved : LiveData<Boolean>
         get() = _isPinCodeSaved
 
+    private var _activePage = MutableLiveData<Int>(0)
+    val activePage : LiveData<Int>
+        get() = _activePage
+
     private var _isPinEntryErrorMessageVisible = MutableLiveData<Boolean>(false)
     val isPinEntryErrorMessageVisible = Transformations.map(_isPinEntryErrorMessageVisible){
         if(it){
@@ -99,6 +103,18 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
 
         /** We set it in the last step so save the values */
         saveInitialValues()
+    }
+
+    /**
+     * Call this method to set the active page.
+     * This is used for the dot indicator.
+     * Each fragment should call it with its index
+     * as in the initial setup flow.
+     *
+     * @param page The index of the fragment in the flow.
+     */
+    fun setActivePage(page : Int){
+        _activePage.value = page
     }
 
     /**

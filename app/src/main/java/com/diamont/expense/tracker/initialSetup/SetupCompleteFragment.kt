@@ -5,17 +5,37 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.databinding.FragmentSetupCompleteBinding
 
 
 class SetupCompleteFragment : Fragment() {
+
+    /** Data binding */
+    private lateinit var binding: FragmentSetupCompleteBinding
+
+    /** Get our View Model */
+    private val viewModel: InitialSetupFragmentViewModel by activityViewModels {
+        InitialSetupFragmentViewModelFactory(
+            requireNotNull(this.activity).application
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setup_complete, container, false)
+        /** Inflate the layout for this fragment */
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_setup_complete, container, false)
+        binding.lifecycleOwner = this
+
+        /** Set the active page for the dot indicator */
+        viewModel.setActivePage(6)
+
+        /** Return the inflated view */
+        return binding.root
     }
 
 }

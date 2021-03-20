@@ -34,10 +34,12 @@ class WelcomeFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_welcome, container, false)
         binding.lifecycleOwner = this
 
+        /** Set the active page for the dot indicator */
+        viewModel.setActivePage(0)
+
         /** Set onClickListener for the start button */
         binding.btnStartInitialSetup.setOnClickListener {
-            //it.findNavController().navigate(WelcomeFragmentDirections.actionWelcomeFragmentToAskAuthenticationFragment())
-            binding.diDotIndicator.setDotIndicatorActiveDot(3)
+            it.findNavController().navigate(WelcomeFragmentDirections.actionWelcomeFragmentToAskAuthenticationFragment())
         }
 
         /** Return the inflated layout */

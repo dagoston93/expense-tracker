@@ -1,11 +1,9 @@
 package com.diamont.expense.tracker.util.view
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.diamont.expense.tracker.R
@@ -73,8 +71,6 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
 
         /** Set up the layoutParams */
         params = MarginLayoutParams(inactiveDotSize, inactiveDotSize)
-        //params.width = inactiveDotSize
-        //params.height = inactiveDotSize
         params.marginStart = dotSpacing/2
         params.marginEnd = dotSpacing/2
 
@@ -86,10 +82,11 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
 
             /** Set background and attach to container */
             llDot.setBackgroundResource(R.drawable.dot_indicator_empty_dot)
+            llDot.backgroundTintList = ColorStateList.valueOf(inactiveDotColorVal)
             llContainer.addView(llDot)
         }
 
-        //setDotIndicatorActiveDot(activeDot)
+        setDotIndicatorActiveDot(activeDot)
     }
 
     /**
@@ -116,25 +113,21 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
 
             /** Change background and color */
             dot.setBackgroundResource(R.drawable.dot_indicator_full_dot)
-
-            //dot.invalidate()
-            //dot.requestLayout()
+            dot.backgroundTintList = ColorStateList.valueOf(completedDotColorVal)
         }
 
         /** Get the new active dot */
-        val dot2 = (llContainer.getChildAt(dotIndex) as ImageView)
+        val dot = (llContainer.getChildAt(dotIndex) as ImageView)
 
         /** Change the size */
-        val params = dot2.layoutParams as MarginLayoutParams
+        val params = dot.layoutParams as MarginLayoutParams
         params.width=activeDotSize
         params.height=activeDotSize
-        dot2.layoutParams = params
-
-        //dot2.invalidate()
-        //dot2.requestLayout()
+        dot.layoutParams = params
 
         /** Change background and color */
-        dot2.setBackgroundResource(R.drawable.dot_indicator_full_dot)
+        dot.setBackgroundResource(R.drawable.dot_indicator_full_dot)
+        dot.backgroundTintList = ColorStateList.valueOf(activeDotColorVal)
 
         /** Save the current and previous active dot */
         prevActiveDot = activeDot

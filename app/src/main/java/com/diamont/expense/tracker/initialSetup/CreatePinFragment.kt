@@ -33,6 +33,9 @@ class CreatePinFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        /** Set the active page for the dot indicator */
+        viewModel.setActivePage(2)
+
         /** Enable/disable button if enough/not enough digits entered */
         binding.pciCreatePin.isInputComplete.observe(viewLifecycleOwner, Observer {
             binding.btnCreatePin.isEnabled = it

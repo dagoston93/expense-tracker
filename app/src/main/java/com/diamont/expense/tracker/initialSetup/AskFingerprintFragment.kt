@@ -34,6 +34,9 @@ class AskFingerprintFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_ask_fingerprint, container, false)
         binding.lifecycleOwner = this
 
+        /** Set the active page for the dot indicator */
+        viewModel.setActivePage(3)
+
         /**
          * Set onClickListeners for the buttons
          */

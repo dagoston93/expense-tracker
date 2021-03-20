@@ -41,6 +41,9 @@ class ChooseCurrencyFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_choose_currency, container, false)
         binding.lifecycleOwner = this
 
+        /** Set the active page for the dot indicator */
+        viewModel.setActivePage(4)
+
         /** Set up the Exposed Dropdown Menu */
         adapter = CurrencyArrayAdapter(requireContext(), Currency.availableCurrencies)
         binding.actvCurrencyList.setText(adapter.getItem(0).toString(), false)

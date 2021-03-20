@@ -33,6 +33,9 @@ class AskAuthenticationFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_ask_authentication, container, false)
         binding.lifecycleOwner = this
 
+        /** Set the active page for the dot indicator */
+        viewModel.setActivePage(1)
+
         /** Set onClickListeners for the Yes and No buttons */
         binding.btnAskAuthYes.setOnClickListener {
             viewModel.setAuthenticationRequired()

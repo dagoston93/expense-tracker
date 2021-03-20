@@ -34,6 +34,9 @@ class StartBalanceFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_start_balance, container, false)
         binding.lifecycleOwner = this
 
+        /** Set the active page for the dot indicator */
+        viewModel.setActivePage(5)
+
         binding.tilStartBalanceCash.suffixText = viewModel.selectedCurrencySign
         binding.tilStartBalanceCard.suffixText = viewModel.selectedCurrencySign
 
