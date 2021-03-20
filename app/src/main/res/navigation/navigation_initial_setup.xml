@@ -53,12 +53,21 @@
         android:label="fragment_choose_currency"
         tools:layout="@layout/fragment_choose_currency" >
         <action
-            android:id="@+id/action_chooseCurrencyFragment_to_setupCompleteFragment"
-            app:destination="@id/setupCompleteFragment" />
+            android:id="@+id/action_chooseCurrencyFragment_to_startBalanceFragment"
+            app:destination="@id/startBalanceFragment" />
     </fragment>
     <fragment
         android:id="@+id/setupCompleteFragment"
         android:name="com.diamont.expense.tracker.initialSetup.SetupCompleteFragment"
         android:label="fragment_setup_complete"
         tools:layout="@layout/fragment_setup_complete" />
+    <fragment
+        android:id="@+id/startBalanceFragment"
+        android:name="com.diamont.expense.tracker.initialSetup.StartBalanceFragment"
+        android:label="fragment_start_balance"
+        tools:layout="@layout/fragment_start_balance" >
+        <action
+            android:id="@+id/action_startBalanceFragment_to_setupCompleteFragment"
+            app:destination="@id/setupCompleteFragment" />
+    </fragment>
 </navigation>

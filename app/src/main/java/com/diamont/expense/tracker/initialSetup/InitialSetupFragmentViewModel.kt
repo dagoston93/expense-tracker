@@ -1,16 +1,11 @@
 package com.diamont.expense.tracker.initialSetup
 
 import android.app.Application
-import android.content.Context.FINGERPRINT_SERVICE
-import android.hardware.fingerprint.FingerprintManager
-import android.opengl.Visibility
-import android.os.Build
-import android.util.Log
 import android.view.View
 import androidx.biometric.BiometricManager
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.*
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.util.Currency
 
 class InitialSetupFragmentViewModel(private val appContext: Application) : AndroidViewModel(appContext) {
 
@@ -18,7 +13,13 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     private var isAuthenticationRequired : Boolean = false
     private var isFingerprintEnabled : Boolean = false
     private var pinCode : String = ""
-    private var isFirstEntryAccepted : Boolean = false
+    private var isFirstPinEntryAccepted : Boolean = false
+    private var selectedCurrency = Currency(0,"","")
+    val selectedCurrencySign : String
+        get() = selectedCurrency.sign
+
+    private var initialBalanceCash : Float? = 0f
+    private var initialBalanceCard : Float? = 0f
 
     private var _isFingerprintSensorAvailable : Boolean = false
     val isFingerprintSensorAvailable : Boolean
@@ -51,11 +52,8 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
 
         if(biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
          == BiometricManager.BIOMETRIC_SUCCESS){
-
             _isFingerprintSensorAvailable = true
-
         }
-
     }
 
     /**
@@ -75,27 +73,45 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     }
 
     /**
+     * Call this method to set the id of the selected currency
+     *
+     * @param currency The id of the currency set int the list
+     * in Currency.availableCurrencies
+     */
+    fun setSelectedCurrencyId(currency : Currency){
+        selectedCurrency = currency
+    }
+
+    /**
+     * Call this method to set the initial balance details
+     */
+    fun setInitialBalance(cash : Float?, card: Float?){
+        initialBalanceCash = cash
+        initialBalanceCard = card
+    }
+
+    /**
      * Call this method if the  Set Pin Code / Confirm Pin Code button is clicked
      *
      * @param code - The value the user has entered in the PinCodeInputView
      */
     fun setPinButtonClicked(code : String){
         /** Check if we should Set or Confirm?*/
-        if(isFirstEntryAccepted){
+        if(isFirstPinEntryAccepted){
             /** Confirm so check if the two code matches */
             if(code == pinCode){
                 /** Codes match, we are ready to continue */
                 _isPinCodeSaved.value = true
             }else{
                 /** Codes don't match, we set the error message and restart process */
-                isFirstEntryAccepted = false
+                isFirstPinEntryAccepted = false
                 _setOrConfirmPinStr.value = appContext.getString(R.string.set_pin_code)
                 _isPinEntryErrorMessageVisible.value = true
             }
         }else{
             /** Set so we save the first entry and change text*/
             pinCode = code
-            isFirstEntryAccepted = true
+            isFirstPinEntryAccepted = true
             _setOrConfirmPinStr.value = appContext.getString(R.string.confirm_pin_code)
             _isPinEntryErrorMessageVisible.value = false
         }

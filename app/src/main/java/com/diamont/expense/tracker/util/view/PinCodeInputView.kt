@@ -246,6 +246,9 @@ class PinCodeInputView(context: Context, attrs: AttributeSet) : LinearLayout(con
         tvPinCodeInputStars.text = ""
         _pinCodeEntered = ""
         _isInputComplete.value = false
+
+        /** Cancel runnable */
+        tvPinCodeInputStars.removeCallbacks(hideLastCharRunnable)
     }
 
     companion object{

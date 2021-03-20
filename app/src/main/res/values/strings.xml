@@ -22,10 +22,15 @@
     <string name="pin_entry_error">The entered codes don\'t match. \n Please try again!</string>
     <string name="fingerprint">Fingerprint</string>
     <string name="ask_fingerprint_auth">Would you like to enable authentication using your fingerprint?</string>
-    <string name="we_are_ready">We are ready!</string>
-    <string name="initial_setup_complete">Initial setup is complete. Now you are ready to use the app. Thank you for your time!</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="initial_setup_complete">Initial setup is complete. \nNow you are ready to use the app. \nThank you for your time!</string>
     <string name="finish">Finish</string>
     <string name="choose_currency">Choose currency</string>
     <string name="currency">Currency</string>
+    <string name="start_balance">Start balance</string>
+    <string name="set_balance">Set balance</string>
+    <string name="card">Card</string>
+    <string name="cash">Cash</string>
+    <string name="enter_balance_details">Please enter your starting balance details.</string>
 
 </resources>
