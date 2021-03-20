@@ -25,7 +25,7 @@
     </style>
 
     <style name="Theme.ExpenseTracker.TextAppearance.PinCodeInputStarsText" parent="">
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <!-- Style for the DotIndicator -->
@@ -36,6 +36,18 @@
         <item name="dotIndicatorActiveDotColor">?attr/colorPrimary</item>
         <item name="dotIndicatorCompletedDotColor">?attr/colorPrimaryDark</item>
         <item name="dotIndicatorInactiveDotColor">@android:color/darker_gray</item>
+    </style>
+
+    <!-- Style for Initial Setup Title -->
+    <style name="Theme.ExpenseTracker.TextAppearance.InitialSetupTitle" parent="">
+        <item name="android:textSize">34sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <!-- Style for Initial Setup Subtitle -->
+    <style name="Theme.ExpenseTracker.TextAppearance.InitialSetupSubtitle" parent="">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textAlignment">center</item>
     </style>
 
 </resources>

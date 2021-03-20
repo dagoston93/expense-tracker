@@ -50,12 +50,17 @@ class PinCodeInputView(context: Context, attrs: AttributeSet) : LinearLayout(con
     private var starTextAppearanceId : Int = 0
     private var buttonColorVal : Int = 0
 
-    private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    private lateinit var vibrator : Vibrator
 
     /**
      * Constructor
      */
     init{
+        /** Init vibrator */
+        if(!isInEditMode){
+            vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
         /** Receive the attributes */
         context.theme.obtainStyledAttributes(
             attrs,

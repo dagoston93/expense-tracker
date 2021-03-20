@@ -4,43 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".initialSetup.WelcomeFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/initial_setup_horizontal_padding">
 
         <TextView
+            android:id="@+id/textView"
+            style="@style/Theme.ExpenseTracker.TextAppearance.InitialSetupTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
             android:text="@string/welcome"
-            android:textSize="40sp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/textView2"
+            style="@style/Theme.ExpenseTracker.TextAppearance.InitialSetupSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:text="@string/to_expense_tracker"
-            android:textSize="34sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="@dimen/initial_setup_subtitle_top_margin"
             android:text="@string/initial_setup_needed"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <ImageView
+            android:layout_width="220dp"
+            android:layout_height="154dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/img_money"
+            app:layout_constraintBottom_toTopOf="@+id/btnStartInitialSetup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <Button
             android:id="@+id/btnStartInitialSetup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start" />
+            android:text="@string/start"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="-16dp" />
 
 
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

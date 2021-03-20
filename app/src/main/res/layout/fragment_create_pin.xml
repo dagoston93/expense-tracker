@@ -1,52 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.diamont.expense.tracker.initialSetup.InitialSetupFragmentViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingHorizontal="@dimen/initial_setup_horizontal_padding"
         tools:context=".initialSetup.CreatePinFragment">
 
-
-
         <TextView
+            android:id="@+id/textView6"
+            style="@style/Theme.ExpenseTracker.TextAppearance.InitialSetupTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@{viewModel.setOrConfirmPinStr}"
-            android:textSize="34sp"
-            tools:text="@string/confirm_pin_code"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/confirm_pin_code" />
 
         <TextView
+            android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textSize="16sp"
-            android:textColor="@android:color/holo_red_dark"
             android:text="@string/pin_entry_error"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="16sp"
             android:visibility="@{viewModel.isPinEntryErrorMessageVisible}"
-            tools:visibility="visible"
-            android:textAlignment="center"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6"
+            tools:visibility="visible" />
 
         <com.diamont.expense.tracker.util.view.PinCodeInputView
             android:id="@+id/pciCreatePin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            app:layout_constraintBottom_toTopOf="@+id/btnCreatePin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            tools:text="MÉNEMMUTATOD????" />
 
         <Button
             android:id="@+id/btnCreatePin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.setOrConfirmPinStr}"
-            tools:text="@string/confirm_pin_code"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/confirm_pin_code" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

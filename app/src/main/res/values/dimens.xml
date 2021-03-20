@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="pinInputButtonSize">70dp</dimen>
-    <dimen name="pinInputDelIconSize">30dp</dimen>
+    <dimen name="pinInputButtonSize">65dp</dimen>
+    <dimen name="pinInputDelIconSize">27dp</dimen>
+    <dimen name="initial_setup_subtitle_top_margin">16dp</dimen>
+    <dimen name="initial_setup_horizontal_padding">8dp</dimen>
 </resources>

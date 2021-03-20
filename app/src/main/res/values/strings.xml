@@ -8,8 +8,7 @@
     <string name="pin_colon">PIN:</string>
 
     <!-- Strings for the initial setup pages -->
-    <string name="welcome">Welcome</string>
-    <string name="to_expense_tracker">to Expense Tracker!</string>
+    <string name="welcome">Welcome \nto Expense Tracker!</string>
     <string name="initial_setup_needed">Before you start using the app you need to complete a few simple steps.</string>
     <string name="start">Start</string>
     <string name="authentication">Authentication</string>
@@ -32,5 +31,6 @@
     <string name="card">Card</string>
     <string name="cash">Cash</string>
     <string name="enter_balance_details">Please enter your starting balance details.</string>
+    <string name="choose_currency_subtitle">Choose the currency you would like to use.</string>
 
 </resources>

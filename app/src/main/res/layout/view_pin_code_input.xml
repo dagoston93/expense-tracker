@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/llPinCodeInputView2"
-        app:layout_constraintTop_toBottomOf="@+id/tvPinCodeInputStars">
+        app:layout_constraintTop_toTopOf="@+id/llPinCodeInputView2">
 
         <TextView
             android:id="@+id/tvPinCodeInput3"
@@ -49,6 +49,7 @@
         android:id="@+id/llPinCodeInputView2"
         android:layout_width="?attr/pinCodeInputButtonSize"
         android:layout_height="?attr/pinCodeInputButtonSize"
+        android:layout_marginTop="16dp"
         android:background="@drawable/bg_pin_button_circle"
         android:gravity="center"
         android:orientation="vertical"
@@ -75,7 +76,7 @@
         app:layout_constraintEnd_toStartOf="@+id/llPinCodeInputView2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPinCodeInputStars">
+        app:layout_constraintTop_toTopOf="@+id/llPinCodeInputView2">
 
         <TextView
             android:id="@+id/tvPinCodeInput1"

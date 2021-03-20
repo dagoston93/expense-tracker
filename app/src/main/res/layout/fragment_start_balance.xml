@@ -1,59 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".initialSetup.StartBalanceFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/initial_setup_horizontal_padding">
 
         <TextView
+            android:id="@+id/textView14"
+            style="@style/Theme.ExpenseTracker.TextAppearance.InitialSetupTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="34sp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/start_balance" />
+            android:text="@string/start_balance"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/textView13"
+            style="@style/Theme.ExpenseTracker.TextAppearance.InitialSetupSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:textAlignment="center"
-            android:textSize="24sp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/enter_balance_details" />
+            android:layout_marginTop="@dimen/initial_setup_subtitle_top_margin"
+            android:text="@string/enter_balance_details"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="220dp"
+            android:layout_height="191dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/img_cash_card"
+            app:layout_constraintBottom_toTopOf="@+id/tilStartBalanceCash"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilStartBalanceCash"
-            app:startIconDrawable="@drawable/ic_cash"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:hint="@string/cash"
+            app:layout_constraintBottom_toTopOf="@+id/tilStartBalanceCard"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+            app:startIconDrawable="@drawable/ic_cash"
             app:suffixText="$">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number|numberDecimal"/>
+                android:inputType="number|numberDecimal" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilStartBalanceCard"
-            app:startIconDrawable="@drawable/ic_credit_card"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:hint="@string/card"
+            app:layout_constraintBottom_toTopOf="@+id/btnSetStartBalance"
+            app:layout_constraintTop_toBottomOf="@+id/tilStartBalanceCash"
+            app:startIconDrawable="@drawable/ic_credit_card"
             app:suffixText="$">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number|numberDecimal"/>
+                android:inputType="number|numberDecimal" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -61,7 +87,11 @@
             android:id="@+id/btnSetStartBalance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/set_balance" />
+            android:text="@string/set_balance"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
