@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.ImageView
 import android.widget.LinearLayout
 import com.diamont.expense.tracker.R
 
@@ -65,15 +67,12 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
         /** Get the container */
         llContainer = root.findViewById(R.id.llDotIndicatorContainer)
 
-        val p = llContainer.layoutParams
-        //p.width = activeDotSize
-        p.height = activeDotSize
-        llContainer.layoutParams = p
-
-        Log.d("GUSTI", "${llContainer.layoutParams.height}")
+        var params = llContainer.layoutParams
+        params.height = activeDotSize
+        llContainer.layoutParams = params
 
         /** Set up the layoutParams */
-        val params = LinearLayout.LayoutParams(inactiveDotSize, inactiveDotSize)
+        params = MarginLayoutParams(inactiveDotSize, inactiveDotSize)
         //params.width = inactiveDotSize
         //params.height = inactiveDotSize
         params.marginStart = dotSpacing/2
@@ -82,7 +81,7 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
         /** Add the dots */
         for(i in 0 until numOfDots){
             /** Create the view for the dots */
-            val llDot = LinearLayout(context)
+            val llDot = ImageView(context)
             llDot.layoutParams = params
 
             /** Set background and attach to container */
@@ -106,11 +105,11 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
         if(dotIndex > numOfDots - 1) return
 
         /** Set the previous dots as completed */
-        /*for(i in prevActiveDot until dotIndex){
-            val dot = (llContainer.getChildAt(i) as LinearLayout)
+        for(i in prevActiveDot until dotIndex){
+            val dot = (llContainer.getChildAt(i) as ImageView)
 
             /** Change the size */
-            val params = dot.layoutParams
+            val params = dot.layoutParams as MarginLayoutParams
             params.width = inactiveDotSize
             params.height = inactiveDotSize
             dot.layoutParams = params
@@ -118,21 +117,21 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
             /** Change background and color */
             dot.setBackgroundResource(R.drawable.dot_indicator_full_dot)
 
-            dot.invalidate()
-            dot.requestLayout()
-        }*/
+            //dot.invalidate()
+            //dot.requestLayout()
+        }
 
         /** Get the new active dot */
-        val dot2 = (llContainer.getChildAt(dotIndex) as LinearLayout)
+        val dot2 = (llContainer.getChildAt(dotIndex) as ImageView)
 
         /** Change the size */
-        val params = dot2.layoutParams
+        val params = dot2.layoutParams as MarginLayoutParams
         params.width=activeDotSize
         params.height=activeDotSize
         dot2.layoutParams = params
 
         //dot2.invalidate()
-        dot2.requestLayout()
+        //dot2.requestLayout()
 
         /** Change background and color */
         dot2.setBackgroundResource(R.drawable.dot_indicator_full_dot)
