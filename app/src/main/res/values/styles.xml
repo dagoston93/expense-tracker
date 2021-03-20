@@ -28,4 +28,10 @@
         <item name="android:textSize">36sp</item>
     </style>
 
+    <!-- Style for the DotIndicator -->
+    <style name="Theme.ExpenseTracker.Widget.DotIndicator" parent="">
+        <item name="dotIndicatorInactiveDotSize">12dp</item>
+        <item name="dotIndicatorActiveDotSize">32dp</item>
+        <item name="dotIndicatorDotSpacing">8dp</item>
+    </style>
 </resources>

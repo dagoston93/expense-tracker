@@ -1,11 +1,14 @@
 package com.diamont.expense.tracker.initialSetup
 
 import android.app.Application
+import android.content.SharedPreferences
+import android.util.Log
 import android.view.View
 import androidx.biometric.BiometricManager
 import androidx.lifecycle.*
+import androidx.preference.PreferenceManager
 import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.util.Currency
+import com.diamont.expense.tracker.util.*
 
 class InitialSetupFragmentViewModel(private val appContext: Application) : AndroidViewModel(appContext) {
 
@@ -24,6 +27,8 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     private var _isFingerprintSensorAvailable : Boolean = false
     val isFingerprintSensorAvailable : Boolean
         get() = _isFingerprintSensorAvailable
+
+    private lateinit var sharedPreferences : SharedPreferences
 
     /** Create some live data for ui to observe */
     private var _setOrConfirmPinStr = MutableLiveData<String>(appContext.getString(R.string.set_pin_code))
@@ -54,6 +59,9 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
          == BiometricManager.BIOMETRIC_SUCCESS){
             _isFingerprintSensorAvailable = true
         }
+
+        /** Get the shared prefs */
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
     }
 
     /**
@@ -88,6 +96,26 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     fun setInitialBalance(cash : Float?, card: Float?){
         initialBalanceCash = cash
         initialBalanceCard = card
+
+        /** We set it in the last step so save the values */
+        saveInitialValues()
+    }
+
+    /**
+     * Save the initial setup values
+     */
+    private fun saveInitialValues(){
+        with(sharedPreferences.edit()) {
+            putBoolean(KEY_PREF_INITIAL_SETUP_DONE, true)
+            putBoolean(KEY_PREF_AUTHENTICATION_REQUIRED, isAuthenticationRequired)
+            putBoolean(KEY_PREF_FINGERPRINT_ENABLED, isFingerprintEnabled)
+            putString(KEY_PREF_PIN_CODE, pinCode)
+            putInt(KEY_PREF_CURRENCY_ID, selectedCurrency.id)
+            putFloat(KEY_PREF_INITIAL_CARD, initialBalanceCard ?: 0f)
+            putFloat(KEY_PREF_INITIAL_CASH, initialBalanceCash ?: 0f)
+
+            apply()
+        }
     }
 
     /**

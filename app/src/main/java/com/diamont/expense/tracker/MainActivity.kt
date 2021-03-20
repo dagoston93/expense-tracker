@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.preference.PreferenceManager
 import androidx.databinding.DataBindingUtil
 import com.diamont.expense.tracker.databinding.ActivityMainBinding
+import com.diamont.expense.tracker.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,6 +47,11 @@ class MainActivity : AppCompatActivity() {
 
         /** Load shared preferences */
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+        /** ONLY FOR TEST*/
+        clearPrefsForTest()
+        /** ONLY FOR TEST*/
+
         _isAuthenticationRequired = sharedPreferences.getBoolean(KEY_PREF_AUTHENTICATION_REQUIRED, false)
         _isFingerprintEnabled = sharedPreferences.getBoolean(KEY_PREF_FINGERPRINT_ENABLED, false)
         _isInitialSetupDone = sharedPreferences.getBoolean(KEY_PREF_INITIAL_SETUP_DONE, false)
@@ -53,11 +59,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    companion object{
-        /** Define the keys for the shared preferences */
-        const val KEY_PREF_AUTHENTICATION_REQUIRED = "key_authentication_required"
-        const val KEY_PREF_FINGERPRINT_ENABLED = "key_fingerprint_enabled"
-        const val KEY_PREF_INITIAL_SETUP_DONE = "key_initial_setup_done"
-        const val KEY_PREF_PIN_CODE = "key_pin_code"
+    private fun clearPrefsForTest(){
+        with(sharedPreferences.edit()) {
+            putBoolean(KEY_PREF_INITIAL_SETUP_DONE, false)
+            putBoolean(KEY_PREF_AUTHENTICATION_REQUIRED, false)
+            putBoolean(KEY_PREF_FINGERPRINT_ENABLED, false)
+            putString(KEY_PREF_PIN_CODE, pinCode)
+            putInt(KEY_PREF_CURRENCY_ID, 0)
+            putFloat(KEY_PREF_INITIAL_CARD, 0f)
+            putFloat(KEY_PREF_INITIAL_CASH, 0f)
+
+            apply()
+        }
     }
 }

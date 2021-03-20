@@ -13,4 +13,18 @@
         <attr name="pinCodeInputButtonSize" format="dimension"/>
         <attr name="pinCodeInputDelIconSize" format="dimension"/>
     </declare-styleable>
+
+    <!-- Attributes for the DotIndicator -->
+    <declare-styleable name="DotIndicator">
+        <attr name="dotIndicatorActiveDotColor" format="color"/>
+        <attr name="dotIndicatorInactiveDotColor" format="color"/>
+        <attr name="dotIndicatorCompletedDotColor" format="color"/>
+        <attr name="dotIndicatorActiveDotSize" format="dimension"/>
+        <attr name="dotIndicatorInactiveDotSize" format="dimension"/>
+        <attr name="dotIndicatorCompletedDotSize" format="dimension"/>
+        <attr name="dotIndicatorNumberOfDots" format="integer"/>
+        <attr name="dotIndicatorActiveDot" format="integer"/>
+        <attr name="dotIndicatorDotSpacing" format="dimension"/>
+        <attr name="dotIndicatorStyle" format="reference"/>
+    </declare-styleable>
 </resources>

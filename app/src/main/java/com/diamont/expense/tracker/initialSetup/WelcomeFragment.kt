@@ -36,7 +36,8 @@ class WelcomeFragment : Fragment() {
 
         /** Set onClickListener for the start button */
         binding.btnStartInitialSetup.setOnClickListener {
-            it.findNavController().navigate(WelcomeFragmentDirections.actionWelcomeFragmentToAskAuthenticationFragment())
+            //it.findNavController().navigate(WelcomeFragmentDirections.actionWelcomeFragmentToAskAuthenticationFragment())
+            binding.diDotIndicator.setDotIndicatorActiveDot(3)
         }
 
         /** Return the inflated layout */
