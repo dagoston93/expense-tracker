@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_welcome" >
         <action
             android:id="@+id/action_welcomeFragment_to_askAuthenticationFragment"
-            app:destination="@id/askAuthenticationFragment" />
+            app:destination="@id/askAuthenticationFragment"
+            app:enterAnim="@anim/anim_slide_in_from_right"
+            app:exitAnim="@anim/anim_slide_out_to_left" />
     </fragment>
     <fragment
         android:id="@+id/askAuthenticationFragment"
@@ -21,10 +23,14 @@
         tools:layout="@layout/fragment_ask_authentication" >
         <action
             android:id="@+id/action_askAuthenticationFragment_to_createPinFragment"
-            app:destination="@id/createPinFragment" />
+            app:destination="@id/createPinFragment"
+            app:enterAnim="@anim/anim_slide_in_from_right"
+            app:exitAnim="@anim/anim_slide_out_to_left" />
         <action
             android:id="@+id/action_askAuthenticationFragment_to_chooseCurrencyFragment"
-            app:destination="@id/chooseCurrencyFragment" />
+            app:destination="@id/chooseCurrencyFragment"
+            app:enterAnim="@anim/anim_slide_in_from_right"
+            app:exitAnim="@anim/anim_slide_out_to_left" />
     </fragment>
     <fragment
         android:id="@+id/createPinFragment"
@@ -33,10 +39,14 @@
         tools:layout="@layout/fragment_create_pin" >
         <action
             android:id="@+id/action_createPinFragment_to_askFingerprintFragment"
-            app:destination="@id/askFingerprintFragment" />
+            app:destination="@id/askFingerprintFragment"
+            app:enterAnim="@anim/anim_slide_in_from_right"
+            app:exitAnim="@anim/anim_slide_out_to_left" />
         <action
             android:id="@+id/action_createPinFragment_to_chooseCurrencyFragment"
-            app:destination="@id/chooseCurrencyFragment" />
+            app:destination="@id/chooseCurrencyFragment"
+            app:enterAnim="@anim/anim_slide_in_from_right"
+            app:exitAnim="@anim/anim_slide_out_to_left" />
     </fragment>
     <fragment
         android:id="@+id/askFingerprintFragment"
@@ -45,7 +55,9 @@
         tools:layout="@layout/fragment_ask_fingerprint" >
         <action
             android:id="@+id/action_askFingerprintFragment_to_chooseCurrencyFragment"
-            app:destination="@id/chooseCurrencyFragment" />
+            app:destination="@id/chooseCurrencyFragment"
+            app:enterAnim="@anim/anim_slide_in_from_right"
+            app:exitAnim="@anim/anim_slide_out_to_left" />
     </fragment>
     <fragment
         android:id="@+id/chooseCurrencyFragment"
@@ -54,7 +66,9 @@
         tools:layout="@layout/fragment_choose_currency" >
         <action
             android:id="@+id/action_chooseCurrencyFragment_to_startBalanceFragment"
-            app:destination="@id/startBalanceFragment" />
+            app:destination="@id/startBalanceFragment"
+            app:enterAnim="@anim/anim_slide_in_from_right"
+            app:exitAnim="@anim/anim_slide_out_to_left" />
     </fragment>
     <fragment
         android:id="@+id/setupCompleteFragment"
@@ -68,6 +82,8 @@
         tools:layout="@layout/fragment_start_balance" >
         <action
             android:id="@+id/action_startBalanceFragment_to_setupCompleteFragment"
-            app:destination="@id/setupCompleteFragment" />
+            app:destination="@id/setupCompleteFragment"
+            app:enterAnim="@anim/anim_slide_in_from_right"
+            app:exitAnim="@anim/anim_slide_out_to_left" />
     </fragment>
 </navigation>

@@ -68,6 +68,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:id="@+id/btnAskAuthNo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

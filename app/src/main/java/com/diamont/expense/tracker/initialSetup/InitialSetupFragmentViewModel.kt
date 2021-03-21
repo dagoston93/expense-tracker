@@ -28,7 +28,7 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     val isFingerprintSensorAvailable : Boolean
         get() = _isFingerprintSensorAvailable
 
-    private lateinit var sharedPreferences : SharedPreferences
+    private var sharedPreferences : SharedPreferences
 
     /** Create some live data for ui to observe */
     private var _setOrConfirmPinStr = MutableLiveData<String>(appContext.getString(R.string.set_pin_code))
@@ -42,6 +42,10 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     private var _activePage = MutableLiveData<Int>(0)
     val activePage : LiveData<Int>
         get() = _activePage
+
+    private var _isSetupProcessComplete : Boolean = false
+    val isSetupProcessComplete : Boolean
+        get() = _isSetupProcessComplete
 
     private var _isPinEntryErrorMessageVisible = MutableLiveData<Boolean>(false)
     val isPinEntryErrorMessageVisible = Transformations.map(_isPinEntryErrorMessageVisible){
@@ -132,6 +136,7 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
 
             apply()
         }
+        _isSetupProcessComplete = true
     }
 
     /**

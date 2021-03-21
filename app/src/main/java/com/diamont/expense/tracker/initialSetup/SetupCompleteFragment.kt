@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentSetupCompleteBinding
 
@@ -23,6 +24,9 @@ class SetupCompleteFragment : Fragment() {
         )
     }
 
+    /**
+     * onCreateView()
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,6 +37,13 @@ class SetupCompleteFragment : Fragment() {
 
         /** Set the active page for the dot indicator */
         viewModel.setActivePage(6)
+
+        /** Add onClickListener for the button */
+        binding.btnSetupCompleteFinish.setOnClickListener {
+            activity?.findNavController(R.id.mainNavHostFragment)?.navigate(
+                InitialSetupFragmentDirections.actionInitialSetupFragmentToMainAppFragment()
+            )
+        }
 
         /** Return the inflated view */
         return binding.root

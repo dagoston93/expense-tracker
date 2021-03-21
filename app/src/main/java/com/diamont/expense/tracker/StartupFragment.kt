@@ -44,7 +44,7 @@ class StartupFragment : Fragment() {
         return if ((activity as MainActivity).isAuthenticationRequired) {
             StartupFragmentDirections.actionMainFragmentToAuthenticationFragment()
         } else {
-            StartupFragmentDirections.actionMainFragmentToHomeFragment()
+            StartupFragmentDirections.actionMainFragmentToMainAppFragment()
         }
     }
 }
