@@ -51,4 +51,10 @@
         <item name="android:textAlignment">center</item>
     </style>
 
+    <!-- Style for pin code error messages -->
+    <style name="Theme.ExpenseTracker.TextAppearance.ErrorInvalidPin" parent="">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@android:color/holo_red_dark</item>
+    </style>
 </resources>

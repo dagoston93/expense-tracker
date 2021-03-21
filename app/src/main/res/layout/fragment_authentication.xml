@@ -1,14 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".authentication.AuthenticationFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <variable
+            name="viewModel"
+            type="com.diamont.expense.tracker.authentication.AuthenticationFragmentViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Authentication here" />
+        tools:context=".authentication.AuthenticationFragment">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/textView18"
+            style="@style/Theme.ExpenseTracker.TextAppearance.InitialSetupTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/please_log_in"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView19"
+            style="@style/Theme.ExpenseTracker.TextAppearance.ErrorInvalidPin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/initial_setup_subtitle_top_margin"
+            android:text="@string/invalid_pin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView18"
+            android:visibility="@{viewModel.isErrorMessageVisible}"
+            tools:visibility="visible" />
+
+        <com.diamont.expense.tracker.util.view.PinCodeInputView
+            android:id="@+id/pcivAuthentication"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:pinCodeInputLength="4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout></layout>

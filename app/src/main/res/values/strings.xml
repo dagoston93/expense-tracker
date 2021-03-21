@@ -33,4 +33,8 @@
     <string name="enter_balance_details">Please enter your starting balance details.</string>
     <string name="choose_currency_subtitle">Choose the currency you would like to use.</string>
 
+    <!-- Strings for the authentication fragment -->
+    <string name="please_log_in">Please log in</string>
+    <string name="invalid_pin">Invalid PIN entered.\nPlease try again.</string>
+
 </resources>
