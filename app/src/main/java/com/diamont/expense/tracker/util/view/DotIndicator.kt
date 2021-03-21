@@ -23,12 +23,12 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
     private var completedDotColorVal: Int = 0
     private var activeDotSize: Int = 0
     private var inactiveDotSize: Int = 0
-    private var completedDotSize: Int = 0
     private var dotSpacing: Int = 0
     private var numOfDots: Int = 0
     private var prevActiveDot: Int = 0
     private var activeDot: Int = 0
-
+    private var activeDotSizeFactor : Float = 0f
+    private var animTime : Long = 0
     /** The required views */
     private var llContainer : LinearLayout
 
@@ -49,11 +49,10 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
                 completedDotColorVal = getColor(R.styleable.DotIndicator_dotIndicatorCompletedDotColor, 0)
                 activeDotSize = getDimensionPixelSize(R.styleable.DotIndicator_dotIndicatorActiveDotSize, 16)
                 inactiveDotSize = getDimensionPixelSize(R.styleable.DotIndicator_dotIndicatorInactiveDotSize, 16)
-                completedDotSize = getDimensionPixelSize(R.styleable.DotIndicator_dotIndicatorCompletedDotSize, 16)
                 dotSpacing = getDimensionPixelSize(R.styleable.DotIndicator_dotIndicatorDotSpacing, 16)
                 numOfDots = getInt(R.styleable.DotIndicator_dotIndicatorNumberOfDots, 1)
                 activeDot = getInt(R.styleable.DotIndicator_dotIndicatorActiveDot, 0)
-
+                animTime = getInt(R.styleable.DotIndicator_dotIndicatorAnimTime, 500).toLong()
             } finally {
                 recycle()
             }
@@ -62,11 +61,14 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
         /** Inflate the layout */
         val root : View = inflate(context, R.layout.view_dot_indicator, this)
 
+        /** Calculate active dot size factor */
+        activeDotSizeFactor = activeDotSize.toFloat()/inactiveDotSize.toFloat()
+
         /** Get the container */
         llContainer = root.findViewById(R.id.llDotIndicatorContainer)
 
         var params = llContainer.layoutParams
-        params.height = activeDotSize
+        params.height = (inactiveDotSize * activeDotSizeFactor).toInt()
         llContainer.layoutParams = params
 
         /** Set up the layoutParams */
@@ -87,6 +89,7 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
         }
 
         setDotIndicatorActiveDot(activeDot)
+
     }
 
     /**
@@ -106,10 +109,8 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
             val dot = (llContainer.getChildAt(i) as ImageView)
 
             /** Change the size */
-            val params = dot.layoutParams as MarginLayoutParams
-            params.width = inactiveDotSize
-            params.height = inactiveDotSize
-            dot.layoutParams = params
+            dot.animate().scaleX(1f/activeDotSizeFactor).duration = animTime
+            dot.animate().scaleY(1f/activeDotSizeFactor).duration = animTime
 
             /** Change background and color */
             dot.setBackgroundResource(R.drawable.dot_indicator_full_dot)
@@ -120,10 +121,8 @@ class DotIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context
         val dot = (llContainer.getChildAt(dotIndex) as ImageView)
 
         /** Change the size */
-        val params = dot.layoutParams as MarginLayoutParams
-        params.width=activeDotSize
-        params.height=activeDotSize
-        dot.layoutParams = params
+        dot.animate().scaleX(activeDotSizeFactor).duration = animTime
+        dot.animate().scaleY(activeDotSizeFactor).duration = animTime
 
         /** Change background and color */
         dot.setBackgroundResource(R.drawable.dot_indicator_full_dot)

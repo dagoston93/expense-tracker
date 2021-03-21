@@ -36,6 +36,7 @@
         <item name="dotIndicatorActiveDotColor">?attr/colorPrimary</item>
         <item name="dotIndicatorCompletedDotColor">?attr/colorPrimaryDark</item>
         <item name="dotIndicatorInactiveDotColor">@android:color/darker_gray</item>
+        <item name="dotIndicatorAnimTime">@android:integer/config_mediumAnimTime</item>
     </style>
 
     <!-- Style for Initial Setup Title -->
