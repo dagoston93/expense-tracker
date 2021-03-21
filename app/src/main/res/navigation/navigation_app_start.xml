@@ -27,7 +27,9 @@
         tools:layout="@layout/fragment_authentication" >
         <action
             android:id="@+id/action_authenticationFragment_to_mainAppFragment"
-            app:destination="@id/mainAppFragment" />
+            app:destination="@id/mainAppFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/navigation_app_start"/>
     </fragment>
     <fragment
         android:id="@+id/initialSetupFragment"
