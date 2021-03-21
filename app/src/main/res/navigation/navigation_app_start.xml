@@ -37,7 +37,6 @@
         <action
             android:id="@+id/action_initialSetupFragment_to_mainAppFragment"
             app:destination="@id/mainAppFragment"
-            app:launchSingleTop="true"
             app:popUpToInclusive="true"
             app:popUpTo="@id/navigation_app_start" />
     </fragment>
