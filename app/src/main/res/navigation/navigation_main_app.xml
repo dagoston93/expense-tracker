@@ -14,13 +14,7 @@
         android:id="@+id/menu_btm_home"
         android:name="com.diamont.expense.tracker.homeFragment.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_menu_btm_home_to_menu_btm_history2"
-            app:destination="@id/menu_btm_history"
-            app:popEnterAnim="@anim/anim_slide_in_from_left"
-            app:popExitAnim="@anim/anim_slide_out_to_right" />
-    </fragment>
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/menu_btm_plan"
         android:name="com.diamont.expense.tracker.planFragment.PlanFragment"
