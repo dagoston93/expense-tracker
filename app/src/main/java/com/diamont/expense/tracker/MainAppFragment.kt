@@ -38,7 +38,7 @@ class MainAppFragment : Fragment() {
 
         /** Setup onCLickListener for the FAB */
         binding.fabAdd.setOnClickListener{
-            navigateWithAnimation(R.id.addOrEditTransactionFragment, R.anim.anim_slide_in_from_left, R.anim.anim_slide_out_to_right)
+            navigateWithAnimation(R.id.addOrEditTransactionFragment, R.anim.anim_add_open, R.anim.anim_fade_out)
         }
 
         /** Setup the onClickListener for the bottom nav view menu items */
