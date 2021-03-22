@@ -57,4 +57,20 @@
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@android:color/holo_red_dark</item>
     </style>
+
+    <!-- Style for the BottomNavigationView -->
+    <style name="Theme.ExpenseTracker.Widget.BottomNavigationView" parent="">
+        <item name="itemIconTint">@color/selector_bottom_nav_menu_item</item>
+        <item name="itemTextColor">@color/selector_bottom_nav_menu_item</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <!-- Style for the BottomAppBar -->
+    <style name="Theme.ExpenseTracker.Widget.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
+        <item name="fabCradleMargin">10dp</item>
+        <item name="fabCradleRoundedCornerRadius">10dp</item>
+        <item name="fabCradleVerticalOffset">10dp</item>
+    </style>
+
 </resources>

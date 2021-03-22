@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_btm_home"
+        android:icon="@drawable/ic_home_outline"
+        android:title="@string/home"/>
+
+    <item android:id="@+id/menu_btm_history"
+        android:icon="@drawable/ic_history_outline"
+        android:title="@string/history"/>
+
+    <item android:id="@+id/menu_btm_placeholder"
+        android:title=""/>
+
+    <item android:id="@+id/menu_btm_plan"
+        android:icon="@drawable/ic_plan_outline"
+        android:title="@string/plan"/>
+
+    <item android:id="@+id/menu_btm_statistic"
+        android:icon="@drawable/ic_statistic_outline"
+        android:title="@string/statistics"/>
+
+</menu>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_main_app"
+    app:startDestination="@id/menu_btm_home">
+
+    <fragment
+        android:id="@+id/addOrEditTransactionFragment"
+        android:name="com.diamont.expense.tracker.addOrEditTransactionFragment.AddOrEditTransactionFragment"
+        android:label="fragment_add_or_edit_transaction"
+        tools:layout="@layout/fragment_add_or_edit_transaction" />
+    <fragment
+        android:id="@+id/menu_btm_home"
+        android:name="com.diamont.expense.tracker.homeFragment.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_menu_btm_home_to_menu_btm_history2"
+            app:destination="@id/menu_btm_history"
+            app:popEnterAnim="@anim/anim_slide_in_from_left"
+            app:popExitAnim="@anim/anim_slide_out_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/menu_btm_plan"
+        android:name="com.diamont.expense.tracker.planFragment.PlanFragment"
+        android:label="fragment_plan"
+        tools:layout="@layout/fragment_plan" />
+    <fragment
+        android:id="@+id/menu_btm_history"
+        android:name="com.diamont.expense.tracker.historyFragment.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" />
+    <fragment
+        android:id="@+id/menu_btm_statistic"
+        android:name="com.diamont.expense.tracker.statisticFragment.StatisticFragment"
+        android:label="fragment_statistic"
+        tools:layout="@layout/fragment_statistic" />
+</navigation>

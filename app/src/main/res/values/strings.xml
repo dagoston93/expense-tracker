@@ -40,4 +40,10 @@
     <string name="biometric_prompt_title">Fingerprint</string>
     <string name="biometric_prompt_subtitle">Login using your fingerprint</string>
 
+    <!-- String for the bottom nav menu -->
+    <string name="home">Home</string>
+    <string name="history">History</string>
+    <string name="plan">Plan</string>
+    <string name="statistics">Statistics</string>
+
 </resources>

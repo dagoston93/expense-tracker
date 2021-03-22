@@ -3,6 +3,7 @@ package com.diamont.expense.tracker
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import com.diamont.expense.tracker.databinding.ActivityMainBinding
