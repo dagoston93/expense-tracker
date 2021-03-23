@@ -9,18 +9,32 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.diamont.expense.tracker.databinding.FragmentMainAppBinding
+import com.diamont.expense.tracker.util.BackPressHandlerFragment
 
-class MainAppFragment : Fragment() {
+class MainAppFragment : Fragment(), BackPressHandlerFragment{
     /** Data binding */
     private lateinit var binding : FragmentMainAppBinding
 
     /** The nav controller */
     private lateinit var navController : NavController
 
+    /** Get the Activity View Model */
+    private val activityViewModel : MainActivityViewModel by activityViewModels {
+        MainActivityViewModelFactory(
+            requireNotNull(this.activity).application
+        )
+    }
+
+    /**
+     * onCreateView()
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,6 +61,11 @@ class MainAppFragment : Fragment() {
             navigateWithSlideAnimation(it)
             true
         }
+
+        /** Observe bottom nav bar visibility */
+        activityViewModel.isBottomNavBarVisible.observe(viewLifecycleOwner, Observer {
+            binding.coordLoBottomNav.visibility = if(it){View.VISIBLE}else{View.GONE}
+        })
 
         /** Return the inflated layout */
         return binding.root
@@ -138,4 +157,25 @@ class MainAppFragment : Fragment() {
         navController.navigate(destinationId, null, navOptions)
     }
 
+    /**
+     * Handle the back button presses
+     */
+    override fun onBackPressed(): Boolean {
+        /*/** Check if the currently loaded fragment implements BackPressHandlerFragment*/
+        val fragment = childFragmentManager.fragments?.get(0)
+
+        /** If yes we call it's onBackPressed() */
+        if(fragment is BackPressHandlerFragment)
+        {
+            /** If it did not handle the button press we let the default behaviour to happen */
+            if((fragment as? BackPressHandlerFragment)?.onBackPressed() != true){
+                activity?.onBackPressed()
+            }
+        }else{
+            /** If it does not implement it, we let the default behaviour to happen */
+            activity?.onBackPressed()
+        }
+*/
+        return true
+    }
 }

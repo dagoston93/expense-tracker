@@ -4,9 +4,18 @@ package com.diamont.expense.tracker
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBar
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import com.diamont.expense.tracker.authentication.AuthenticationFragmentViewModel
+import com.diamont.expense.tracker.authentication.AuthenticationFragmentViewModelFactory
 import com.diamont.expense.tracker.databinding.ActivityMainBinding
+import com.diamont.expense.tracker.initialSetup.InitialSetupFragmentViewModel
+import com.diamont.expense.tracker.initialSetup.InitialSetupFragmentViewModelFactory
 import com.diamont.expense.tracker.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +24,8 @@ class MainActivity : AppCompatActivity() {
      * Declare some objects we will need later
      */
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel : MainActivityViewModel
+
 
     /**
      * onCreate()
@@ -27,6 +38,21 @@ class MainActivity : AppCompatActivity() {
 
         /** Set up toolbar */
         setSupportActionBar(binding.toolbar)
+
+        /** Get our viewModel */
+        val viewModelFactory = MainActivityViewModelFactory(application)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(MainActivityViewModel::class.java)
+
+        /** Observe some live data from the view model */
+        viewModel.actionbarTitle.observe(this, Observer {
+            supportActionBar?.title = it
+        })
+
+        viewModel.isUpButtonVisible.observe(this, Observer {
+            supportActionBar?.setDisplayHomeAsUpEnabled(it)
+        })
     }
 
     /**
@@ -49,5 +75,7 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+
 
 }
