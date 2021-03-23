@@ -25,6 +25,10 @@ class MainActivityViewModel (appContext: Application) : AndroidViewModel(appCont
     val isBottomNavBarVisible : LiveData<Boolean>
         get() = _isBottomNavBarVisible
 
+    private val _isDrawerEnabled = MutableLiveData<Boolean>(false)
+    val isDrawerEnabled : LiveData<Boolean>
+        get() = _isDrawerEnabled
+
     /**
      * Call this method to set the title
      */
@@ -44,5 +48,12 @@ class MainActivityViewModel (appContext: Application) : AndroidViewModel(appCont
      */
     fun setUpButtonVisibility(isVisible: Boolean){
         _isUpButtonVisible.value = isVisible
+    }
+
+    /**
+     * Call this method to enable/disable the drawer layout
+     */
+    fun setDrawerLayoutEnabled(isEnabled : Boolean){
+        _isDrawerEnabled.value = isEnabled
     }
 }

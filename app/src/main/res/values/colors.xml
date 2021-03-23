@@ -13,4 +13,5 @@
     <color name="primaryDark">#008900</color>
 
     <color name="secondaryColor">#FF4A1C</color>
+    <color name="drawer_header_background">#ECEFEB</color>
 </resources>

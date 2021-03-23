@@ -53,6 +53,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.isUpButtonVisible.observe(this, Observer {
             supportActionBar?.setDisplayHomeAsUpEnabled(it)
         })
+
+        viewModel.isDrawerEnabled.observe(this, Observer {
+            if(it){
+                binding.toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
+            }
+        })
     }
 
     /**

@@ -39,6 +39,7 @@ class StatisticFragment : Fragment() {
         activityViewModel.setTitle(getString(R.string.statistics))
         activityViewModel.setBottomNavBarVisibility(true)
         activityViewModel.setUpButtonVisibility(false)
+        activityViewModel.setDrawerLayoutEnabled(true)
 
         /** Return the inflated layout */
         return binding.root

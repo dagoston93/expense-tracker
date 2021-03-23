@@ -30,4 +30,12 @@
         android:name="com.diamont.expense.tracker.statisticFragment.StatisticFragment"
         android:label="fragment_statistic"
         tools:layout="@layout/fragment_statistic" />
+    <fragment
+        android:id="@+id/menu_drawer_settings"
+        android:name="com.diamont.expense.tracker.settingsFragment.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/menu_drawer_about"
+        android:name="com.diamont.expense.tracker.aboutFragment.AboutFragment"
+        android:label="AboutFragment" />
 </navigation>

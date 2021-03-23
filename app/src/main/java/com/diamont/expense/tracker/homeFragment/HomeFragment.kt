@@ -39,6 +39,7 @@ class HomeFragment : Fragment() {
         activityViewModel.setTitle(getString(R.string.app_name))
         activityViewModel.setBottomNavBarVisibility(true)
         activityViewModel.setUpButtonVisibility(false)
+        activityViewModel.setDrawerLayoutEnabled(true)
 
         /** Return the inflated layout */
         return binding.root

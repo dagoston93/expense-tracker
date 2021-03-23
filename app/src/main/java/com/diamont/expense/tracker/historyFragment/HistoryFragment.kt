@@ -38,6 +38,7 @@ class HistoryFragment : Fragment() {
         activityViewModel.setTitle(getString(R.string.history))
         activityViewModel.setBottomNavBarVisibility(true)
         activityViewModel.setUpButtonVisibility(false)
+        activityViewModel.setDrawerLayoutEnabled(true)
 
         /** Return the inflated layout */
         return binding.root

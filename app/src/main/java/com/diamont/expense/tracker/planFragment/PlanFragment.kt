@@ -38,6 +38,7 @@ class PlanFragment : Fragment() {
         activityViewModel.setTitle(getString(R.string.plan))
         activityViewModel.setBottomNavBarVisibility(true)
         activityViewModel.setUpButtonVisibility(false)
+        activityViewModel.setDrawerLayoutEnabled(true)
 
         /** Return the inflated layout */
         return binding.root

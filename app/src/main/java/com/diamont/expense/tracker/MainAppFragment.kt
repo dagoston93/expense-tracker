@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -66,11 +67,42 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment{
             true
         }
 
+        /** Setup the onClickListener for the drawer menu items */
+        binding.nvDrawer.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.menu_btm_home -> {
+                    binding.bottomNavView.selectedItemId = R.id.menu_btm_home
+                    setActiveMenuItemIcon(binding.bottomNavView.menu.findItem(R.id.menu_btm_home))
+                    navController.navigate(R.id.menu_btm_home)
+                }
+
+                else -> {
+                    //navigateWithAnimation(it.itemId, R.anim.anim_add_open, R.anim.anim_fade_out)
+                    navController.navigate(it.itemId)
+                }
+            }
+
+            binding.dlDrawerLayout.closeDrawer(binding.nvDrawer)
+            true
+        }
+
+        /**
+         * Observe if drawer layout is enabled or not
+         */
+        activityViewModel.isDrawerEnabled.observe(viewLifecycleOwner, Observer {
+            binding.dlDrawerLayout.setDrawerLockMode(
+                if(it){
+                    DrawerLayout.LOCK_MODE_UNLOCKED
+                }
+                else{
+                    DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+                }
+            )
+        })
+
         /** Observe bottom nav bar visibility */
         activityViewModel.isBottomNavBarVisible.observe(viewLifecycleOwner, Observer {
-            //binding.coordLoBottomNav.visibility = if(it){View.VISIBLE}else{View.GONE}
             val isNowVisible = binding.coordLoBottomNav.alpha == 1f
-            Log.d("GUSTI", "$isNowVisible")
             /** Only do animation if visibility differs */
             if(isNowVisible != it){
                 val duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
@@ -241,10 +273,21 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             android.R.id.home ->{
-                navigateBack()
+                /** If the drawer is enabled the the drawer icon is there so we open the drawer */
+                if(activityViewModel.isDrawerEnabled.value == true){
+                    if(binding.dlDrawerLayout.isDrawerOpen(binding.nvDrawer)){
+                        binding.dlDrawerLayout.closeDrawer(binding.nvDrawer)
+                    }else{
+                        binding.dlDrawerLayout.openDrawer(binding.nvDrawer)
+                    }
+                }else{
+                    /** Otherwise the back button would be displayed so we navigate back */
+                    navigateBack()
+                }
                 return true
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 }

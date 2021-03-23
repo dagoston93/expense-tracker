@@ -73,4 +73,13 @@
         <item name="fabCradleVerticalOffset">10dp</item>
     </style>
 
+    <!-- Text appearance for drawer layout title -->
+    <style name="Theme.ExpenseTracker.TextAppearance.DrawerLayoutTitle" parent="">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
 </resources>
