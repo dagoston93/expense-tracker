@@ -1,5 +1,4 @@
 package com.diamont.expense.tracker.util
-
 /**
  * If a fragment wants to handle the back button
  * it needs to implement this interface.

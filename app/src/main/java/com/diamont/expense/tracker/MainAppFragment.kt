@@ -1,5 +1,7 @@
 package com.diamont.expense.tracker
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,15 +9,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.diamont.expense.tracker.databinding.FragmentMainAppBinding
+import com.diamont.expense.tracker.util.BackPressCallbackFragment
 import com.diamont.expense.tracker.util.BackPressHandlerFragment
 
 class MainAppFragment : Fragment(), BackPressHandlerFragment{
@@ -47,6 +48,9 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment{
         binding.bottomNavView.background = null
         binding.bottomNavView.menu.getItem(2).isEnabled = false
 
+        /** We need to set it to true to be able to handle the up button */
+        setHasOptionsMenu(true)
+
         /** Get the navigation controller */
          navController = childFragmentManager.findFragmentByTag("main_app_nav")!!.findNavController()
 
@@ -64,7 +68,33 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment{
 
         /** Observe bottom nav bar visibility */
         activityViewModel.isBottomNavBarVisible.observe(viewLifecycleOwner, Observer {
-            binding.coordLoBottomNav.visibility = if(it){View.VISIBLE}else{View.GONE}
+            //binding.coordLoBottomNav.visibility = if(it){View.VISIBLE}else{View.GONE}
+            val isNowVisible = binding.coordLoBottomNav.alpha == 1f
+            Log.d("GUSTI", "$isNowVisible")
+            /** Only do animation if visibility differs */
+            if(isNowVisible != it){
+                val duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
+                if(it) {
+                    binding.coordLoBottomNav.alpha = 0f
+                    binding.coordLoBottomNav.visibility = View.VISIBLE
+
+                    binding.coordLoBottomNav.animate()
+                        .setDuration(duration)
+                        .alpha(1f)
+                        .setListener(null)
+
+                }else{
+                    binding.coordLoBottomNav.isClickable = false
+                    binding.coordLoBottomNav.animate()
+                        .setDuration(duration)
+                        .alpha(0f)
+                        .setListener(object : AnimatorListenerAdapter(){
+                            override fun onAnimationEnd(animation: Animator?) {
+                                binding.coordLoBottomNav.visibility = View.GONE
+                            }
+                        })
+                }
+            }
         })
 
         /** Return the inflated layout */
@@ -158,24 +188,63 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment{
     }
 
     /**
+     * This method navigates backwards with the scale animation
+     */
+    private fun navigateBack(){
+        if(navController.previousBackStackEntry != null && navController.previousBackStackEntry?.destination != null)
+        {
+            navigateWithAnimation(
+                navController.previousBackStackEntry?.destination?.id!!,
+                R.anim.anim_fade_in,
+                R.anim.anim_add_clsoe
+            )
+        }
+    }
+
+    /**
      * Handle the back button presses
      */
     override fun onBackPressed(): Boolean {
-        /*/** Check if the currently loaded fragment implements BackPressHandlerFragment*/
-        val fragment = childFragmentManager.fragments?.get(0)
+        /** Check if the currently loaded fragment implements BackPressHandlerFragment*/
+        val fragment = childFragmentManager.fragments[0].childFragmentManager.fragments[0]
 
         /** If yes we call it's onBackPressed() */
-        if(fragment is BackPressHandlerFragment)
+        if(fragment is BackPressCallbackFragment)
         {
             /** If it did not handle the button press we let the default behaviour to happen */
-            if((fragment as? BackPressHandlerFragment)?.onBackPressed() != true){
-                activity?.onBackPressed()
+            if((fragment as? BackPressCallbackFragment)?.onBackPressed { navigateBack() } != true){
+                return false
             }
         }else{
-            /** If it does not implement it, we let the default behaviour to happen */
-            activity?.onBackPressed()
+            /** If it does not implement it, we navigate to home because it means
+             * that we are on one of the main pages from which we always go home if back is pressed */
+            if(navController.currentDestination?.id != R.id.menu_btm_home){
+                /** If we are not on the home page we return */
+                val menuItem = binding.bottomNavView.menu.findItem(R.id.menu_btm_home)
+                navigateWithSlideAnimation(menuItem)
+                setActiveMenuItemIcon(menuItem)
+                binding.bottomNavView.selectedItemId = R.id.menu_btm_home
+
+                return true
+            }else{
+                /** Otherwise we let the normal behaviour happen (close the app)*/
+                return false
+            }
+
         }
-*/
         return true
+    }
+
+    /**
+     * This method handles the up button click
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home ->{
+                navigateBack()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

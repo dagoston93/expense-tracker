@@ -14,9 +14,10 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentAddOrEditTransactionBinding
+import com.diamont.expense.tracker.util.BackPressCallbackFragment
 import com.diamont.expense.tracker.util.BackPressHandlerFragment
 
-class AddOrEditTransactionFragment : Fragment(), BackPressHandlerFragment {
+class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
     /** Data binding */
     private lateinit var binding : FragmentAddOrEditTransactionBinding
 
@@ -26,6 +27,9 @@ class AddOrEditTransactionFragment : Fragment(), BackPressHandlerFragment {
             requireNotNull(this.activity).application
         )
     }
+
+    /** Required variables */
+    private var backPressedListener : () -> Unit = {}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,25 +44,18 @@ class AddOrEditTransactionFragment : Fragment(), BackPressHandlerFragment {
         activityViewModel.setBottomNavBarVisibility(false)
         activityViewModel.setUpButtonVisibility(true)
 
-        /** We need to have it true to be able to handle the up button */
-        setHasOptionsMenu(true)
+
 
         /** Return the inflated layout */
         return binding.root
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            android.R.id.home ->{
-                binding.root.findNavController().navigateUp()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed(): Boolean {
-        binding.root.findNavController().navigateUp()
+    /**
+     * This method handles the back button press
+     */
+    override fun onBackPressed(listener: () -> Unit): Boolean {
+        listener()
         return true
     }
+
 }
