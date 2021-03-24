@@ -2,6 +2,7 @@ package com.diamont.expense.tracker.util.view
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
@@ -37,10 +38,12 @@ class CircularProgressBar(context: Context, attrs: AttributeSet) : LinearLayout(
                 progress = getInt(R.styleable.CircularProgressBar_circularProgressBarProgress, 0)
                 backgroundColorValue = getColor(
                     R.styleable.CircularProgressBar_circularProgressBarBackgroundColor,
-                    0xffffff
+                    Color.WHITE
                 )
-                foregroundColorValue =
-                    getColor(R.styleable.CircularProgressBar_circularProgressBarForegroundColor, 0)
+                foregroundColorValue = getColor(
+                    R.styleable.CircularProgressBar_circularProgressBarForegroundColor,
+                    Color.BLACK
+                )
                 textAppearanceId = getResourceId(
                     R.styleable.CircularProgressBar_circularProgressBarTextAppearance,
                     R.style.TextAppearance_AppCompat_Large

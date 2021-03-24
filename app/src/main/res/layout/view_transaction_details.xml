@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/llTransactionDetailsContainer"
     android:animateLayoutChanges="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +14,7 @@
         android:background="@drawable/bg_card">
 
         <ImageView
-            android:id="@+id/imageView9"
+            android:id="@+id/ivTransactionDetailColoredStrip"
             android:layout_width="10dp"
             android:layout_height="0dp"
             android:src="@drawable/bg_card_start"
@@ -22,54 +23,53 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView7"
+            android:id="@+id/ivTransactionDetailIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_credit_card"
-            app:layout_constraintBottom_toBottomOf="@+id/textView37"
-            app:layout_constraintStart_toEndOf="@+id/imageView9"
-            app:layout_constraintTop_toTopOf="@+id/textView36" />
+            app:layout_constraintBottom_toBottomOf="@+id/tvTransactionDetailDateLabel"
+            app:layout_constraintStart_toEndOf="@+id/ivTransactionDetailColoredStrip"
+            app:layout_constraintTop_toTopOf="@+id/tvTransactionDetailTitle" />
 
         <TextView
-            android:id="@+id/textView36"
+            android:id="@+id/tvTransactionDetailTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:text="Food shopping"
-            android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/imageView7"
+            app:layout_constraintStart_toEndOf="@+id/ivTransactionDetailIcon"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView37"
+            android:id="@+id/tvTransactionDetailDateLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date:"
+            android:layout_marginTop="4dp"
             android:paddingBottom="8dp"
-            app:layout_constraintStart_toStartOf="@+id/textView36"
-            app:layout_constraintTop_toBottomOf="@+id/textView36" />
+            android:text="Date:"
+            app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailTitle" />
 
         <TextView
-            android:id="@+id/textView44"
+            android:id="@+id/tvTransactionDetailDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="2021. 02. 12."
-            app:layout_constraintBaseline_toBaselineOf="@+id/textView37"
-            app:layout_constraintStart_toEndOf="@+id/textView37" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailDateLabel"
+            app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailDateLabel" />
 
         <TextView
-            android:id="@+id/textView45"
+            android:id="@+id/tvTransactionDetailAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="$15.45"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/textView37"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTransactionDetailDateLabel"
             app:layout_constraintEnd_toStartOf="@+id/ivTransactionDetailsShowMore"
-            app:layout_constraintTop_toTopOf="@+id/textView36" />
+            app:layout_constraintTop_toTopOf="@+id/tvTransactionDetailTitle" />
 
         <ImageView
             android:id="@+id/ivTransactionDetailsShowMore"
@@ -77,75 +77,73 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_show_more"
-            app:layout_constraintBottom_toBottomOf="@+id/textView45"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTransactionDetailAmount"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView45" />
+            app:layout_constraintTop_toTopOf="@+id/tvTransactionDetailAmount" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clTransactionDetailsExpandable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
-
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textView37"
-            app:layout_constraintTop_toBottomOf="@+id/textView44"
-            tools:visibility="visible">
+            app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailDateLabel"
+            app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailDate">
 
             <TextView
-                android:id="@+id/textView40"
+                android:id="@+id/tvTransactionDetailCategoryLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="Category:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView42"
+                android:id="@+id/tvTransactionDetailCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Food"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView40"
-                app:layout_constraintStart_toEndOf="@+id/textView40" />
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailCategoryLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailCategoryLabel" />
 
             <TextView
-                android:id="@+id/textView41"
+                android:id="@+id/tvTransactionDetailVenueLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Venue:"
-                app:layout_constraintStart_toStartOf="@+id/textView40"
-                app:layout_constraintTop_toBottomOf="@+id/textView40" />
+                app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailCategoryLabel"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailCategoryLabel" />
 
             <TextView
-                android:id="@+id/textView43"
+                android:id="@+id/tvTransactionDetailVenue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Walmart"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView41"
-                app:layout_constraintStart_toEndOf="@+id/textView41" />
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailVenueLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailVenueLabel" />
 
             <TextView
-                android:id="@+id/textView38"
+                android:id="@+id/tvTransactionDetailPaymentMethodLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Payment method:"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView40"
-                app:layout_constraintTop_toBottomOf="@+id/textView41" />
+                app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailCategoryLabel"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailVenueLabel" />
 
             <TextView
-                android:id="@+id/textView39"
+                android:id="@+id/tvTransactionDetailPaymentMethod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Card"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView38"
-                app:layout_constraintStart_toEndOf="@+id/textView38" />
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailPaymentMethodLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailPaymentMethodLabel" />
 
             <ImageView
                 android:id="@+id/ivTransactionDetailsEdit"

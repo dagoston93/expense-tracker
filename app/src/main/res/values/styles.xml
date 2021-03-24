@@ -112,4 +112,20 @@
         <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
+    <!-- Style for the TransactionDetailsView -->
+    <style name="Theme.ExpenseTracker.Widget.TransactionDetailsView" parent="">
+        <item name="transactionDetailTitleTextAppearance">@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailTitle</item>
+        <item name="transactionDetailLabelTextAppearance">@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel</item>
+        <item name="transactionDetailDeleteIconColor">@color/colorGoalNotAchieved</item>
+        <item name="transactionDetailEditIconColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailTitle" parent="">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel" parent="">
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>
