@@ -17,13 +17,13 @@ import com.diamont.expense.tracker.R
  */
 class CircularProgressBar(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
     /** Some variables */
-    private var progress : Int = 0
-    private var backgroundColorValue : Int = 0
-    private var foregroundColorValue : Int = 0
-    private var textAppearanceId : Int = 0
-    private var pbProgressBar : ProgressBar
-    private var tvProgressText : TextView
-    private var ivProgressBarBg : ImageView
+    private var progress: Int = 0
+    private var backgroundColorValue: Int = 0
+    private var foregroundColorValue: Int = 0
+    private var textAppearanceId: Int = 0
+    private var pbProgressBar: ProgressBar
+    private var tvProgressText: TextView
+    private var ivProgressBarBg: ImageView
 
     init {
         /** Receive the attributes */
@@ -35,23 +35,32 @@ class CircularProgressBar(context: Context, attrs: AttributeSet) : LinearLayout(
         ).apply {
             try {
                 progress = getInt(R.styleable.CircularProgressBar_circularProgressBarProgress, 0)
-                backgroundColorValue = getColor(R.styleable.CircularProgressBar_circularProgressBarBackgroundColor, 0xffffff)
-                foregroundColorValue = getColor(R.styleable.CircularProgressBar_circularProgressBarForegroundColor, 0)
-                textAppearanceId = getResourceId(R.styleable.CircularProgressBar_circularProgressBarTextAppearance,
-                    R.style.TextAppearance_AppCompat_Large)
+                backgroundColorValue = getColor(
+                    R.styleable.CircularProgressBar_circularProgressBarBackgroundColor,
+                    0xffffff
+                )
+                foregroundColorValue =
+                    getColor(R.styleable.CircularProgressBar_circularProgressBarForegroundColor, 0)
+                textAppearanceId = getResourceId(
+                    R.styleable.CircularProgressBar_circularProgressBarTextAppearance,
+                    R.style.TextAppearance_AppCompat_Large
+                )
             } finally {
                 recycle()
             }
         }
 
         /** Inflate the layout */
-        val root : View = View.inflate(context, R.layout.view_circular_progress_bar, this)
+        val root: View = View.inflate(context, R.layout.view_circular_progress_bar, this)
         pbProgressBar = root.findViewById(R.id.pbCircularProgressBar) as ProgressBar
         tvProgressText = root.findViewById(R.id.tvCircularProgressBarText) as TextView
         ivProgressBarBg = root.findViewById(R.id.ivCircularProgressBarBg) as ImageView
 
         /** Set the colors */
-        ImageViewCompat.setImageTintList(ivProgressBarBg, ColorStateList.valueOf(backgroundColorValue))
+        ImageViewCompat.setImageTintList(
+            ivProgressBarBg,
+            ColorStateList.valueOf(backgroundColorValue)
+        )
         pbProgressBar.progressTintList = ColorStateList.valueOf(foregroundColorValue)
 
         /** Set text appearance */
@@ -64,20 +73,20 @@ class CircularProgressBar(context: Context, attrs: AttributeSet) : LinearLayout(
          * Validate progress value before setting it on the progress bar
          * This way we are able to display as text over 100 %.
          */
-        if(progress > 100){
+        if (progress > 100) {
             pbProgressBar.progress = 100
-        }else if(progress < 0){
+        } else if (progress < 0) {
             pbProgressBar.progress = 0
-        }else{
+        } else {
             pbProgressBar.progress = progress
         }
 
     }
 
     /** Set progress */
-    fun setCircularProgressBarProgress(prog : Int){
+    fun setCircularProgressBarProgress(prog: Int) {
         /** Check if within range */
-        if(prog !in 0..100) return
+        if (prog !in 0..100) return
 
         progress = prog
 

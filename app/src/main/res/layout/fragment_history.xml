@@ -5,13 +5,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".historyFragment.HistoryFragment">
+        tools:context=".historyFragment.HistoryFragment"
+        android:background="@color/background"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+
+        <com.diamont.expense.tracker.util.view.TransactionDetailsView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="HISTORY" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
+
+        <com.diamont.expense.tracker.util.view.TransactionDetailsView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 </layout>
