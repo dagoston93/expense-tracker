@@ -1,17 +1,318 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:orientation="vertical"
         tools:context=".homeFragment.HomeFragment">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/Theme.ExpenseTracker.CardLayout"
+            android:background="@drawable/bg_card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Home" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.TotalBalance"
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:text="Total balance:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/tvHomeTotalBalance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$1,1538.54"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView22"
+                app:layout_constraintEnd_toEndOf="@+id/tvHomeCash" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_cash"
+                app:tint="?attr/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Cash:"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+                app:layout_constraintStart_toEndOf="@+id/imageView5"
+                app:layout_constraintTop_toTopOf="@+id/imageView5"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/tvHomeCash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$130.50"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView21"
+                app:layout_constraintEnd_toEndOf="@+id/tvHOmeCard" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Card:"
+                app:layout_constraintVertical_bias="0.5"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                app:layout_constraintStart_toStartOf="@+id/textView21"
+                app:layout_constraintTop_toTopOf="@+id/imageView6" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.TotalBalance"
+                android:id="@+id/tvHOmeCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="$1408.04"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView20"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_credit_card"
+                app:tint="?attr/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/imageView5"
+                app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/Theme.ExpenseTracker.CardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card">
+
+            <TextView
+                android:id="@+id/textView23"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:text="Monthly income"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Planned:"
+                app:layout_constraintStart_toStartOf="@+id/textView23"
+                app:layout_constraintTop_toBottomOf="@+id/textView23" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total:"
+                app:layout_constraintStart_toStartOf="@+id/textView24"
+                app:layout_constraintTop_toBottomOf="@+id/textView24" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="$1,000"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView24"
+                app:layout_constraintStart_toEndOf="@+id/textView24" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$800"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView26"
+                app:layout_constraintEnd_toEndOf="@+id/textView25" />
+
+
+            <com.diamont.expense.tracker.util.view.CircularProgressBar
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:circularProgressBarForegroundColor="@color/colorGoalNotAchieved"
+                app:circularProgressBarProgress="80"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/Theme.ExpenseTracker.CardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card">
+
+            <TextView
+                android:id="@+id/textView29"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:text="Monthly expenses"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView27"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Planned:"
+                app:layout_constraintStart_toStartOf="@+id/textView29"
+                app:layout_constraintTop_toBottomOf="@+id/textView29" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total:"
+                app:layout_constraintStart_toStartOf="@+id/textView27"
+                app:layout_constraintTop_toBottomOf="@+id/textView27" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="$1,000"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView27"
+                app:layout_constraintStart_toEndOf="@+id/textView27" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$800"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView28"
+                app:layout_constraintEnd_toEndOf="@+id/textView30" />
+
+
+            <com.diamont.expense.tracker.util.view.CircularProgressBar
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:circularProgressBarForegroundColor="@color/colorGoalAchieved"
+                app:circularProgressBarProgress="80"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/Theme.ExpenseTracker.CardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card">
+
+            <TextView
+                android:id="@+id/textView31"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:text="Savings"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView32"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Planned this month:"
+                app:layout_constraintStart_toStartOf="@+id/textView31"
+                app:layout_constraintTop_toBottomOf="@+id/textView31" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/textView33"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Possible this month:"
+                app:layout_constraintStart_toStartOf="@+id/textView32"
+                app:layout_constraintTop_toBottomOf="@+id/textView32" />
+
+            <TextView
+                android:id="@+id/textView34"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="$1,000"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView32"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$800"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView33"
+                app:layout_constraintEnd_toEndOf="@+id/textView34" />
+
+            <TextView
+                android:id="@+id/textView35"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Savings so far:"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView32"
+                app:layout_constraintTop_toBottomOf="@+id/textView33" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$800"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView35"
+                app:layout_constraintEnd_toEndOf="@+id/textView34" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 </layout>

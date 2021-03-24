@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Custom theme attributes -->
+    <declare-styleable name="expenseTrackerTheme">
+        <attr name="expenseTrackerCardBackgroundColor" format="color"/>
+    </declare-styleable>
     <!-- Attributes for PinCodeInputView -->
     <declare-styleable name="PinCodeInputView">
         <attr name="pinCodeInputLength" format="integer"/>
@@ -27,4 +31,14 @@
         <attr name="dotIndicatorStyle" format="reference"/>
         <attr name="dotIndicatorAnimTime" format="integer"/>
     </declare-styleable>
+
+    <!-- Attributes for CircularProgressBar -->
+    <declare-styleable name="CircularProgressBar">
+        <attr name="circularProgressBarProgress" format="integer"/>
+        <attr name="circularProgressBarBackgroundColor" format="color"/>
+        <attr name="circularProgressBarForegroundColor" format="color"/>
+        <attr name="circularProgressBarTextAppearance" format="reference"/>
+        <attr name="circularProgressBarStyle" format="reference"/>
+    </declare-styleable>
+
 </resources>

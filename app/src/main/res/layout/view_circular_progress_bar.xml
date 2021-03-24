@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<!-- app:tint="@color/progressbarBackground" -->
+
+    <ImageView
+        android:id="@+id/ivCircularProgressBarBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/circular_progressbar_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:tint="@color/circularProgressbarBackground"/>
+
+    <!--        android:progressTint="@color/primaryColor"-->
+    <ProgressBar
+        android:id="@+id/pbCircularProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminateOnly="false"
+        android:progressDrawable="@drawable/circular_progressbar_fg"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:progressTint="@color/primaryColor"
+        tools:progress="60" />
+
+    <TextView
+        android:id="@+id/tvCircularProgressBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="60%"
+        app:layout_constraintBottom_toBottomOf="@+id/pbCircularProgressBar"
+        app:layout_constraintEnd_toEndOf="@+id/pbCircularProgressBar"
+        app:layout_constraintStart_toStartOf="@+id/pbCircularProgressBar"
+        app:layout_constraintTop_toTopOf="@+id/pbCircularProgressBar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

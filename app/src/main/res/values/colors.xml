@@ -14,4 +14,9 @@
 
     <color name="secondaryColor">#FF4A1C</color>
     <color name="drawer_header_background">#ECEFEB</color>
+
+    <color name="circularProgressbarBackground">#8E8B8B</color>
+    <color name="background">#E0E6EB</color>
+    <color name="colorGoalAchieved">#46ba20</color>
+    <color name="colorGoalNotAchieved">#D13E3E</color>
 </resources>

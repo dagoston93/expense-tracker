@@ -82,4 +82,34 @@
 
     </style>
 
+    <!-- Style for  CircularProgressBar -->
+    <style name="Theme.ExpenseTracker.Widget.CircularProgressBar" parent="">
+        <item name="circularProgressBarBackgroundColor">@color/circularProgressbarBackground</item>
+        <item name="circularProgressBarForegroundColor">@color/primaryColor</item>
+        <item name="circularProgressBarTextAppearance">@style/Theme.ExpenseTracker.TextAppearance.CircularProgressBarText</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker.TextAppearance.CircularProgressBarText" parent="">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Style for the cards on Home page -->
+    <style name="Theme.ExpenseTracker.CardLayout">
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText" parent="">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker.TextAppearance.CardLayoutTitle" parent="">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker.TextAppearance.TotalBalance" parent="">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
 </resources>

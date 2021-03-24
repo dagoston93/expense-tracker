@@ -21,5 +21,8 @@
         <item name="pinCodeInputButtonSize">@dimen/pinInputButtonSize</item>
         <item name="pinCodeInputDelIconSize">@dimen/pinInputDelIconSize</item>
         <item name="dotIndicatorStyle">@style/Theme.ExpenseTracker.Widget.DotIndicator</item>
+        <item name="circularProgressBarStyle">@style/Theme.ExpenseTracker.Widget.CircularProgressBar</item>
+
+        <item name="expenseTrackerCardBackgroundColor">@color/white</item>
     </style>
 </resources>
