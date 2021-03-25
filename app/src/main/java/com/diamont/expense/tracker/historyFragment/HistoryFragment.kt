@@ -44,17 +44,23 @@ class HistoryFragment : Fragment() {
         /******
          * TEST
          */
+        val cat1 = TransactionCategory(0,"Food", R.color.secondaryColor)
+        val cat2 = TransactionCategory(0,"Clothes", R.color.circularProgressbarBackground)
+        val cat3 = TransactionCategory(0,"Unspecified", android.R.color.holo_blue_dark)
+        val cat4 = TransactionCategory(0,"Unspecified", android.R.color.holo_blue_dark)
+        val cat5 = TransactionCategory(0,"Salary", android.R.color.holo_purple)
+
         val tr1 = Transaction(
             0,
             TransactionType.EXPENSE,
             "Food shopping",
             15.47f,
-            TransactionCategory(0,"Food", R.color.secondaryColor),
+            cat1.categoryId,
             "InterSparhelt",
             PaymentMethod.CASH,
-            0,
             TransactionPlanned.PLANNED,
-            TransactionFrequency.MONTHLY_SUM
+            TransactionFrequency.MONTHLY_SUM,
+            0
         )
 
         val tr2 = Transaction(
@@ -62,12 +68,12 @@ class HistoryFragment : Fragment() {
             TransactionType.EXPENSE,
             "Clothes shopping",
             23.77f,
-            TransactionCategory(0,"Clothes", R.color.circularProgressbarBackground),
+            cat2.categoryId,
             "Whatever shop",
             PaymentMethod.CARD,
-            0,
             TransactionPlanned.NOT_PLANNED,
-            TransactionFrequency.FORTNIGHTLY_ONCE
+            TransactionFrequency.FORTNIGHTLY_ONCE,
+            0
         )
 
         val tr3 = Transaction(
@@ -75,12 +81,12 @@ class HistoryFragment : Fragment() {
             TransactionType.WITHDRAW,
             "Withdrawal",
             50.0f,
-            TransactionCategory(0,"Unspecified", android.R.color.holo_blue_dark),
+            cat3.categoryId,
             "Whatever shop",
             PaymentMethod.CARD,
-            0,
             TransactionPlanned.NOT_PLANNED,
-            TransactionFrequency.FORTNIGHTLY_ONCE
+            TransactionFrequency.FORTNIGHTLY_ONCE,
+            0
         )
 
         val tr4 = Transaction(
@@ -88,12 +94,12 @@ class HistoryFragment : Fragment() {
             TransactionType.DEPOSIT,
             "Deposit",
             70.0f,
-            TransactionCategory(0,"Unspecified", android.R.color.holo_blue_dark),
+            cat4.categoryId,
             "Whatever shop",
             PaymentMethod.CARD,
-            0,
             TransactionPlanned.NOT_PLANNED,
-            TransactionFrequency.FORTNIGHTLY_ONCE
+            TransactionFrequency.FORTNIGHTLY_ONCE,
+            0
         )
 
         val tr5 = Transaction(
@@ -101,19 +107,19 @@ class HistoryFragment : Fragment() {
             TransactionType.INCOME,
             "Salary",
             1245.55f,
-            TransactionCategory(0,"Salary", android.R.color.holo_purple),
+            cat5.categoryId,
             "My boss",
             PaymentMethod.CARD,
-            0,
             TransactionPlanned.PLANNED,
-            TransactionFrequency.MONTHLY_ONCE
+            TransactionFrequency.MONTHLY_ONCE,
+            0
         )
 
-        binding.tran1.setTransaction(tr1)
-        binding.tran2.setTransaction(tr2)
-        binding.tran3.setTransaction(tr3)
-        binding.tran4.setTransaction(tr4)
-        binding.tran5.setTransaction(tr5)
+        binding.tran1.setTransactionAndCategory(tr1, cat1)
+        binding.tran2.setTransactionAndCategory(tr2, cat2)
+        binding.tran3.setTransactionAndCategory(tr3, cat3)
+        binding.tran4.setTransactionAndCategory(tr4, cat4)
+        binding.tran5.setTransactionAndCategory(tr5, cat5)
 
 
         /** Return the inflated layout */

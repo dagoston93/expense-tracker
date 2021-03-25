@@ -17,10 +17,7 @@ import androidx.core.view.doOnLayout
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat
 import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.util.PaymentMethod
-import com.diamont.expense.tracker.util.Transaction
-import com.diamont.expense.tracker.util.TransactionPlanned
-import com.diamont.expense.tracker.util.TransactionType
+import com.diamont.expense.tracker.util.*
 
 class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
@@ -35,6 +32,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     private var titleTextAppearance : Int = 0
     private var labelTextAppearance : Int = 0
     private lateinit var transaction : Transaction
+    private var category = TransactionCategory(0,"", android.R.color.black)
 
     /**
      * The required views
@@ -232,9 +230,10 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     /**
      * Call this method to set the transaction
      */
-    fun setTransaction(tran : Transaction){
+    fun setTransactionAndCategory(tran : Transaction, cat: TransactionCategory){
         /** Save the transaction */
         this.transaction = tran
+        this.category = cat
 
         /**
          * Set up the view according to the transaction
@@ -242,7 +241,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
 
         /** Set the strip color */
         ImageViewCompat.setImageTintList(ivStrip, ColorStateList.valueOf(
-            ContextCompat.getColor(context, transaction.category.categoryColorResId)
+            ContextCompat.getColor(context, category.categoryColorResId)
         ))
 
         /**
@@ -294,7 +293,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
             /** Display the category title */
             tvCategory.visibility = VISIBLE
             tvCategoryLabel.visibility = VISIBLE
-            tvCategory.text = transaction.category.categoryName
+            tvCategory.text = category.categoryName
 
             /** Is planned */
             tvIsPlanned.visibility = VISIBLE
