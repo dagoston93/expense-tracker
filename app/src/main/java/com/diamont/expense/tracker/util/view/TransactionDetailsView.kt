@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
@@ -13,11 +12,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat
 import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.util.PaymentMethod
+import com.diamont.expense.tracker.util.Transaction
 import com.diamont.expense.tracker.util.TransactionType
 
 class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
@@ -28,18 +28,11 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     private var isExpanded = false
     private var expandedHeight : Int = 0
 
-    private var stripColor : Int = 0
     private var editIconColor : Int = 0
     private var deleteIconColor : Int = 0
     private var titleTextAppearance : Int = 0
     private var labelTextAppearance : Int = 0
-    private var title : String = ""
-    private var amount : String = ""
-    private var date : String = ""
-    private var category : String = ""
-    private var venue : String = ""
-    private var paymentMethod : PaymentMethod = PaymentMethod.CASH
-    private var transactionType : TransactionType = TransactionType.INCOME_ONE_TIME
+    private lateinit var transaction : Transaction
 
     /**
      * The required views
@@ -48,6 +41,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     private var ivEditIcon : ImageView
     private var ivDeleteIcon : ImageView
     private var ivStrip : ImageView
+    private var ivTransaction : ImageView
 
     private var tvTitle : TextView
     private var tvAmount : TextView
@@ -57,11 +51,14 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     private var tvCategory : TextView
     private var tvVenueLabel : TextView
     private var tvVenue : TextView
-    private var tvPaymentMehodLabel : TextView
-    private var tvPaymentMehod : TextView
-
-
-
+    private var tvPaymentMethodLabel : TextView
+    private var tvPaymentMethod : TextView
+    private var tvTransactionType : TextView
+    private var tvTransactionTypeLabel : TextView
+    private var tvIsPlanned : TextView
+    private var tvIsPlannedLabel : TextView
+    private var tvFrequency : TextView
+    private var tvFrequencyLabel : TextView
 
     private var clExpandable : ConstraintLayout
     private var llContainer : LinearLayout
@@ -75,7 +72,6 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
             R.style.Theme_ExpenseTracker_Widget_TransactionDetailsView
         ).apply {
             try {
-                stripColor = getColor(R.styleable.TransactionDetailsView_transactionDetailStripColor, Color.BLACK)
                 editIconColor = getColor(R.styleable.TransactionDetailsView_transactionDetailEditIconColor, Color.BLACK)
                 deleteIconColor = getColor(R.styleable.TransactionDetailsView_transactionDetailDeleteIconColor, Color.BLACK)
 
@@ -84,20 +80,6 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
 
                 labelTextAppearance = getResourceId(R.styleable.TransactionDetailsView_transactionDetailLabelTextAppearance,
                     R.style.TextAppearance_AppCompat)
-
-                title = getString(R.styleable.TransactionDetailsView_transactionDetailTitle) ?: ""
-                amount = getString(R.styleable.TransactionDetailsView_transactionDetailAmount) ?: ""
-                date = getString(R.styleable.TransactionDetailsView_transactionDetailDate) ?: ""
-                category = getString(R.styleable.TransactionDetailsView_transactionDetailCategory) ?: ""
-                venue = getString(R.styleable.TransactionDetailsView_transactionDetailVenue) ?: ""
-
-                paymentMethod = PaymentMethod.fromInt(
-                    getInt(R.styleable.TransactionDetailsView_transactionDetailPaymentMethod, 0)
-                ) ?: PaymentMethod.CASH
-
-                transactionType = TransactionType.fromInt(
-                    getInt(R.styleable.TransactionDetailsView_transactionType, 0)
-                ) ?: TransactionType.INCOME_ONE_TIME
 
             } finally {
                 recycle()
@@ -111,6 +93,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         ivEditIcon = root.findViewById<ImageView>(R.id.ivTransactionDetailsEdit) as ImageView
         ivDeleteIcon = root.findViewById<ImageView>(R.id.ivTransactionDetailsDelete) as ImageView
         ivStrip = root.findViewById<ImageView>(R.id.ivTransactionDetailColoredStrip) as ImageView
+        ivTransaction = root.findViewById<ImageView>(R.id.ivTransactionDetailIcon) as ImageView
 
         tvTitle = root.findViewById<TextView>(R.id.tvTransactionDetailTitle) as TextView
         tvAmount = root.findViewById<TextView>(R.id.tvTransactionDetailAmount) as TextView
@@ -120,8 +103,14 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         tvCategoryLabel = root.findViewById<TextView>(R.id.tvTransactionDetailCategoryLabel) as TextView
         tvVenue = root.findViewById<TextView>(R.id.tvTransactionDetailVenue) as TextView
         tvVenueLabel = root.findViewById<TextView>(R.id.tvTransactionDetailVenueLabel) as TextView
-        tvPaymentMehod = root.findViewById<TextView>(R.id.tvTransactionDetailPaymentMethod) as TextView
-        tvPaymentMehodLabel = root.findViewById<TextView>(R.id.tvTransactionDetailPaymentMethodLabel) as TextView
+        tvPaymentMethod = root.findViewById<TextView>(R.id.tvTransactionDetailPaymentMethod) as TextView
+        tvPaymentMethodLabel = root.findViewById<TextView>(R.id.tvTransactionDetailPaymentMethodLabel) as TextView
+        tvTransactionType = root.findViewById<TextView>(R.id.tvTransactionDetailType) as TextView
+        tvTransactionTypeLabel = root.findViewById<TextView>(R.id.tvTransactionDetailTypeLabel) as TextView
+        tvIsPlanned = root.findViewById<TextView>(R.id.tvTransactionDetailIsPlanned) as TextView
+        tvIsPlannedLabel = root.findViewById<TextView>(R.id.tvTransactionDetailIsPlannedLabel) as TextView
+        tvFrequency = root.findViewById<TextView>(R.id.tvTransactionDetailFrequency) as TextView
+        tvFrequencyLabel = root.findViewById<TextView>(R.id.tvTransactionDetailFrequencyLabel) as TextView
 
         clExpandable = root.findViewById<ConstraintLayout>(R.id.clTransactionDetailsExpandable) as ConstraintLayout
         llContainer = root.findViewById<LinearLayout>(R.id.llTransactionDetailsContainer) as LinearLayout
@@ -136,19 +125,12 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         TextViewCompat.setTextAppearance(tvCategoryLabel, labelTextAppearance)
         TextViewCompat.setTextAppearance(tvVenue, labelTextAppearance)
         TextViewCompat.setTextAppearance(tvVenueLabel, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvPaymentMehod, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvPaymentMehodLabel, labelTextAppearance)
-
-        /** Set the texts */
-        tvTitle.text = title
-        tvAmount.text = amount
-        tvDate.text = date
-        tvCategory.text = category
-        tvVenue.text = venue
-        tvPaymentMehod.text = context.resources.getString(paymentMethod.stringId)
+        TextViewCompat.setTextAppearance(tvPaymentMethod, labelTextAppearance)
+        TextViewCompat.setTextAppearance(tvPaymentMethodLabel, labelTextAppearance)
+        TextViewCompat.setTextAppearance(tvTransactionType, labelTextAppearance)
+        TextViewCompat.setTextAppearance(tvTransactionTypeLabel, labelTextAppearance)
 
         /** Set the colors */
-        ImageViewCompat.setImageTintList(ivStrip, ColorStateList.valueOf(stripColor))
         ImageViewCompat.setImageTintList(ivEditIcon, ColorStateList.valueOf(editIconColor))
         ImageViewCompat.setImageTintList(ivDeleteIcon, ColorStateList.valueOf(deleteIconColor))
 
@@ -242,10 +224,59 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     }
 
     /**
-     * Call this method to change the strip color
+     * Call this method to set the transaction
      */
-    fun setTransactionDetailStripColor(color : Int){
-        stripColor = color
-        ImageViewCompat.setImageTintList(ivStrip, ColorStateList.valueOf(stripColor))
+    fun setTransaction(tran : Transaction){
+        /** Save the transaction */
+        this.transaction = tran
+
+        /**
+         * Set up the view according to the transaction
+         */
+
+        /** Set the strip color */
+        ImageViewCompat.setImageTintList(ivStrip, ColorStateList.valueOf(
+            ContextCompat.getColor(context, transaction.category.categoryColorResId)
+        ))
+
+        /**
+         * Set up the always used text views
+         */
+        tvTitle.text = transaction.description
+        tvAmount.text = transaction.getAmount()
+        tvDate.text = transaction.getDate()
+        tvTransactionType.text = context.resources.getString(transaction.transactionType.stringId)
+
+        /**
+         * Configure the rest according to the transaction type
+         */
+        if(transaction.transactionType == TransactionType.DEPOSIT || transaction.transactionType == TransactionType.WITHDRAW)
+        {
+            /** If withdraw/deposit we hide the unnecessary text fields */
+            tvCategory.visibility = GONE
+            tvCategoryLabel.visibility = GONE
+            tvIsPlanned.visibility = GONE
+            tvIsPlannedLabel.visibility = GONE
+            tvFrequency.visibility = GONE
+            tvFrequencyLabel.visibility = GONE
+            tvVenue.visibility = GONE
+            tvVenueLabel.visibility = GONE
+            tvPaymentMethod.visibility = GONE
+            tvPaymentMethodLabel.visibility = GONE
+
+            /** Set the icon*/
+            ivTransaction.setImageResource(
+                if(transaction.transactionType == TransactionType.DEPOSIT){
+                    R.drawable.ic_deposit
+                }else{
+                    R.drawable.ic_withdraw
+                }
+            )
+        }
+
+        tvCategory.text = transaction.category.categoryName
+        tvIsPlanned.text = context.resources.getString(transaction.planned.stringId)
+
+
     }
 }

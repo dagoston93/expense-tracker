@@ -43,30 +43,10 @@
 
     <!-- Attributes for TransactionDetailsView -->
     <declare-styleable name="TransactionDetailsView">
-        <attr name="transactionDetailStripColor" format="color"/>
         <attr name="transactionDetailEditIconColor" format="color"/>
         <attr name="transactionDetailDeleteIconColor" format="color"/>
         <attr name="transactionDetailTitleTextAppearance" format="reference"/>
         <attr name="transactionDetailLabelTextAppearance" format="reference"/>
-        <attr name="transactionDetailTitle" format="string"/>
-        <attr name="transactionDetailAmount" format="string"/>
-        <attr name="transactionDetailDate" format="string"/>
-        <attr name="transactionDetailCategory" format="string"/>
-        <attr name="transactionDetailVenue" format="string"/>
         <attr name="transactionDetailViewStyle" format="reference"/>
-        <attr name="transactionDetailPaymentMethod" format="enum">
-            <enum name="cash" value="0"/>
-            <enum name="card" value="1"/>
-        </attr>
-        <attr name="transactionType" format="enum">
-            <enum name="income_one_time"     value="0"/>
-            <enum name="income_regular"      value="1"/>
-            <enum name="expense_one_time"    value="2"/>
-            <enum name="expense_regular"     value="3"/>
-            <enum name="income_plan"         value="4"/>
-            <enum name="expense_plan"        value="5"/>
-            <enum name="withdraw"            value="6"/>
-            <enum name="deposit"             value="7"/>
-        </attr>
     </declare-styleable>
 </resources>

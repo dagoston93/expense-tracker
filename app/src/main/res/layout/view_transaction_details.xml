@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:paddingBottom="8dp"
-            android:text="Date:"
+            android:text="@string/date"
             app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailTitle" />
 
@@ -96,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Category:"
+                android:text="@string/category"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -110,12 +110,63 @@
                 app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailCategoryLabel" />
 
             <TextView
+                android:id="@+id/tvTransactionDetailTypeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transaction_type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailCategoryLabel" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Expense"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailTypeLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailTypeLabel" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailFrequencyLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/frequency"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailIsPlannedLabel" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailFrequency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Monthly (sum)"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailFrequencyLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailFrequencyLabel" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailIsPlannedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/plan_colon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailTypeLabel" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailIsPlanned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Planned"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailIsPlannedLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailIsPlannedLabel" />
+
+            <TextView
                 android:id="@+id/tvTransactionDetailVenueLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Venue:"
+                android:text="@string/recipient_venue"
                 app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailCategoryLabel"
-                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailCategoryLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailFrequencyLabel" />
 
             <TextView
                 android:id="@+id/tvTransactionDetailVenue"
@@ -130,9 +181,8 @@
                 android:id="@+id/tvTransactionDetailPaymentMethodLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Payment method:"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@string/payment_method"
+                android:paddingBottom="8dp"
                 app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailCategoryLabel"
                 app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailVenueLabel" />
 
@@ -150,20 +200,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
                 android:src="@drawable/ic_edit"
-                app:layout_constraintBottom_toBottomOf="@+id/ivTransactionDetailsDelete"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ivTransactionDetailsDelete" />
 
             <ImageView
                 android:id="@+id/ivTransactionDetailsDelete"
-                app:tint="@color/colorGoalNotAchieved"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:src="@drawable/ic_delete"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ivTransactionDetailsEdit"
+                app:tint="@color/colorGoalNotAchieved" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -15,29 +15,28 @@
 
 
         <com.diamont.expense.tracker.util.view.TransactionDetailsView
+            android:id="@+id/tran1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:transactionDetailTitle="Food shopping"
-            app:transactionDetailAmount="$17.23"
-            app:transactionDetailCategory="Food"
-            app:transactionDetailVenue="TESCO"
-            app:transactionDetailPaymentMethod="cash"
-            app:transactionType="expense_one_time"
-            app:transactionDetailDate="2021. 02. 21."
-            app:transactionDetailStripColor="#D10F5D"/>
+            android:layout_marginBottom="8dp" />
 
         <com.diamont.expense.tracker.util.view.TransactionDetailsView
+            android:id="@+id/tran2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:transactionDetailTitle="Gas"
-            app:transactionDetailAmount="$25.71"
-            app:transactionDetailCategory="Car related"
-            app:transactionDetailVenue="Shell"
-            app:transactionDetailPaymentMethod="card"
-            app:transactionType="expense_one_time"
-            app:transactionDetailDate="2021. 02. 17."
-            app:transactionDetailStripColor="#BD7C19"/>
+            android:layout_marginBottom="8dp"/>
+
+        <com.diamont.expense.tracker.util.view.TransactionDetailsView
+            android:id="@+id/tran3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
+
+        <com.diamont.expense.tracker.util.view.TransactionDetailsView
+            android:id="@+id/tran4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
 
     </LinearLayout>
 </layout>

@@ -48,4 +48,35 @@
     <string name="settings">Settings</string>
     <string name="about">About</string>
 
+    <!-- Strings for the transaction frequencies -->
+    <string name="one_time">One time</string>
+    <string name="weekly_once">Weekly (once)</string>
+    <string name="weekly_sum">Weekly (sum)</string>
+    <string name="fortnightly_once">Fortnight (once)</string>
+    <string name="fortnightly_sum">Fortnight (sum)</string>
+    <string name="monthly_once">Monthly (once)</string>
+    <string name="monthly_sum">Monthly (sum)</string>
+    <string name="yearly_once">Yearly (once)</string>
+    <string name="yearly_sum">Yearly (sum)</string>
+
+    <!-- String for the transaction types -->
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="deposit">Deposit</string>
+
+    <!-- Strings for planned/unplanned transactions -->
+    <string name="planned">Planned</string>
+    <string name="not_planned">Not planned</string>
+    
+    <!-- Strings for the TransactionDetailView -->
+    <string name="date">Date:</string>
+    <string name="category">Category:</string>
+    <string name="transaction_type">Transaction type:</string>
+    <string name="plan_colon">Plan:</string>
+    <string name="frequency">Frequency:</string>
+    <string name="recipient_venue">Recipient/venue:</string>
+    <string name="payment_method">Payment method:</string>
+    <string name="source">Source:</string>
+    <string name="period">Period:</string>
 </resources>
