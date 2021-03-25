@@ -12,7 +12,8 @@ data class Transaction(
     val secondParty : String,
     val method: PaymentMethod,
     val period : Int,
-    val planned: TransactionPlanned
+    val planned: TransactionPlanned,
+    val frequency: TransactionFrequency
 ){
 
     /**

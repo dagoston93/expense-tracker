@@ -17,7 +17,9 @@ import androidx.core.view.doOnLayout
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.util.PaymentMethod
 import com.diamont.expense.tracker.util.Transaction
+import com.diamont.expense.tracker.util.TransactionPlanned
 import com.diamont.expense.tracker.util.TransactionType
 
 class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
@@ -129,6 +131,10 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         TextViewCompat.setTextAppearance(tvPaymentMethodLabel, labelTextAppearance)
         TextViewCompat.setTextAppearance(tvTransactionType, labelTextAppearance)
         TextViewCompat.setTextAppearance(tvTransactionTypeLabel, labelTextAppearance)
+        TextViewCompat.setTextAppearance(tvIsPlanned, labelTextAppearance)
+        TextViewCompat.setTextAppearance(tvIsPlannedLabel, labelTextAppearance)
+        TextViewCompat.setTextAppearance(tvFrequency, labelTextAppearance)
+        TextViewCompat.setTextAppearance(tvFrequencyLabel, labelTextAppearance)
 
         /** Set the colors */
         ImageViewCompat.setImageTintList(ivEditIcon, ColorStateList.valueOf(editIconColor))
@@ -272,11 +278,80 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
                     R.drawable.ic_withdraw
                 }
             )
+
+            /** Set icon color */
+            ImageViewCompat.setImageTintList(ivTransaction, ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    context,
+                    if(transaction.transactionType == TransactionType.WITHDRAW){
+                        R.color.colorGoalNotAchieved
+                    }else{
+                        R.color.colorGoalAchieved
+                    }
+                )
+            ))
+        }else {
+            /** Display the category title */
+            tvCategory.visibility = VISIBLE
+            tvCategoryLabel.visibility = VISIBLE
+            tvCategory.text = transaction.category.categoryName
+
+            /** Is planned */
+            tvIsPlanned.visibility = VISIBLE
+            tvIsPlannedLabel.visibility = VISIBLE
+            tvIsPlanned.text = context.resources.getString(transaction.planned.stringId)
+
+            /** If expense/income is not planned we hide frequency */
+            if(transaction.planned == TransactionPlanned.PLANNED)
+            {
+                tvFrequency.visibility = VISIBLE
+                tvFrequencyLabel.visibility = VISIBLE
+                tvFrequency.text = context.resources.getString(transaction.frequency.stringId)
+            }else{
+                tvFrequency.visibility = GONE
+                tvFrequencyLabel.visibility = GONE
+            }
+
+            /** Show the rest of the labels */
+            tvVenue.visibility = VISIBLE
+            tvVenueLabel.visibility = VISIBLE
+            tvPaymentMethod.visibility = VISIBLE
+            tvPaymentMethodLabel.visibility = VISIBLE
+
+            tvVenue.text = transaction.secondParty
+            tvPaymentMethod.text = context.resources.getString(transaction.method.stringId)
+
+            /** Set them up depending on if it is expense or income */
+            if(transaction.transactionType == TransactionType.INCOME){
+                tvVenueLabel.text = context.resources.getString(R.string.source)
+                tvPaymentMethodLabel.text = context.resources.getString(R.string.received_by)
+            }else{
+                tvVenueLabel.text = context.resources.getString(R.string.recipient_venue)
+                tvPaymentMethodLabel.text = context.resources.getString(R.string.payment_method)
+            }
+
+            /** Set the icon */
+            ivTransaction.setImageResource(
+                if(transaction.method == PaymentMethod.CASH){
+                    R.drawable.ic_cash
+                }else{
+                    R.drawable.ic_credit_card
+                }
+            )
+
+            /** Set icon color */
+            ImageViewCompat.setImageTintList(ivTransaction, ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    context,
+                    if(transaction.transactionType == TransactionType.EXPENSE){
+                        R.color.colorGoalNotAchieved
+                    }else{
+                        R.color.colorGoalAchieved
+                    }
+                )
+            ))
+
         }
-
-        tvCategory.text = transaction.category.categoryName
-        tvIsPlanned.text = context.resources.getString(transaction.planned.stringId)
-
 
     }
 }

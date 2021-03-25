@@ -17,6 +17,6 @@
 
     <color name="circularProgressbarBackground">#8E8B8B</color>
     <color name="background">#E0E6EB</color>
-    <color name="colorGoalAchieved">#46ba20</color>
+    <color name="colorGoalAchieved">@color/primaryColor</color>
     <color name="colorGoalNotAchieved">#D13E3E</color>
 </resources>

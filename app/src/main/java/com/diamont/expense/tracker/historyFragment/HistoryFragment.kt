@@ -53,7 +53,8 @@ class HistoryFragment : Fragment() {
             "InterSparhelt",
             PaymentMethod.CASH,
             0,
-            TransactionPlanned.PLANNED
+            TransactionPlanned.PLANNED,
+            TransactionFrequency.MONTHLY_SUM
         )
 
         val tr2 = Transaction(
@@ -65,7 +66,8 @@ class HistoryFragment : Fragment() {
             "Whatever shop",
             PaymentMethod.CARD,
             0,
-            TransactionPlanned.NOT_PLANNED
+            TransactionPlanned.NOT_PLANNED,
+            TransactionFrequency.FORTNIGHTLY_ONCE
         )
 
         val tr3 = Transaction(
@@ -77,25 +79,41 @@ class HistoryFragment : Fragment() {
             "Whatever shop",
             PaymentMethod.CARD,
             0,
-            TransactionPlanned.NOT_PLANNED
+            TransactionPlanned.NOT_PLANNED,
+            TransactionFrequency.FORTNIGHTLY_ONCE
         )
 
         val tr4 = Transaction(
             0,
             TransactionType.DEPOSIT,
             "Deposit",
-            23.77f,
+            70.0f,
             TransactionCategory(0,"Unspecified", android.R.color.holo_blue_dark),
             "Whatever shop",
             PaymentMethod.CARD,
             0,
-            TransactionPlanned.NOT_PLANNED
+            TransactionPlanned.NOT_PLANNED,
+            TransactionFrequency.FORTNIGHTLY_ONCE
+        )
+
+        val tr5 = Transaction(
+            0,
+            TransactionType.INCOME,
+            "Salary",
+            1245.55f,
+            TransactionCategory(0,"Salary", android.R.color.holo_purple),
+            "My boss",
+            PaymentMethod.CARD,
+            0,
+            TransactionPlanned.PLANNED,
+            TransactionFrequency.MONTHLY_ONCE
         )
 
         binding.tran1.setTransaction(tr1)
         binding.tran2.setTransaction(tr2)
         binding.tran3.setTransaction(tr3)
         binding.tran4.setTransaction(tr4)
+        binding.tran5.setTransaction(tr5)
 
 
         /** Return the inflated layout */
