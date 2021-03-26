@@ -18,6 +18,8 @@ import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.*
+import com.diamont.expense.tracker.util.database.Transaction
+import com.diamont.expense.tracker.util.database.TransactionCategory
 
 class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
@@ -248,8 +250,8 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
          * Set up the always used text views
          */
         tvTitle.text = transaction.description
-        tvAmount.text = transaction.getAmount()
-        tvDate.text = transaction.getDate()
+        tvAmount.text = transaction.getAmountString()
+        tvDate.text = transaction.getDateString()
         tvTransactionType.text = context.resources.getString(transaction.transactionType.stringId)
 
         /**

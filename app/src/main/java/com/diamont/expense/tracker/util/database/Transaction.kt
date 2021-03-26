@@ -1,13 +1,10 @@
-package com.diamont.expense.tracker.util
+package com.diamont.expense.tracker.util.database
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.diamont.expense.tracker.util.database.PaymentMethodConverter
-import com.diamont.expense.tracker.util.database.TransactionFrequencyConverter
-import com.diamont.expense.tracker.util.database.TransactionPlannedConverter
-import com.diamont.expense.tracker.util.database.TransactionTypeConverter
+import androidx.room.*
+import com.diamont.expense.tracker.util.PaymentMethod
+import com.diamont.expense.tracker.util.TransactionFrequency
+import com.diamont.expense.tracker.util.TransactionPlanned
+import com.diamont.expense.tracker.util.TransactionType
 
 /**
  * This data class holds information about a transaction
@@ -49,17 +46,16 @@ data class Transaction(
     @ColumnInfo(name = "date")
     val date: Long
 ){
-
     /**
      * Call this method to get amount as string
      */
-    fun getAmount() : String{
+    fun getAmountString() : String{
         return "$$amount"
     }
 
     /**
      * Call this method to get the date as string
      */
-    fun getDate() : String = "2021. 02. 16."
+    fun getDateString() : String = "2021. 02. 16."
 
 }

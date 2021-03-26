@@ -7,15 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentHistoryBinding
 import com.diamont.expense.tracker.util.*
+import com.diamont.expense.tracker.util.database.Transaction
+import com.diamont.expense.tracker.util.database.TransactionAdapter
+import com.diamont.expense.tracker.util.database.TransactionCategory
+import com.diamont.expense.tracker.util.database.TransactionDatabase
 
 class HistoryFragment : Fragment() {
     /** Data binding */
     private lateinit var binding : FragmentHistoryBinding
+    private lateinit var viewModel: HistoryFragmentViewModel
 
     /** Get the Activity View Model */
     private val activityViewModel : MainActivityViewModel by activityViewModels {
@@ -34,6 +41,16 @@ class HistoryFragment : Fragment() {
         /** Inflate the layout for this fragment */
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
         binding.lifecycleOwner = this
+
+        /**
+         *  Create the view model using a view model factory
+         */
+        val application = requireNotNull(this.activity).application
+        val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
+        val viewModelFactory = HistoryFragmentViewModelFactory(application, databaseDao)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(HistoryFragmentViewModel::class.java)
 
         /** Set up values for activity view model */
         activityViewModel.setTitle(getString(R.string.history))
@@ -115,12 +132,21 @@ class HistoryFragment : Fragment() {
             0
         )
 
-        binding.tran1.setTransactionAndCategory(tr1, cat1)
-        binding.tran2.setTransactionAndCategory(tr2, cat2)
-        binding.tran3.setTransactionAndCategory(tr3, cat3)
-        binding.tran4.setTransactionAndCategory(tr4, cat4)
-        binding.tran5.setTransactionAndCategory(tr5, cat5)
+        //binding.tran1.setTransactionAndCategory(tr1, cat1)
+        //binding.tran2.setTransactionAndCategory(tr2, cat2)
+        //binding.tran3.setTransactionAndCategory(tr3, cat3)
+        //binding.tran4.setTransactionAndCategory(tr4, cat4)
+        //binding.tran5.setTransactionAndCategory(tr5, cat5)
 
+        val adapter = TransactionAdapter()
+        binding.rvTransactionList.adapter = adapter
+
+        viewModel.transactionData.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
+                adapter.transactions = it
+            }
+        })
 
         /** Return the inflated layout */
         return binding.root
