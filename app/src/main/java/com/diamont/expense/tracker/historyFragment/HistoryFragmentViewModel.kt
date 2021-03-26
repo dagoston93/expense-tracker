@@ -50,10 +50,10 @@ class HistoryFragmentViewModel(
         0,
         TransactionType.EXPENSE,
         "Food shopping",
-        15.47f,
+        21.35f,
         2,
-        "InterSparhelt",
-        PaymentMethod.CASH,
+        "TACSKO",
+        PaymentMethod.CARD,
         TransactionPlanned.PLANNED,
         TransactionFrequency.MONTHLY_SUM,
         0
@@ -62,10 +62,10 @@ class HistoryFragmentViewModel(
     val tr2 = Transaction(
         0,
         TransactionType.EXPENSE,
-        "Clothes shopping",
-        23.77f,
+        "Some jeans",
+        59.99f,
         3,
-        "Whatever shop",
+        "ClothTHingSHop",
         PaymentMethod.CARD,
         TransactionPlanned.NOT_PLANNED,
         TransactionFrequency.FORTNIGHTLY_ONCE,
@@ -74,22 +74,22 @@ class HistoryFragmentViewModel(
 
     val tr3 = Transaction(
         0,
-        TransactionType.WITHDRAW,
-        "Withdrawal",
-        50.0f,
+        TransactionType.INCOME,
+        "Sold some stuff",
+        35.0f,
         1,
-        "Whatever shop",
-        PaymentMethod.CARD,
+        "Whoever bought it",
+        PaymentMethod.CASH,
         TransactionPlanned.NOT_PLANNED,
-        TransactionFrequency.FORTNIGHTLY_ONCE,
+        TransactionFrequency.ONE_TIME,
         0
     )
 
     val tr4 = Transaction(
         0,
-        TransactionType.DEPOSIT,
-        "Deposit",
-        70.0f,
+        TransactionType.WITHDRAW,
+        "Withdrawal",
+        10.0f,
         1,
         "Whatever shop",
         PaymentMethod.CARD,
@@ -100,13 +100,13 @@ class HistoryFragmentViewModel(
 
     val tr5 = Transaction(
         0,
-        TransactionType.INCOME,
-        "Salary",
-        1245.55f,
-        4,
-        "My boss",
+        TransactionType.EXPENSE,
+        "Random shopping",
+        24.15f,
+        1,
+        "At a shop",
         PaymentMethod.CARD,
-        TransactionPlanned.PLANNED,
+        TransactionPlanned.NOT_PLANNED,
         TransactionFrequency.MONTHLY_ONCE,
         0
     )
@@ -128,10 +128,6 @@ class HistoryFragmentViewModel(
             //insertCategorySuspend()
             _categories.value = getCategoriesSuspend()
             _transactionData.value = getTransactionDataSuspend()
-            Log.d("GUSTI", "c: ${_categories.value!!.size}")
-            for(i in _categories.value!!.indices){
-                Log.d("GUSTI", "cat: ${_categories.value!![i].categoryId} name : ${_categories.value!![i].categoryName}")
-            }
         }
     }
 

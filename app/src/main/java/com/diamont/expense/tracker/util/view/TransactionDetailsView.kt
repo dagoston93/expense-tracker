@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
@@ -26,9 +27,6 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     /**
      * Declare the required variables
      */
-    private var isExpanded = false
-    private var expandedHeight : Int = 0
-
     private var editIconColor : Int = 0
     private var deleteIconColor : Int = 0
     private var titleTextAppearance : Int = 0
@@ -62,7 +60,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     private var tvFrequency : TextView
     private var tvFrequencyLabel : TextView
 
-    private var clExpandable : ConstraintLayout
+    var clExpandable : ConstraintLayout
     private var llContainer : LinearLayout
 
     init{
@@ -87,6 +85,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
                 recycle()
             }
         }
+
         /** Inflate the layout */
         val root : View = inflate(context, R.layout.view_transaction_details, this)
 
@@ -140,75 +139,6 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         ImageViewCompat.setImageTintList(ivEditIcon, ColorStateList.valueOf(editIconColor))
         ImageViewCompat.setImageTintList(ivDeleteIcon, ColorStateList.valueOf(deleteIconColor))
 
-        /** Set onClickListener for the expand/collapse button */
-        ivShowMoreIcon.setOnClickListener {
-            if(isExpanded) {
-                collapse()
-            }else{
-                expand()
-            }
-            isExpanded = !isExpanded
-        }
-
-        /** Measure the expanded height of the content */
-        this.doOnLayout {
-            /** Save the expanded height of the content then set it to 0 */
-            expandedHeight = clExpandable.height
-
-            val params = clExpandable.layoutParams
-            params.height = 0
-            clExpandable.layoutParams = params
-
-            clExpandable.visibility = INVISIBLE
-        }
-    }
-
-    /**
-     * Call this method to perform the expand animation
-     */
-    private fun expand(){
-        /** Make content view visible */
-        clExpandable.visibility = VISIBLE
-
-        /** Set up the animator */
-        val animator = ValueAnimator.ofInt(0, expandedHeight)
-        animator.interpolator = AccelerateDecelerateInterpolator()
-        animator.duration = 500
-
-        /** Update the layout params as value is updated */
-        animator.addUpdateListener {
-            val params = clExpandable.layoutParams as MarginLayoutParams
-            params.height = animator.animatedValue as Int
-            clExpandable.layoutParams = params
-        }
-
-        /** Play the animation */
-        animator.start()
-    }
-
-    /**
-     * Call this method to perform the collapsing animation
-     */
-    private fun collapse(){
-        /** Set up the animator */
-        val animator = ValueAnimator.ofInt(expandedHeight, 0)
-        animator.interpolator = AccelerateDecelerateInterpolator()
-        animator.duration = 500
-
-        /** Update the layout params as value is updated */
-        animator.addUpdateListener {
-            val params = clExpandable.layoutParams as MarginLayoutParams
-            params.height = animator.animatedValue as Int
-            clExpandable.layoutParams = params
-        }
-
-        /** Play the animation */
-        animator.start()
-
-        /** Hide content when animation is done */
-        animator.doOnEnd {
-            clExpandable.visibility = INVISIBLE
-        }
     }
 
     /**
@@ -233,6 +163,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
      * Call this method to set the transaction
      */
     fun setTransactionAndCategory(tran : Transaction, cat: TransactionCategory){
+        Log.d("GUS", "data in")
         /** Save the transaction */
         this.transaction = tran
         this.category = cat
@@ -351,8 +282,6 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
                     }
                 )
             ))
-
         }
-
     }
 }

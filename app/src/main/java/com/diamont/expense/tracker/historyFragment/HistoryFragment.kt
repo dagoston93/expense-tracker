@@ -132,15 +132,14 @@ class HistoryFragment : Fragment() {
             0
         )
 
-        //binding.tran1.setTransactionAndCategory(tr1, cat1)
-        //binding.tran2.setTransactionAndCategory(tr2, cat2)
-        //binding.tran3.setTransactionAndCategory(tr3, cat3)
-        //binding.tran4.setTransactionAndCategory(tr4, cat4)
-        //binding.tran5.setTransactionAndCategory(tr5, cat5)
-
-        val adapter = TransactionAdapter()
+        /** Set up the recycler view with the adapter */
+        val adapter = TransactionAdapter(binding.rvTransactionList)
         binding.rvTransactionList.adapter = adapter
 
+        /** Turn the blinking animation on item change off*/
+        binding.rvTransactionList.itemAnimator = null
+
+        /** Observe the data and refresh recycler view if it changes */
         viewModel.transactionData.observe(viewLifecycleOwner, Observer {
             it?.let{
                 adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
