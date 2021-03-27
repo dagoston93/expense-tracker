@@ -1,19 +1,23 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentAddOrEditTransactionBinding
 import com.diamont.expense.tracker.util.arrayAdapters.StringArrayAdapter
+import com.diamont.expense.tracker.util.arrayAdapters.TransactionCategoryAdapter
+import com.diamont.expense.tracker.util.database.TransactionCategory
+import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionPlanned
 import com.diamont.expense.tracker.util.enums.TransactionType
@@ -22,8 +26,9 @@ import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 
 class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
-    /** Data binding */
+    /** Data binding and view model */
     private lateinit var binding : FragmentAddOrEditTransactionBinding
+    private lateinit var viewModel : AddOrEditTransactionFragmentViewModel
 
     /** Get the Activity View Model */
     private val activityViewModel : MainActivityViewModel by activityViewModels {
@@ -36,11 +41,21 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
     private lateinit var transactionTypeAdapter : StringArrayAdapter
     private lateinit var transactionPlannedAdapter : StringArrayAdapter
     private lateinit var paymentMethodAdapter : StringArrayAdapter
+    private lateinit var transactionCategoryAdapter: TransactionCategoryAdapter
+    private lateinit var venueAdapter: ArrayAdapter<String>
 
     private lateinit var transactionTypeStringList : List<String>
     private lateinit var transactionPlannedStringList : List<String>
     private lateinit var paymentMethodStringList : List<String>
 
+    /**
+     * The date picker
+     */
+    private val datePicker =
+        MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select date")
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .build()
 
     /**
      * onCreateView()
@@ -53,13 +68,27 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_or_edit_transaction, container, false)
         binding.lifecycleOwner = this
 
-        /** Set up values for activity view model */
-        activityViewModel.setTitle("Add")
+        /**
+         *  Create the view model using a view model factory
+         */
+        val application = requireNotNull(this.activity).application
+        val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
+        val viewModelFactory = AddOrEditTransactionFragmentViewModelFactory(application, databaseDao)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(AddOrEditTransactionFragmentViewModel::class.java)
+        binding.viewModel = viewModel
+
+        /**
+         * Set up values for activity view model
+         */
         activityViewModel.setBottomNavBarVisibility(false)
         activityViewModel.setUpButtonVisibility(true)
         activityViewModel.setDrawerLayoutEnabled(false)
 
-        /** Set up the Exposed Dropdown Menus */
+        /**
+         * Set up the Exposed Dropdown Menus
+         */
         transactionTypeStringList = TransactionType.getValuesAsStringList(requireContext())
         transactionPlannedStringList = TransactionPlanned.getValuesAsStringList(requireContext())
         paymentMethodStringList = PaymentMethod.getValuesAsStringList(requireContext())
@@ -67,24 +96,64 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         transactionTypeAdapter = StringArrayAdapter(requireContext(), transactionTypeStringList)
         transactionPlannedAdapter = StringArrayAdapter(requireContext(), transactionPlannedStringList)
         paymentMethodAdapter = StringArrayAdapter(requireContext(), paymentMethodStringList)
+        transactionCategoryAdapter = TransactionCategoryAdapter(requireContext(), listOf<TransactionCategory>())
+        venueAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, listOf<String>())
 
         binding.actvAddTransactionType.setText(transactionTypeAdapter.getItem(0), false)
         binding.actvAddIsPlanned.setText(transactionPlannedAdapter.getItem(0), false)
         binding.actvAddPaymentMethod.setText(paymentMethodAdapter.getItem(0), false)
 
+        /**
+         * textChanged listener for Transaction Type dropdown menu
+         */
+        binding.actvAddTransactionType.addTextChangedListener{
+            val idx = binding.actvAddTransactionType.getStringListIndexFromText(transactionTypeStringList)
+            viewModel.onTransactionTypeChanged(idx)
+        }
 
         /**
-         * OnCLickListener for date
+         * OnClickListener for the date picker OK button
+         */
+        datePicker.addOnPositiveButtonClickListener {
+            viewModel.onSelectedDateChanged(it)
+        }
+
+        /**
+         * OnCLickListener for date text view
          */
         binding.etAddDate.setOnClickListener {
-            val datePicker =
-                MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Select date")
-                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                    .build()
-
-            datePicker.show(activity?.supportFragmentManager!!, "")
+            datePicker.show(childFragmentManager, "")
         }
+
+        /**
+         * Observe Live data
+         *
+         * App title
+         */
+        viewModel.titleString.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            activityViewModel.setTitle(it)
+        })
+
+        /**
+         * If the list of categories received from database we update the adapter for the dropdown menu
+         */
+        viewModel.categories.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if(it.isNotEmpty()){
+                transactionCategoryAdapter = TransactionCategoryAdapter(requireContext(), it)
+                binding.actvAddCategory.setAdapter(transactionCategoryAdapter)
+                binding.actvAddCategory.setText(transactionCategoryAdapter.getItem(0).toString(), false)
+            }
+        })
+
+        /**
+         * When the venues are retrieved we set the adapter for the autocomplete textview
+         */
+        viewModel.venues.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if(it.isNotEmpty()){
+                venueAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, it)
+                binding.actvAddRecipientOrVenue.setAdapter(venueAdapter)
+            }
+        })
 
         /**
          * Set add button on click listener
@@ -118,6 +187,9 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         binding.actvAddTransactionType.setAdapter(transactionTypeAdapter)
         binding.actvAddIsPlanned.setAdapter(transactionPlannedAdapter)
         binding.actvAddPaymentMethod.setAdapter(paymentMethodAdapter)
+        binding.actvAddCategory.setAdapter(transactionCategoryAdapter)
+        binding.actvAddRecipientOrVenue.setAdapter(venueAdapter)
+
         super.onResume()
     }
 

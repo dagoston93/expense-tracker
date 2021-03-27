@@ -84,6 +84,10 @@
     <!-- Strings for AddOEditFragment -->
     <string name="description">Description:</string>
     <string name="amount">Amount:</string>
+    <string name="add_expense">Add expense</string>
+    <string name="add_income">Add income</string>
+    <string name="add_withdrawal">Add withdrawal</string>
+    <string name="add_deposit">Add deposit</string>
 
 
 </resources>

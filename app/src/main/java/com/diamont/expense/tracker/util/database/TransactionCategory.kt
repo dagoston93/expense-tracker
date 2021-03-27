@@ -19,4 +19,8 @@ data class TransactionCategory(
 
     @ColumnInfo(name = "color_res_id")
     val categoryColorResId : Int = R.color.black
-)
+){
+    override fun toString(): String {
+        return "$categoryName"
+    }
+}

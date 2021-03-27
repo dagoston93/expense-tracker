@@ -35,7 +35,6 @@ class HistoryFragmentViewModel(
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-
     /******
      * SOME TEST DATA TO INSERT
      */

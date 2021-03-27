@@ -8,8 +8,8 @@ import com.diamont.expense.tracker.R
  */
 enum class TransactionType(val id : Int, val stringId :Int) {
     /** Do NOT change the id's to keep database valid */
-    INCOME(0, R.string.income),
     EXPENSE(1, R.string.expense),
+    INCOME(0, R.string.income),
     WITHDRAW(2, R.string.withdraw),
     DEPOSIT(3, R.string.deposit);
 
@@ -29,6 +29,11 @@ enum class TransactionType(val id : Int, val stringId :Int) {
          * Need it for exposed dropdown menu and database usage
          */
         fun getIdFromIndex(index : Int) = values()[index].id
+
+        /**
+         * Return the enum value from the index
+         */
+        fun getEnumValueFromIndex(index: Int) = values()[index]
 
         /**
          * Return the possible values as a string array

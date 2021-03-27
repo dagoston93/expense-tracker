@@ -161,7 +161,6 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
      * Call this method to set the transaction
      */
     fun setTransactionAndCategory(tran : Transaction, cat: TransactionCategory){
-        Log.d("GUS", "data in")
         /** Save the transaction */
         this.transaction = tran
         this.category = cat

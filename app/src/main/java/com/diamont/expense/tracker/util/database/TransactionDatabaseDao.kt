@@ -59,4 +59,10 @@ interface TransactionDatabaseDao {
     @Query("DELETE FROM transaction_category")
     fun clearCategoryDatabase()
 
+    /**
+     * Get all venues
+     */
+    @Query("SELECT venue_name FROM venue_data ORDER BY venue_name")
+    fun getAllVenues() : List<String>
+
 }
