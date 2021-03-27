@@ -1,15 +1,14 @@
 package com.diamont.expense.tracker.historyFragment
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.util.PaymentMethod
-import com.diamont.expense.tracker.util.TransactionFrequency
-import com.diamont.expense.tracker.util.TransactionPlanned
-import com.diamont.expense.tracker.util.TransactionType
+import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionFrequency
+import com.diamont.expense.tracker.util.enums.TransactionPlanned
+import com.diamont.expense.tracker.util.enums.TransactionType
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao

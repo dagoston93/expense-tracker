@@ -1,7 +1,6 @@
 package com.diamont.expense.tracker.initialSetup
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,7 @@ import androidx.navigation.findNavController
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentChooseCurrencyBinding
 import com.diamont.expense.tracker.util.Currency
-import com.diamont.expense.tracker.util.CurrencyArrayAdapter
+import com.diamont.expense.tracker.util.arrayAdapters.CurrencyArrayAdapter
 
 
 class ChooseCurrencyFragment : Fragment() {
@@ -55,6 +54,8 @@ class ChooseCurrencyFragment : Fragment() {
                 ChooseCurrencyFragmentDirections.actionChooseCurrencyFragmentToStartBalanceFragment()
             )
         }
+
+
 
         /** Return the inflated view */
         return binding.root

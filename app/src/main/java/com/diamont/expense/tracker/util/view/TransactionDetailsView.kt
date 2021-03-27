@@ -1,26 +1,24 @@
 package com.diamont.expense.tracker.util.view
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnLayout
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat
 import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
+import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionPlanned
+import com.diamont.expense.tracker.util.enums.TransactionType
 
 class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 

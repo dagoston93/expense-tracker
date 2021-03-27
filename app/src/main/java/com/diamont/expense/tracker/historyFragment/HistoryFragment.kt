@@ -13,11 +13,14 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentHistoryBinding
-import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
+import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionFrequency
+import com.diamont.expense.tracker.util.enums.TransactionPlanned
+import com.diamont.expense.tracker.util.enums.TransactionType
 
 class HistoryFragment : Fragment() {
     /** Data binding */

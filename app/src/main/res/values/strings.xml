@@ -80,4 +80,10 @@
     <string name="received_by">Received by:</string>
     <string name="source">Source:</string>
     <string name="period">Period:</string>
+
+    <!-- Strings for AddOEditFragment -->
+    <string name="description">Description:</string>
+    <string name="amount">Amount:</string>
+
+
 </resources>

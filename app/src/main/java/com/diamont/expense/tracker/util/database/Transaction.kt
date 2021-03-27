@@ -1,10 +1,10 @@
 package com.diamont.expense.tracker.util.database
 
 import androidx.room.*
-import com.diamont.expense.tracker.util.PaymentMethod
-import com.diamont.expense.tracker.util.TransactionFrequency
-import com.diamont.expense.tracker.util.TransactionPlanned
-import com.diamont.expense.tracker.util.TransactionType
+import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionFrequency
+import com.diamont.expense.tracker.util.enums.TransactionPlanned
+import com.diamont.expense.tracker.util.enums.TransactionType
 
 /**
  * This data class holds information about a transaction

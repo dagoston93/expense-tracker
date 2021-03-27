@@ -11,7 +11,7 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentSettingsBinding
-import com.diamont.expense.tracker.util.BackPressCallbackFragment
+import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 
 
 class SettingsFragment : Fragment(), BackPressCallbackFragment {

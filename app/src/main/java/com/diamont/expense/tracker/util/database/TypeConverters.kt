@@ -1,7 +1,10 @@
 package com.diamont.expense.tracker.util.database
 
 import androidx.room.TypeConverter
-import com.diamont.expense.tracker.util.*
+import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionFrequency
+import com.diamont.expense.tracker.util.enums.TransactionPlanned
+import com.diamont.expense.tracker.util.enums.TransactionType
 
 /**
  * In this file we have type converters
@@ -13,7 +16,7 @@ class TransactionFrequencyConverter{
     fun toTransactionFrequency(value : Int) = TransactionFrequency.fromInt(value)
 
     @TypeConverter
-    fun fromTransactionFrequency(value : TransactionFrequency) = value.value
+    fun fromTransactionFrequency(value : TransactionFrequency) = value.id
 }
 
 class TransactionTypeConverter{
@@ -21,7 +24,7 @@ class TransactionTypeConverter{
     fun toTransactionType(value : Int) = TransactionType.fromInt(value)
 
     @TypeConverter
-    fun fromTransactionType(value : TransactionType) = value.value
+    fun fromTransactionType(value : TransactionType) = value.id
 }
 
 class TransactionPlannedConverter{
@@ -29,7 +32,7 @@ class TransactionPlannedConverter{
     fun toTransactionPlanned(value : Int) = TransactionPlanned.fromInt(value)
 
     @TypeConverter
-    fun fromTransactionPlanned(value : TransactionPlanned) = value.value
+    fun fromTransactionPlanned(value : TransactionPlanned) = value.id
 }
 
 class PaymentMethodConverter{
@@ -37,5 +40,5 @@ class PaymentMethodConverter{
     fun toPaymentMethod(value : Int) = PaymentMethod.fromInt(value)
 
     @TypeConverter
-    fun fromPaymentMethod(value : PaymentMethod) = value.value
+    fun fromPaymentMethod(value : PaymentMethod) = value.id
 }

@@ -1,4 +1,4 @@
-package com.diamont.expense.tracker.util
+package com.diamont.expense.tracker.util.arrayAdapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.diamont.expense.tracker.R
-
+import com.diamont.expense.tracker.util.Currency
 
 /**
  * This ArrayAdapter creates the layouts
@@ -34,7 +34,7 @@ class CurrencyArrayAdapter(context: Context,
     private fun createView(position: Int, convertView: View?, parent: ViewGroup) : TextView{
         val context = parent.context
         val view = (convertView ?: LayoutInflater.from(context)
-            .inflate(R.layout.layout_currency_dropdown_item, parent, false)) as TextView
+            .inflate(R.layout.item_simple_dropdown, parent, false)) as TextView
         view.text = currencyList[position].toString()
         return view
     }
