@@ -11,7 +11,9 @@ enum class TransactionType(val id : Int, val stringId :Int) {
     EXPENSE(1, R.string.expense),
     INCOME(0, R.string.income),
     WITHDRAW(2, R.string.withdraw),
-    DEPOSIT(3, R.string.deposit);
+    DEPOSIT(3, R.string.deposit),
+    PLAN_EXPENSE(4, R.string.plan_expense),
+    PLAN_INCOME(5, R.string.plan_income);
 
     /**
      * Companion object

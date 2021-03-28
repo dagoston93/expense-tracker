@@ -227,7 +227,7 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
             navigateWithAnimation(
                 navController.previousBackStackEntry?.destination?.id!!,
                 R.anim.anim_fade_in,
-                R.anim.anim_add_clsoe
+                R.anim.anim_add_close
             )
         }
     }

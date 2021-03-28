@@ -11,8 +11,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * Our room database
  */
 @Database(
-    entities = [Transaction::class, TransactionCategory::class, VenueData::class],
-    version = 4,
+    entities = [Transaction::class, TransactionCategory::class, VenueData::class, Plan::class],
+    version = 7,
     exportSchema = false
 )
 abstract class TransactionDatabase : RoomDatabase(){
@@ -33,7 +33,7 @@ abstract class TransactionDatabase : RoomDatabase(){
                         "transaction_database"
                     )
                         //.fallbackToDestructiveMigration()
-                        .addMigrations(MIGRATION_3_4)
+                        .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                         .build()
 
                     INSTANCE = instance
@@ -50,6 +50,24 @@ abstract class TransactionDatabase : RoomDatabase(){
                 database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('Spar')")
                 database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('Aldi')")
                 database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('Lidli')")
+            }
+        }
+
+        private val MIGRATION_4_5 = object : Migration(4,5){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE IF NOT EXISTS `plan_data` (`plan_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT NOT NULL, `description` TEXT NOT NULL, `amount` REAL NOT NULL, `category` INTEGER NOT NULL, `second_party` TEXT NOT NULL, `frequency` TEXT NOT NULL, `date` INTEGER NOT NULL)");
+            }
+        }
+
+        private val MIGRATION_5_6 = object : Migration(5,6){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE `transaction_data` ADD `plan_id` INTEGER NOT NULL DEFAULT -1")
+            }
+        }
+
+        private val MIGRATION_6_7 = object : Migration(6,7){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE `plan_data` ADD `is_active` INTEGER NOT NULL DEFAULT 1")
             }
         }
     }

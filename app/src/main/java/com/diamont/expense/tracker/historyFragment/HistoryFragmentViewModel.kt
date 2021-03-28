@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionPlanned
@@ -34,80 +35,6 @@ class HistoryFragmentViewModel(
      */
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
-    /******
-     * SOME TEST DATA TO INSERT
-     */
-    val cat1 = TransactionCategory(0,"Food", R.color.secondaryColor)
-    val cat2 = TransactionCategory(0,"Clothes", R.color.circularProgressbarBackground)
-    val cat3 = TransactionCategory(0,"Unspecified", android.R.color.holo_blue_dark)
-    val cat4 = TransactionCategory(0,"Unspecified", android.R.color.holo_blue_dark)
-    val cat5 = TransactionCategory(0,"Salary", android.R.color.holo_purple)
-
-    val tr1 = Transaction(
-        0,
-        TransactionType.EXPENSE,
-        "Food shopping",
-        21.35f,
-        2,
-        "TACSKO",
-        PaymentMethod.CARD,
-        TransactionPlanned.PLANNED,
-        TransactionFrequency.MONTHLY_SUM,
-        0
-    )
-
-    val tr2 = Transaction(
-        0,
-        TransactionType.EXPENSE,
-        "Some jeans",
-        59.99f,
-        3,
-        "ClothTHingSHop",
-        PaymentMethod.CARD,
-        TransactionPlanned.NOT_PLANNED,
-        TransactionFrequency.FORTNIGHTLY_ONCE,
-        0
-    )
-
-    val tr3 = Transaction(
-        0,
-        TransactionType.INCOME,
-        "Sold some stuff",
-        35.0f,
-        1,
-        "Whoever bought it",
-        PaymentMethod.CASH,
-        TransactionPlanned.NOT_PLANNED,
-        TransactionFrequency.ONE_TIME,
-        0
-    )
-
-    val tr4 = Transaction(
-        0,
-        TransactionType.WITHDRAW,
-        "Withdrawal",
-        10.0f,
-        1,
-        "Whatever shop",
-        PaymentMethod.CARD,
-        TransactionPlanned.NOT_PLANNED,
-        TransactionFrequency.FORTNIGHTLY_ONCE,
-        0
-    )
-
-    val tr5 = Transaction(
-        0,
-        TransactionType.EXPENSE,
-        "Random shopping",
-        24.15f,
-        1,
-        "At a shop",
-        PaymentMethod.CARD,
-        TransactionPlanned.NOT_PLANNED,
-        TransactionFrequency.MONTHLY_ONCE,
-        0
-    )
 
     /**
      * Constructor
@@ -153,11 +80,23 @@ class HistoryFragmentViewModel(
      */
     private suspend fun insertTransactionSuspend(){
         return withContext(Dispatchers.IO){
-            databaseDao.insertTransaction(tr1)
-            databaseDao.insertTransaction(tr2)
-            databaseDao.insertTransaction(tr3)
-            databaseDao.insertTransaction(tr4)
-            databaseDao.insertTransaction(tr5)
+            val plan1 = Plan(0, TransactionType.EXPENSE, "Sth to spend money on", 55.55f,
+                2, "Any shop", TransactionFrequency.ONE_TIME, 1617207973000)
+
+            val plan2 = Plan(0, TransactionType.EXPENSE, "Monthly food", 99.88f,
+                2, "Food shops", TransactionFrequency.MONTHLY_SUM, 1612113973000)
+
+            val plan3 = Plan(0, TransactionType.INCOME, "Sell a car", 4555.00f,
+                2, "Whoever buys it", TransactionFrequency.ONE_TIME, 1618935973000)
+
+            val plan4 = Plan(0, TransactionType.INCOME, "Saaaaaalary", 1250.00f,
+                2, "The boossss", TransactionFrequency.MONTHLY_ONCE, 1597249573000)
+
+            databaseDao.inserPlan(plan1)
+            databaseDao.inserPlan(plan2)
+            databaseDao.inserPlan(plan3)
+            databaseDao.inserPlan(plan4)
+
         }
     }
 
@@ -166,6 +105,11 @@ class HistoryFragmentViewModel(
      */
     private suspend fun insertCategorySuspend(){
         return withContext(Dispatchers.IO){
+            val cat3 = TransactionCategory(0,"Unspecified", android.R.color.holo_blue_dark)
+            val cat1 = TransactionCategory(0,"Food", R.color.secondaryColor)
+            val cat2 = TransactionCategory(0,"Clothes", R.color.circularProgressbarBackground)
+            val cat5 = TransactionCategory(0,"Salary", android.R.color.holo_purple)
+
             databaseDao.insertCategory(cat3)
             databaseDao.insertCategory(cat1)
             databaseDao.insertCategory(cat2)

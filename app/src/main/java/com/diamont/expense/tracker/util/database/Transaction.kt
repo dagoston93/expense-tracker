@@ -44,7 +44,10 @@ data class Transaction(
     val frequency: TransactionFrequency,
 
     @ColumnInfo(name = "date")
-    val date: Long
+    val date: Long,
+
+    @ColumnInfo(name = "plan_id")
+    val planId : Int
 ){
     /**
      * Call this method to get amount as string

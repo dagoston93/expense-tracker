@@ -64,6 +64,8 @@
     <string name="expense">Expense</string>
     <string name="withdraw">Withdraw</string>
     <string name="deposit">Deposit</string>
+    <string name="plan_expense">Plan - Expense</string>
+    <string name="plan_income">Plan - Income</string>
 
     <!-- Strings for planned/unplanned transactions -->
     <string name="planned">Planned</string>
@@ -88,6 +90,8 @@
     <string name="add_income">Add income</string>
     <string name="add_withdrawal">Add withdrawal</string>
     <string name="add_deposit">Add deposit</string>
+    <string name="add_plan_income">Add planned income</string>
+    <string name="add_plan_expense">Add planned expense</string>
 
 
 </resources>

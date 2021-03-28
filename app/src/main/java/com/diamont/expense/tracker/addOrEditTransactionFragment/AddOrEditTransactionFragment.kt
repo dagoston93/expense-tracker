@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
@@ -19,6 +20,7 @@ import com.diamont.expense.tracker.util.arrayAdapters.TransactionCategoryAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionPlanned
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.diamont.expense.tracker.util.getStringListIndexFromText
@@ -41,12 +43,15 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
     private lateinit var transactionTypeAdapter : StringArrayAdapter
     private lateinit var transactionPlannedAdapter : StringArrayAdapter
     private lateinit var paymentMethodAdapter : StringArrayAdapter
+    private lateinit var frequencyAdapter : StringArrayAdapter
     private lateinit var transactionCategoryAdapter: TransactionCategoryAdapter
     private lateinit var venueAdapter: ArrayAdapter<String>
+    private lateinit var planAdapter: ArrayAdapter<String>
 
     private lateinit var transactionTypeStringList : List<String>
     private lateinit var transactionPlannedStringList : List<String>
     private lateinit var paymentMethodStringList : List<String>
+    private lateinit var frequencyStringList : List<String>
 
     /**
      * The date picker
@@ -88,20 +93,27 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
 
         /**
          * Set up the Exposed Dropdown Menus
+         *
+         * TODO maybe simple ArrayAdapter enough and StringArrayAdapter class can be deleted!!!
          */
         transactionTypeStringList = TransactionType.getValuesAsStringList(requireContext())
         transactionPlannedStringList = TransactionPlanned.getValuesAsStringList(requireContext())
         paymentMethodStringList = PaymentMethod.getValuesAsStringList(requireContext())
+        frequencyStringList = TransactionFrequency.getValuesAsStringList(requireContext())
 
         transactionTypeAdapter = StringArrayAdapter(requireContext(), transactionTypeStringList)
         transactionPlannedAdapter = StringArrayAdapter(requireContext(), transactionPlannedStringList)
         paymentMethodAdapter = StringArrayAdapter(requireContext(), paymentMethodStringList)
+        frequencyAdapter = StringArrayAdapter(requireContext(), frequencyStringList)
+        transactionCategoryAdapter = TransactionCategoryAdapter(requireContext(), listOf<TransactionCategory>())
         transactionCategoryAdapter = TransactionCategoryAdapter(requireContext(), listOf<TransactionCategory>())
         venueAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, listOf<String>())
+        planAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, listOf<String>())
 
         binding.actvAddTransactionType.setText(transactionTypeAdapter.getItem(0), false)
-        binding.actvAddIsPlanned.setText(transactionPlannedAdapter.getItem(0), false)
+        //binding.actvAddIsPlanned.setText(transactionPlannedAdapter.getItem(0), false)
         binding.actvAddPaymentMethod.setText(paymentMethodAdapter.getItem(0), false)
+        binding.actvAddFrequency.setText(frequencyAdapter.getItem(0), false)
 
         /**
          * textChanged listener for Transaction Type dropdown menu
@@ -146,6 +158,17 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         })
 
         /**
+         * Update the list of plans (expense/income) if needed
+         */
+        viewModel.currentPlanList.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                planAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, it)
+                binding.actvAddIsPlanned.setAdapter(planAdapter)
+                binding.actvAddIsPlanned.setText(planAdapter.getItem(0).toString(), false)
+            }
+        })
+
+        /**
          * When the venues are retrieved we set the adapter for the autocomplete textview
          */
         viewModel.venues.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -185,8 +208,9 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
      */
     override fun onResume() {
         binding.actvAddTransactionType.setAdapter(transactionTypeAdapter)
-        binding.actvAddIsPlanned.setAdapter(transactionPlannedAdapter)
+        binding.actvAddIsPlanned.setAdapter(planAdapter)
         binding.actvAddPaymentMethod.setAdapter(paymentMethodAdapter)
+        binding.actvAddFrequency.setAdapter(frequencyAdapter)
         binding.actvAddCategory.setAdapter(transactionCategoryAdapter)
         binding.actvAddRecipientOrVenue.setAdapter(venueAdapter)
 

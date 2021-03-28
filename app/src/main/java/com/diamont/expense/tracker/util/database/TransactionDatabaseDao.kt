@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.diamont.expense.tracker.util.enums.TransactionType
 
 /**
  * The database access object for the database
@@ -64,5 +65,17 @@ interface TransactionDatabaseDao {
      */
     @Query("SELECT venue_name FROM venue_data ORDER BY venue_name")
     fun getAllVenues() : List<String>
+
+    /**
+     * Insert plan
+     */
+    @Insert(entity = Plan::class)
+    fun inserPlan(plan: Plan)
+
+    /**
+     * Get all plans
+     */
+    @Query("SELECT * FROM plan_data ORDER BY plan_id DESC")
+    fun getAllPlans() : List<Plan>
 
 }
