@@ -13,7 +13,10 @@ import com.diamont.expense.tracker.util.view.TransactionDetailsView
  * to display Transaction data in our
  * TransactionDetailView
  */
-class TransactionRecyclerViewAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
+class TransactionRecyclerViewAdapter
+    (private val recyclerView: RecyclerView,
+     private val editIconCallback: (id: Int) -> Unit
+) : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
     var transactions  = listOf<Transaction>()
     set(value){
         field = value
@@ -56,6 +59,10 @@ class TransactionRecyclerViewAdapter(private val recyclerView: RecyclerView) : R
             item,
             categories.find { it.categoryId == item.categoryId } ?: TransactionCategory()
         )
+
+        holder.view.setEditIconOnClickListener {
+            editIconCallback(item.transactionId)
+        }
 
         /** Set the visibility of the content */
         val isExpanded = position == expandedPosition

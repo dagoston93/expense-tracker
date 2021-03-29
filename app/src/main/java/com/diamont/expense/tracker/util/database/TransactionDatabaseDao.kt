@@ -45,6 +45,12 @@ interface TransactionDatabaseDao {
     fun getTransactionsByType(type : TransactionType) : List<Transaction>
 
     /**
+     * Get Transaction by id
+     */
+    @Query("SELECT * FROM transaction_data WHERE transaction_id = :id LIMIT 1")
+    fun getTransactionById(id : Int) : Transaction
+
+    /**
      * Clear transaction_data table
      */
     @Query("DELETE FROM transaction_data")
@@ -104,6 +110,26 @@ interface TransactionDatabaseDao {
         }
     }
 
+    /**
+     * Suspend function to get all transaction excluded plans
+     */
+    suspend fun getAllTransactionsExcludePlansSuspend() : List<Transaction>{
+        return withContext(Dispatchers.IO){
+            val data : List<Transaction> = getAllTransactionsExcludePlans(TransactionType.PLAN_EXPENSE, TransactionType.PLAN_INCOME)
+            data
+        }
+    }
+
+    /**
+     * Suspend function to get a transaction by its id
+     */
+    suspend fun getTransactionByIdSuspend(id: Int) : Transaction{
+        return withContext(Dispatchers.IO){
+            val transaction = getTransactionByIdSuspend(id)
+            transaction
+        }
+    }
+
      /**
      * Suspend function to retrieve categories from database
      */
@@ -134,15 +160,7 @@ interface TransactionDatabaseDao {
         }
     }
 
-    /**
-     * Suspend function to get all transaction excluded plans
-     */
-    suspend fun getAllTransactionsExcludePlansSuspend() : List<Transaction>{
-        return withContext(Dispatchers.IO){
-            val data : List<Transaction> = getAllTransactionsExcludePlans(TransactionType.PLAN_EXPENSE, TransactionType.PLAN_INCOME)
-            data
-        }
-    }
+
 
     /**
      * Suspend function to retrieve venues

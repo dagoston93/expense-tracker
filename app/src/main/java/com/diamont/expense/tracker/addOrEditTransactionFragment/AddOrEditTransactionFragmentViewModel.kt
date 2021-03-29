@@ -542,6 +542,15 @@ class AddOrEditTransactionFragmentViewModel(
     }
 
     /**
+     * Call this method if a transaction is passed as an argument
+     * to edit it.
+     */
+    fun setEditTransactionId(id: Int){
+        //getTransactionToEdit(id)
+        //Log.d("GUS", "$currentTransaction")
+    }
+
+    /**
      * This method retrieves the required data from the database
      */
     private fun getDataFromDatabase(){
@@ -562,6 +571,15 @@ class AddOrEditTransactionFragmentViewModel(
         uiScope.launch {
             databaseDao.insertTransactionSuspend(currentTransaction)
             _isOperationComplete.value = true
+        }
+    }
+
+    /**
+     * This method retrieves the transaction that needs to be editet
+     */
+    private fun getTransactionToEdit(id : Int){
+        uiScope.launch {
+            currentTransaction = databaseDao.getTransactionById(id)
         }
     }
 

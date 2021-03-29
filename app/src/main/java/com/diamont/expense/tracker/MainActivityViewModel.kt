@@ -30,6 +30,14 @@ class MainActivityViewModel (appContext: Application) : AndroidViewModel(appCont
         get() = _isDrawerEnabled
 
     /**
+     * Trigger this event when user clicks on an edit icon
+     * by setting the transaction id as the value.
+     *
+     * After navigating reset it to null.
+     */
+    val eventNavigateToEditFragment = MutableLiveData<Int?>(null)
+
+    /**
      * Call this method to set the title
      */
     fun setTitle(title : String){

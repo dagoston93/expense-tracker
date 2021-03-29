@@ -31,6 +31,14 @@ class HistoryFragmentViewModel(
         get() = _categories
 
     /**
+     * Trigger this event when user clicks on an edit icon
+     * by setting the transaction id as the value.
+     *
+     * After passing the event to activity view model reset it to null.
+     */
+    val eventNavigateToEditFragment = MutableLiveData<Int?>(null)
+
+    /**
      * Set up coroutine job and the scope
      */
     private var viewModelJob = Job()

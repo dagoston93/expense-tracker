@@ -3,6 +3,7 @@ package com.diamont.expense.tracker
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -16,6 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.diamont.expense.tracker.databinding.FragmentMainAppBinding
+import com.diamont.expense.tracker.util.KEY_BUNDLE_TRANSACTION_ID
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 import com.diamont.expense.tracker.util.interfaces.BackPressHandlerFragment
 
@@ -128,6 +130,19 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
             }
         })
 
+        /**
+         * Observe if navigate to edit fragment event
+         */
+        activityViewModel.eventNavigateToEditFragment.observe(viewLifecycleOwner, Observer {
+            if(it!= null)
+            {
+                val args = Bundle()
+                args.putInt(KEY_BUNDLE_TRANSACTION_ID, it)
+                activityViewModel.eventNavigateToEditFragment.value = null
+                navigateWithAnimation(R.id.addOrEditTransactionFragment, R.anim.anim_add_open, R.anim.anim_fade_out, args)
+            }
+        })
+
         /** Return the inflated layout */
         return binding.root
     }
@@ -208,14 +223,14 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
      * @param enterAnimId - The id of the animation for the new fragment entering
      * @param exitAnimId - The id of the animation for the old fragment exiting
      */
-    private fun navigateWithAnimation(destinationId : Int, enterAnimId : Int, exitAnimId : Int){
+    private fun navigateWithAnimation(destinationId : Int, enterAnimId : Int, exitAnimId : Int, args : Bundle? = null){
         val navOptions = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .setEnterAnim(enterAnimId)
             .setExitAnim(exitAnimId)
             .build()
 
-        navController.navigate(destinationId, null, navOptions)
+        navController.navigate(destinationId, args, navOptions)
     }
 
     /**

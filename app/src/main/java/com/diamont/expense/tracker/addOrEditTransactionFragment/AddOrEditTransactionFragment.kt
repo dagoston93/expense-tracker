@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentAddOrEditTransactionBinding
+import com.diamont.expense.tracker.util.KEY_BUNDLE_TRANSACTION_ID
 import com.diamont.expense.tracker.util.arrayAdapters.StringArrayAdapter
 import com.diamont.expense.tracker.util.arrayAdapters.TransactionCategoryAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
@@ -109,6 +111,17 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         binding.actvAddTransactionType.setText(transactionTypeAdapter.getItem(0), false)
         binding.actvAddPaymentMethod.setText(paymentMethodAdapter.getItem(0), false)
         binding.actvAddFrequency.setText(frequencyAdapter.getItem(0), false)
+
+        /**
+         * Receive arguments
+         */
+        if(arguments != null){
+            /** Check if we have a transaction id */
+            val id = this.arguments?.getInt(KEY_BUNDLE_TRANSACTION_ID)
+            if(id != null){
+                viewModel.setEditTransactionId(id)
+            }
+        }
 
         /**
          * textChanged listener for Transaction Type dropdown menu

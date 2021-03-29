@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.historyFragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -57,7 +58,10 @@ class HistoryFragment : Fragment() {
         activityViewModel.setDrawerLayoutEnabled(true)
 
         /** Set up the recycler view with the adapter */
-        val adapter = TransactionRecyclerViewAdapter(binding.rvTransactionList)
+        val adapter = TransactionRecyclerViewAdapter(binding.rvTransactionList) { id ->
+            viewModel.eventNavigateToEditFragment.value = id
+        }
+
         binding.rvTransactionList.adapter = adapter
 
         /** Turn the blinking animation on item change off*/
@@ -68,6 +72,16 @@ class HistoryFragment : Fragment() {
             it?.let{
                 adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
                 adapter.transactions = it
+            }
+        })
+
+        /**
+         * Observe the edit navigation event
+         */
+        viewModel.eventNavigateToEditFragment.observe(viewLifecycleOwner, Observer {
+            if(it != null){
+                activityViewModel.eventNavigateToEditFragment.value = it
+                viewModel.eventNavigateToEditFragment.value = null
             }
         })
 
