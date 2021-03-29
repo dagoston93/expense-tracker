@@ -179,7 +179,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
          */
         tvTitle.text = transaction.description
         tvAmount.text = transaction.getAmountString()
-        tvDate.text = transaction.getDateString()
+        tvDate.text = transaction.getDateString(context)
         tvTransactionType.text = context.resources.getString(transaction.transactionType.stringId)
 
         /**

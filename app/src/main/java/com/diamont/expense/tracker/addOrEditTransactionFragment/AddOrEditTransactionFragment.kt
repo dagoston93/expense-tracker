@@ -252,6 +252,15 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         })
 
         /**
+         * If operation complete we navigate back
+         */
+        viewModel.isOperationComplete.observe(viewLifecycleOwner, Observer {
+            if(it){
+                activity?.onBackPressed()
+            }
+        })
+
+        /**
          * Set add button on click listener
          */
         binding.btnAddTransaction.setOnClickListener {

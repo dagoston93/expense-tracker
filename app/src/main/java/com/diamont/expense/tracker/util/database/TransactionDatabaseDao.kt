@@ -96,6 +96,15 @@ interface TransactionDatabaseDao {
     /**
      * * * * * * * * * SUSPEND FUNCTIONS * * * * * * * * * *
      *
+     * Suspend function to insert a transaction
+     */
+    suspend fun insertTransactionSuspend(transaction: Transaction){
+        return withContext(Dispatchers.IO){
+            insertTransaction(transaction)
+        }
+    }
+
+     /**
      * Suspend function to retrieve categories from database
      */
     suspend fun getCategoriesSuspend() : List<TransactionCategory>{

@@ -1,5 +1,6 @@
 package com.diamont.expense.tracker.util.database
 
+import android.content.Context
 import androidx.room.*
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
@@ -59,6 +60,9 @@ data class Transaction(
     /**
      * Call this method to get the date as string
      */
-    fun getDateString() : String = "2021. 02. 16."
+    fun getDateString(context: Context) : String {
+        val dateFormat = android.text.format.DateFormat.getDateFormat(context)
+        return dateFormat.format(date)
+    }
 
 }

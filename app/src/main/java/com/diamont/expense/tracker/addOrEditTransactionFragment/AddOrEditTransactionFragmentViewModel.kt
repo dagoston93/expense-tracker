@@ -133,6 +133,10 @@ class AddOrEditTransactionFragmentViewModel(
     val isCategorySelectEnabled : LiveData<Boolean>
         get() = _isCategorySelectEnabled
 
+    private val _isOperationComplete = MutableLiveData<Boolean>(false)
+    val isOperationComplete : LiveData<Boolean>
+        get() = _isOperationComplete
+
     /**
      * Set up coroutine job and the scope
      */
@@ -480,7 +484,10 @@ class AddOrEditTransactionFragmentViewModel(
      * Call this method whenever the add button is clicked
      */
     fun onAddButtonCLicked(){
-        Log.d("GUS", "$currentTransaction")
+        validate()
+        if(_isInputValid.value == true){
+            insertTransaction()
+        }
     }
 
     /**
@@ -545,6 +552,16 @@ class AddOrEditTransactionFragmentViewModel(
             expensePlans = databaseDao.getExpensePlansSuspend()
             createPlanStringLists()
             _currentPlanList.value = expensePlanStringList
+        }
+    }
+
+    /**
+     * This method inserts the transaction to the database
+     */
+    private fun insertTransaction(){
+        uiScope.launch {
+            databaseDao.insertTransactionSuspend(currentTransaction)
+            _isOperationComplete.value = true
         }
     }
 
