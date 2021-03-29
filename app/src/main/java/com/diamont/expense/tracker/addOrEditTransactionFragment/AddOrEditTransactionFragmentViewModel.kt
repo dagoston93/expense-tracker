@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -101,6 +102,26 @@ class AddOrEditTransactionFragmentViewModel(
     val planPaymentMethodIndex : LiveData<Int>
         get() = _planPaymentMethodIndex
 
+    private val _recipientOrVenueHint = MutableLiveData<String>(appContext.resources.getString(R.string.recipient_venue))
+    val recipientOrVenueHint: LiveData<String>
+        get() = _recipientOrVenueHint
+
+    private val _paymentMethodHint = MutableLiveData<String>(appContext.resources.getString(R.string.payment_method))
+    val paymentMethodHint: LiveData<String>
+        get() = _paymentMethodHint
+
+    private val _dateHint = MutableLiveData<String>(appContext.resources.getString(R.string.date))
+    val dateHint: LiveData<String>
+        get() = _dateHint
+
+    private val _descriptionErrorMessage = MutableLiveData<String?>(null)
+    val descriptionErrorMessage: LiveData<String?>
+        get() = _descriptionErrorMessage
+
+    val isErrorEnabled :LiveData<Boolean> = Transformations.map(_descriptionErrorMessage){
+        it != null
+    }
+
     /**
      * Set up coroutine job and the scope
      */
@@ -153,6 +174,11 @@ class AddOrEditTransactionFragmentViewModel(
                 _descriptionString.value = ""
             }
 
+            /** Set up the hints */
+            _recipientOrVenueHint.value = appContext.resources.getString(R.string.source)
+            _paymentMethodHint.value = appContext.resources.getString(R.string.received_by)
+            _dateHint.value = appContext.resources.getString(R.string.date)
+
             /** Set up the plan list */
             _currentPlanList.value = incomePlanStringList
 
@@ -171,6 +197,11 @@ class AddOrEditTransactionFragmentViewModel(
             if(_descriptionString.value != ""){
                 _descriptionString.value = ""
             }
+
+            /** Set up the hints */
+            _recipientOrVenueHint.value = appContext.resources.getString(R.string.recipient_venue)
+            _paymentMethodHint.value = appContext.resources.getString(R.string.payment_method)
+            _dateHint.value = appContext.resources.getString(R.string.date)
 
             /** Set up the plan list */
             _currentPlanList.value = expensePlanStringList
@@ -192,6 +223,9 @@ class AddOrEditTransactionFragmentViewModel(
             /** Set description */
             _descriptionString.value = appContext.resources.getString(R.string.deposit)
 
+            /** Set up the hints */
+            _dateHint.value = appContext.resources.getString(R.string.date)
+
         }else if(selectedTransactionType == TransactionType.WITHDRAW){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_withdrawal)
@@ -208,6 +242,10 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** Set description */
             _descriptionString.value = appContext.resources.getString(R.string.withdraw)
+
+            /** Set up the hints */
+            _dateHint.value = appContext.resources.getString(R.string.date)
+
         }else if(selectedTransactionType == TransactionType.PLAN_EXPENSE){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_plan_expense)
@@ -224,6 +262,11 @@ class AddOrEditTransactionFragmentViewModel(
                 _descriptionString.value = ""
             }
 
+            /** Set up the hints */
+            _recipientOrVenueHint.value = appContext.resources.getString(R.string.recipient_venue)
+            _paymentMethodHint.value = appContext.resources.getString(R.string.payment_method)
+            _dateHint.value = appContext.resources.getString(R.string.expected_date)
+
         }else if(selectedTransactionType == TransactionType.PLAN_INCOME){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_plan_income)
@@ -239,6 +282,11 @@ class AddOrEditTransactionFragmentViewModel(
             if(_descriptionString.value != ""){
                 _descriptionString.value = ""
             }
+
+            /** Set up the hints */
+            _recipientOrVenueHint.value = appContext.resources.getString(R.string.source)
+            _paymentMethodHint.value = appContext.resources.getString(R.string.receive_by)
+            _dateHint.value = appContext.resources.getString(R.string.expected_date)
 
         }
     }
@@ -298,6 +346,58 @@ class AddOrEditTransactionFragmentViewModel(
                 }
             }
 
+
+        }
+
+    }
+
+    /**
+     * Call this method when the chosen transaction frequency changes
+     */
+    fun onSelectedTransactionFrequencyChanged(selectedIndex: Int?){
+        if(selectedIndex == null) return /** A quick null check */
+
+        val selectedFrequency = TransactionFrequency.getFromIndex(selectedIndex)
+        /**
+         * If sum type, the label will be 'first date' otherwise 'expected date'
+         */
+        if(selectedFrequency == TransactionFrequency.MONTHLY_SUM
+            || selectedFrequency == TransactionFrequency.FORTNIGHTLY_SUM
+            || selectedFrequency == TransactionFrequency.WEEKLY_SUM
+            || selectedFrequency == TransactionFrequency.YEARLY_SUM){
+
+            _dateHint.value = appContext.resources.getString(R.string.first_date)
+        }else{
+            _dateHint.value = appContext.resources.getString(R.string.expected_date)
+        }
+
+    }
+
+    /**
+     * Call this method if the entered description changed
+     */
+    fun onEnteredDescriptionChanged(newDescription: String){
+        /**
+         * If we are in plan mode we need to make sure that
+         * each plan has unique name otherwise we won't be able
+         * to select them from the exposed dropdown menus...
+         */
+        if(selectedTransactionType == TransactionType.PLAN_EXPENSE
+            || selectedTransactionType == TransactionType.PLAN_INCOME){
+
+            val plans = if(selectedTransactionType == TransactionType.PLAN_EXPENSE){
+                expensePlans
+            }else{
+                incomePlans
+            }
+
+            val result = plans.find { it.description == newDescription }
+
+            if(result != null){
+                _descriptionErrorMessage.value = appContext.resources.getString(R.string.description_error_message)
+            }else{
+                _descriptionErrorMessage.value = null
+            }
 
         }
 

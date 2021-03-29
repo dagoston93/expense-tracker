@@ -40,7 +40,6 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
 
     /** Create adapters and string lists for exposed dropdown menus */
     private lateinit var transactionTypeAdapter : StringArrayAdapter
-    private lateinit var transactionPlannedAdapter : StringArrayAdapter
     private lateinit var paymentMethodAdapter : StringArrayAdapter
     private lateinit var frequencyAdapter : StringArrayAdapter
     private lateinit var transactionCategoryAdapter: TransactionCategoryAdapter
@@ -57,7 +56,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
      */
     private val datePicker =
         MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Select date")
+            .setTitleText(context?.resources?.getString(R.string.select_date))
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .build()
 
@@ -125,6 +124,21 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         binding.actvAddIsPlanned.addTextChangedListener {
             val idx = binding.actvAddIsPlanned.getStringListIndexFromText(planStringList)
             viewModel.onSelectedPlanChanged(idx)
+        }
+
+        /**
+         * text changed listener for the Frequency dropdown menu
+         */
+        binding.actvAddFrequency.addTextChangedListener {
+            val idx = binding.actvAddFrequency.getStringListIndexFromText(frequencyStringList)
+            viewModel.onSelectedTransactionFrequencyChanged(idx)
+        }
+
+        /**
+         * Add text changed listener for the description field
+         */
+        binding.etAddDescription.addTextChangedListener {
+            viewModel.onEnteredDescriptionChanged(binding.etAddDescription.text.toString())
         }
 
         /**
@@ -199,6 +213,13 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
             if(!paymentMethodAdapter.isEmpty){
                 binding.actvAddPaymentMethod.setText(paymentMethodAdapter.getItem(it).toString(), false)
             }
+        })
+
+        /**
+         * Observe description error message
+         */
+        viewModel.descriptionErrorMessage.observe(viewLifecycleOwner, Observer {
+            binding.tilAddDescription.error = it
         })
 
         /**

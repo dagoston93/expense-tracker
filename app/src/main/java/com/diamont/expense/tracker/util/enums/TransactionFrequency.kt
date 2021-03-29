@@ -35,6 +35,12 @@ enum class TransactionFrequency(val id : Int, val stringId :Int) {
         fun getIdFromIndex(index : Int) = values()[index].id
 
         /**
+         * Return the enum value from the index
+         * To make it easier to find the item chosen in a dropdown
+         */
+        fun getFromIndex(index: Int) = values()[index]
+
+        /**
          * Return the possible values as a string array
          * We need it for array adapters for exposed
          * dropdown menus

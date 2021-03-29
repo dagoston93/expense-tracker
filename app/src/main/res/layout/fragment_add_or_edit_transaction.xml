@@ -55,11 +55,13 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilAddDescription"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:errorEnabled="@{viewModel.isErrorEnabled}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/description">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etAddDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.descriptionString}"
@@ -105,7 +107,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="@{viewModel.isRecipientOrVenueFieldVisible}"
-                android:hint="@string/recipient_venue">
+                android:hint="@{viewModel.recipientOrVenueHint}"
+                tools:hint="@string/recipient_venue">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvAddRecipientOrVenue"
@@ -123,7 +126,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="@{viewModel.isPaymentMethodFieldVisible}"
-                android:hint="@string/payment_method">
+                android:hint="@{viewModel.paymentMethodHint}"
+                tools:hint="@string/payment_method">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvAddPaymentMethod"
@@ -154,7 +158,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/date">
+                android:hint="@{viewModel.dateHint}"
+                tools:hint="@string/date">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAddDate"
