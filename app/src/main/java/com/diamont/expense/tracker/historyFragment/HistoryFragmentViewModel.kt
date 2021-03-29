@@ -6,13 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.database.Plan
-import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
-import com.diamont.expense.tracker.util.enums.TransactionPlanned
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
+import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionPlanned
 import kotlinx.coroutines.*
 
 class HistoryFragmentViewModel(
@@ -51,51 +51,45 @@ class HistoryFragmentViewModel(
         uiScope.launch {
             //insertTransactionSuspend()
             //insertCategorySuspend()
-            _categories.value = getCategoriesSuspend()
-            _transactionData.value = getTransactionDataSuspend()
+            _categories.value = databaseDao.getCategoriesSuspend()
+            _transactionData.value = databaseDao.getAllTransactionsExcludePlansSuspend()
         }
     }
 
-    /**
-     * Suspend function to retrieve transaction data
-     */
-    private suspend fun getTransactionDataSuspend() : List<Transaction>{
-        return withContext(Dispatchers.IO){
-            val data : List<Transaction> = databaseDao.getAllTransactions()
-            data
-        }
-    }
-
-    /**
-     * Suspend function to retrieve categories
-     */
-    private suspend fun getCategoriesSuspend() : List<TransactionCategory>{
-        return withContext(Dispatchers.IO){
-            val data : List<TransactionCategory> = databaseDao.getAllCategories()
-            data
-        }
-    }
     /**
      * Suspend function for inserting transaction
      */
     private suspend fun insertTransactionSuspend(){
         return withContext(Dispatchers.IO){
-            val plan1 = Plan(0, TransactionType.EXPENSE, "Sth to spend money on", 55.55f,
-                2, "Any shop", TransactionFrequency.ONE_TIME, 1617207973000)
+            val plan1 = Transaction(0, TransactionType.PLAN_EXPENSE, "Sth to spend money on", 55.55f,
+                2, "Any shop", PaymentMethod.CARD, TransactionPlanned.PLANNED,
+                TransactionFrequency.ONE_TIME, 1617207973000, 0)
 
-            val plan2 = Plan(0, TransactionType.EXPENSE, "Monthly food", 99.88f,
-                2, "Food shops", TransactionFrequency.MONTHLY_SUM, 1612113973000)
+            val plan2 = Transaction(0, TransactionType.PLAN_EXPENSE, "Monthly food", 99.88f,
+                0, "Food shops", PaymentMethod.CARD, TransactionPlanned.PLANNED,
+                TransactionFrequency.MONTHLY_SUM, 1612113973000, 0)
 
-            val plan3 = Plan(0, TransactionType.INCOME, "Sell a car", 4555.00f,
-                2, "Whoever buys it", TransactionFrequency.ONE_TIME, 1618935973000)
+            val plan3 = Transaction(0, TransactionType.PLAN_INCOME, "Sell a car", 4555.00f,
+                2, "Whoever buys it", PaymentMethod.CARD, TransactionPlanned.PLANNED,
+                TransactionFrequency.ONE_TIME, 1618935973000, 0)
 
-            val plan4 = Plan(0, TransactionType.INCOME, "Saaaaaalary", 1250.00f,
-                2, "The boossss", TransactionFrequency.MONTHLY_ONCE, 1597249573000)
+            val plan4 = Transaction(0, TransactionType.PLAN_INCOME, "Saaaaaalary", 1250.00f,
+                2, "The boossss", PaymentMethod.CARD, TransactionPlanned.PLANNED,
+                TransactionFrequency.MONTHLY_ONCE, 1597249573000, 0)
 
-            databaseDao.inserPlan(plan1)
-            databaseDao.inserPlan(plan2)
-            databaseDao.inserPlan(plan3)
-            databaseDao.inserPlan(plan4)
+//            val plan2 = Plan(0, TransactionType.EXPENSE, "Monthly food", 99.88f,
+//                2, "Food shops", TransactionFrequency.MONTHLY_SUM, 1612113973000)
+//
+//            val plan3 = Plan(0, TransactionType.INCOME, "Sell a car", 4555.00f,
+//                2, "Whoever buys it", TransactionFrequency.ONE_TIME, 1618935973000)
+//
+//            val plan4 = Plan(0, TransactionType.INCOME, "Saaaaaalary", 1250.00f,
+//                2, "The boossss", TransactionFrequency.MONTHLY_ONCE, 1597249573000)
+
+            databaseDao.insertTransaction(plan1)
+            databaseDao.insertTransaction(plan2)
+            databaseDao.insertTransaction(plan3)
+            databaseDao.insertTransaction(plan4)
 
         }
     }

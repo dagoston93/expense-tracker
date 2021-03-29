@@ -21,7 +21,6 @@ import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
-import com.diamont.expense.tracker.util.enums.TransactionPlanned
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.diamont.expense.tracker.util.getStringListIndexFromText
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
@@ -49,7 +48,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
     private lateinit var planAdapter: ArrayAdapter<String>
 
     private lateinit var transactionTypeStringList : List<String>
-    private lateinit var transactionPlannedStringList : List<String>
+    private lateinit var planStringList : List<String>
     private lateinit var paymentMethodStringList : List<String>
     private lateinit var frequencyStringList : List<String>
 
@@ -97,12 +96,10 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
          * TODO maybe simple ArrayAdapter enough and StringArrayAdapter class can be deleted!!!
          */
         transactionTypeStringList = TransactionType.getValuesAsStringList(requireContext())
-        transactionPlannedStringList = TransactionPlanned.getValuesAsStringList(requireContext())
         paymentMethodStringList = PaymentMethod.getValuesAsStringList(requireContext())
         frequencyStringList = TransactionFrequency.getValuesAsStringList(requireContext())
 
         transactionTypeAdapter = StringArrayAdapter(requireContext(), transactionTypeStringList)
-        transactionPlannedAdapter = StringArrayAdapter(requireContext(), transactionPlannedStringList)
         paymentMethodAdapter = StringArrayAdapter(requireContext(), paymentMethodStringList)
         frequencyAdapter = StringArrayAdapter(requireContext(), frequencyStringList)
         transactionCategoryAdapter = TransactionCategoryAdapter(requireContext(), listOf<TransactionCategory>())
@@ -111,7 +108,6 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         planAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, listOf<String>())
 
         binding.actvAddTransactionType.setText(transactionTypeAdapter.getItem(0), false)
-        //binding.actvAddIsPlanned.setText(transactionPlannedAdapter.getItem(0), false)
         binding.actvAddPaymentMethod.setText(paymentMethodAdapter.getItem(0), false)
         binding.actvAddFrequency.setText(frequencyAdapter.getItem(0), false)
 
@@ -121,6 +117,14 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         binding.actvAddTransactionType.addTextChangedListener{
             val idx = binding.actvAddTransactionType.getStringListIndexFromText(transactionTypeStringList)
             viewModel.onTransactionTypeChanged(idx)
+        }
+
+        /**
+         * text changed listener for the Plan dropdown menu
+         */
+        binding.actvAddIsPlanned.addTextChangedListener {
+            val idx = binding.actvAddIsPlanned.getStringListIndexFromText(planStringList)
+            viewModel.onSelectedPlanChanged(idx)
         }
 
         /**
@@ -162,6 +166,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
          */
         viewModel.currentPlanList.observe(viewLifecycleOwner, Observer {
             if(it.isNotEmpty()){
+                planStringList = it
                 planAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, it)
                 binding.actvAddIsPlanned.setAdapter(planAdapter)
                 binding.actvAddIsPlanned.setText(planAdapter.getItem(0).toString(), false)
@@ -175,6 +180,24 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
             if(it.isNotEmpty()){
                 venueAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, it)
                 binding.actvAddRecipientOrVenue.setAdapter(venueAdapter)
+            }
+        })
+
+        /**
+         * Select category when plan is selected
+         */
+        viewModel.planCategoryIndex.observe(viewLifecycleOwner, Observer {
+            if(!transactionCategoryAdapter.isEmpty){
+                binding.actvAddCategory.setText(transactionCategoryAdapter.getItem(it).toString(), false)
+            }
+        })
+
+        /**
+         * Select payment method when plan is selected
+         */
+        viewModel.planPaymentMethodIndex.observe(viewLifecycleOwner, Observer {
+            if(!paymentMethodAdapter.isEmpty){
+                binding.actvAddPaymentMethod.setText(paymentMethodAdapter.getItem(it).toString(), false)
             }
         })
 

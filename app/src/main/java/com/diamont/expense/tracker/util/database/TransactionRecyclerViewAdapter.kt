@@ -13,7 +13,7 @@ import com.diamont.expense.tracker.util.view.TransactionDetailsView
  * to display Transaction data in our
  * TransactionDetailView
  */
-class TransactionAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
+class TransactionRecyclerViewAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
     var transactions  = listOf<Transaction>()
     set(value){
         field = value
@@ -31,7 +31,7 @@ class TransactionAdapter(private val recyclerView: RecyclerView) : RecyclerView.
     /**
      * This method is responsible for binding data to views
      */
-    override fun onBindViewHolder(holder: TransactionAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TransactionRecyclerViewAdapter.ViewHolder, position: Int) {
         val item = transactions[position]
         bind(holder, item, position)
     }
@@ -39,8 +39,8 @@ class TransactionAdapter(private val recyclerView: RecyclerView) : RecyclerView.
     /**
      * Create new view holder
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : TransactionAdapter.ViewHolder {
-        return TransactionAdapter.ViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : TransactionRecyclerViewAdapter.ViewHolder {
+        return TransactionRecyclerViewAdapter.ViewHolder.from(parent)
     }
 
     /**

@@ -13,14 +13,9 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentHistoryBinding
-import com.diamont.expense.tracker.util.database.Transaction
-import com.diamont.expense.tracker.util.database.TransactionAdapter
+import com.diamont.expense.tracker.util.database.TransactionRecyclerViewAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
-import com.diamont.expense.tracker.util.enums.PaymentMethod
-import com.diamont.expense.tracker.util.enums.TransactionFrequency
-import com.diamont.expense.tracker.util.enums.TransactionPlanned
-import com.diamont.expense.tracker.util.enums.TransactionType
 
 class HistoryFragment : Fragment() {
     /** Data binding */
@@ -62,7 +57,7 @@ class HistoryFragment : Fragment() {
         activityViewModel.setDrawerLayoutEnabled(true)
 
         /** Set up the recycler view with the adapter */
-        val adapter = TransactionAdapter(binding.rvTransactionList)
+        val adapter = TransactionRecyclerViewAdapter(binding.rvTransactionList)
         binding.rvTransactionList.adapter = adapter
 
         /** Turn the blinking animation on item change off*/

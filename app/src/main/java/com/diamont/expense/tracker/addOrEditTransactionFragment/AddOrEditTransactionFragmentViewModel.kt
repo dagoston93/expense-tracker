@@ -1,16 +1,17 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.boolToVisibility
-import com.diamont.expense.tracker.util.database.Plan
+import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
+import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.*
@@ -25,10 +26,12 @@ class AddOrEditTransactionFragmentViewModel(
      */
     private var date : Date = Date(MaterialDatePicker.todayInUtcMilliseconds())
     private val dateFormat = android.text.format.DateFormat.getDateFormat(appContext)
+    private var selectedTransactionType : TransactionType = TransactionType.EXPENSE
 
-    private var allPlans = listOf<Plan>()
-    private var incomePlans = mutableListOf<String>(appContext.resources.getString(R.string.not_planned))
-    private var expensePlans = mutableListOf<String>(appContext.resources.getString(R.string.not_planned))
+    private var incomePlans: List<Transaction> = listOf()
+    private var expensePlans: List<Transaction> = listOf()
+    private var incomePlanStringList: MutableList<String>  = mutableListOf()
+    private var expensePlanStringList: MutableList<String>  = mutableListOf()
 
     /**
      * Set up some live data
@@ -37,9 +40,17 @@ class AddOrEditTransactionFragmentViewModel(
     val titleString : LiveData<String>
         get() = _titleString
 
-   private val _descriptionString = MutableLiveData<String>("")
+    private val _descriptionString = MutableLiveData<String>("")
     val descriptionString : LiveData<String>
         get() = _descriptionString
+
+    private val _amountString = MutableLiveData<String>("")
+    val amountString : LiveData<String>
+        get() = _amountString
+
+    private val _recipientOrVenueString = MutableLiveData<String>("")
+    val recipientOrVenueString : LiveData<String>
+        get() = _recipientOrVenueString
 
     private val _dateString = MutableLiveData<String>("")
     val dateString : LiveData<String>
@@ -82,6 +93,14 @@ class AddOrEditTransactionFragmentViewModel(
         boolToVisibility(it)
     }
 
+    private val _planCategoryIndex = MutableLiveData<Int>(0)
+    val planCategoryIndex : LiveData<Int>
+        get() = _planCategoryIndex
+
+    private val _planPaymentMethodIndex = MutableLiveData<Int>(0)
+    val planPaymentMethodIndex : LiveData<Int>
+        get() = _planPaymentMethodIndex
+
     /**
      * Set up coroutine job and the scope
      */
@@ -115,9 +134,9 @@ class AddOrEditTransactionFragmentViewModel(
     fun onTransactionTypeChanged(index: Int?){
         if(index == null) return
 
-        val newTransactionType = TransactionType.getEnumValueFromIndex(index)
+        selectedTransactionType = TransactionType.getEnumValueFromIndex(index)
 
-        if(newTransactionType == TransactionType.INCOME)
+        if(selectedTransactionType == TransactionType.INCOME)
         {
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_income)
@@ -135,9 +154,9 @@ class AddOrEditTransactionFragmentViewModel(
             }
 
             /** Set up the plan list */
-            _currentPlanList.value = incomePlans
+            _currentPlanList.value = incomePlanStringList
 
-        }else if(newTransactionType == TransactionType.EXPENSE){
+        }else if(selectedTransactionType == TransactionType.EXPENSE){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_expense)
 
@@ -154,9 +173,9 @@ class AddOrEditTransactionFragmentViewModel(
             }
 
             /** Set up the plan list */
-            _currentPlanList.value = expensePlans
+            _currentPlanList.value = expensePlanStringList
 
-        }else if(newTransactionType == TransactionType.DEPOSIT){
+        }else if(selectedTransactionType == TransactionType.DEPOSIT){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_deposit)
 
@@ -167,10 +186,13 @@ class AddOrEditTransactionFragmentViewModel(
             _isPaymentMethodFieldVisible.value = false
             _isFrequencyFieldVisible.value = false
 
+            /** Clear fields */
+            _amountString.value = ""
+
             /** Set description */
             _descriptionString.value = appContext.resources.getString(R.string.deposit)
 
-        }else if(newTransactionType == TransactionType.WITHDRAW){
+        }else if(selectedTransactionType == TransactionType.WITHDRAW){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_withdrawal)
 
@@ -181,9 +203,12 @@ class AddOrEditTransactionFragmentViewModel(
             _isPaymentMethodFieldVisible.value = false
             _isFrequencyFieldVisible.value = false
 
+            /** Clear fields */
+            _amountString.value = ""
+
             /** Set description */
             _descriptionString.value = appContext.resources.getString(R.string.withdraw)
-        }else if(newTransactionType == TransactionType.PLAN_EXPENSE){
+        }else if(selectedTransactionType == TransactionType.PLAN_EXPENSE){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_plan_expense)
 
@@ -199,7 +224,7 @@ class AddOrEditTransactionFragmentViewModel(
                 _descriptionString.value = ""
             }
 
-        }else if(newTransactionType == TransactionType.PLAN_INCOME){
+        }else if(selectedTransactionType == TransactionType.PLAN_INCOME){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_plan_income)
 
@@ -219,59 +244,95 @@ class AddOrEditTransactionFragmentViewModel(
     }
 
     /**
-     * This method sorts the plans to expense or income plans
+     * Call this method whenever the selected plan has changed
+     *
+     * @param index: The index of the selected item in the string list
+     * of plans given to the dropdown menu. The index in the Transaction
+     * list is always one less because of the 'not planned' item.
+     * If it is 0 then the 'not planned' item is selected.
      */
-    private fun sortPlans(){
-        for(plan in allPlans){
-            if(plan.transactionType == TransactionType.EXPENSE){
-                expensePlans.add(plan.description)
-            }else if(plan.transactionType == TransactionType.INCOME){
-                incomePlans.add(plan.description)
+    fun onSelectedPlanChanged(index: Int?){
+        if(index == null) return    // Do a quick null check
+
+        /** If Not planned is selected we need to clear the selections */
+        if(index == 0){
+
+            _descriptionString.value = ""
+            _amountString.value = ""
+            _recipientOrVenueString.value = ""
+            _planCategoryIndex.value = 0
+
+        }else{
+            /** Get the correct plan */
+            var plan: Transaction = if(selectedTransactionType == TransactionType.EXPENSE){
+                expensePlans[index-1]
+            }else{
+                incomePlans[index-1]
             }
+
+            /** If the plan is a SUM type, we don't set description and amount, otherwise we do. */
+            if(plan.frequency == TransactionFrequency.MONTHLY_SUM
+                || plan.frequency == TransactionFrequency.FORTNIGHTLY_SUM
+                || plan.frequency == TransactionFrequency.WEEKLY_SUM
+                || plan.frequency == TransactionFrequency.YEARLY_SUM){
+                _descriptionString.value = ""
+                _amountString.value = ""
+            }else{
+                _descriptionString.value = plan.description
+                _amountString.value = plan.amount.toString()
+            }
+            _recipientOrVenueString.value = plan.secondParty
+
+            /** Find the index of the category in the list */
+            if(_categories.value!= null)
+            for(i in _categories.value!!.indices){
+                if(_categories.value!![i].categoryId == plan.categoryId){
+                    _planCategoryIndex.value = i
+                }
+            }
+
+            /** Find the index of the selected payment method */
+            for(i in PaymentMethod.values().indices){
+                if(plan.method == PaymentMethod.values()[i]){
+                    _planPaymentMethodIndex.value = i
+                }
+            }
+
+
         }
+
     }
 
     /**
-     * This method retrieves the categories from the database
+     * This method retrieves the required data from the database
      */
     private fun getDataFromDatabase(){
         uiScope.launch {
-            _categories.value = getCategoriesSuspend()
-            _venues.value = getVenuesSuspend()
-            allPlans = getPlans()
-            sortPlans()
-            _currentPlanList.value = expensePlans
+            _categories.value = databaseDao.getCategoriesSuspend()
+            _venues.value = databaseDao.getVenuesSuspend()
+            incomePlans = databaseDao.getIncomePlansSuspend()
+            expensePlans = databaseDao.getExpensePlansSuspend()
+            createPlanStringLists()
+            _currentPlanList.value = expensePlanStringList
         }
     }
 
     /**
-     * Suspend function to retrieve categories from database
+     * This method converts the Transaction lists of the
+     * expense and income plans to string lists for the
+     * dropdown menus
      */
-    private suspend fun getCategoriesSuspend() : List<TransactionCategory>{
-        return withContext(Dispatchers.IO){
-            val data : List<TransactionCategory> = databaseDao.getAllCategories()
-            data
+    private fun createPlanStringLists(){
+        incomePlanStringList.add(appContext.getString(R.string.not_planned))
+        for(plan in incomePlans){
+            incomePlanStringList.add(plan.description)
+        }
+
+        expensePlanStringList.add(appContext.getString(R.string.not_planned))
+        for(plan in expensePlans){
+            expensePlanStringList.add(plan.description)
         }
     }
 
-    /**
-     * Suspend function to retrieve venues
-     */
-    private suspend fun getVenuesSuspend() : List<String> {
-        return withContext(Dispatchers.IO){
-            val data : List<String> = databaseDao.getAllVenues()
-            data
-        }
-    }
-
-    /**
-     * Suspend function to get plan data
-     */
-    private suspend fun getPlans() : List<Plan>{
-        return withContext(Dispatchers.IO){
-            val data : List<Plan> = databaseDao.getAllPlans()
-            data
-        }
-    }
 
 }

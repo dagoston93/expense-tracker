@@ -47,7 +47,7 @@ data class Transaction(
     val date: Long,
 
     @ColumnInfo(name = "plan_id")
-    val planId : Int
+    val planIdOrIsActive : Int
 ){
     /**
      * Call this method to get amount as string
