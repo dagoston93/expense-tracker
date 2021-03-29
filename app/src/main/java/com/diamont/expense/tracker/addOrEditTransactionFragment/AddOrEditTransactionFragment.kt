@@ -142,6 +142,35 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         }
 
         /**
+         * Add text changed listener for the amount field
+         */
+        binding.etAddAmount.addTextChangedListener {
+            viewModel.onEnteredAmountChanged(binding.etAddAmount.text.toString().toFloatOrNull())
+        }
+
+        /**
+         * Add text changed listener for the category dropdown
+         */
+        binding.actvAddCategory.addTextChangedListener {
+            viewModel.onSelectedCategoryChanged(binding.actvAddCategory.text.toString())
+        }
+
+        /**
+         * Add text changed listener for the venue field
+         */
+        binding.actvAddRecipientOrVenue.addTextChangedListener {
+            viewModel.onEnteredRecipientOrVenueChanged(binding.actvAddRecipientOrVenue.text.toString())
+        }
+
+        /**
+         * Add text changed listener for the payment method dropdown
+         */
+        binding.actvAddPaymentMethod.addTextChangedListener {
+            val idx = binding.actvAddPaymentMethod.getStringListIndexFromText(paymentMethodStringList)
+            viewModel.onSelectedPaymentMethodChanged(idx)
+        }
+
+        /**
          * OnClickListener for the date picker OK button
          */
         datePicker.addOnPositiveButtonClickListener {
@@ -225,13 +254,9 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         /**
          * Set add button on click listener
          */
-        //binding.btnAddTransaction.setOnClickListener {
-//            val idx = binding.actvAddTransactionType.getStringListIndexFromText(transactionTypeStringList)
-//            if(idx != null){
-//                val id = TransactionType.getIdFromIndex(idx)
-//                Log.d("GUS", "idx: $idx id: $id")
-//            }
-        //}
+        binding.btnAddTransaction.setOnClickListener {
+            viewModel.onAddButtonCLicked()
+        }
 
         /** Return the inflated layout */
         return binding.root

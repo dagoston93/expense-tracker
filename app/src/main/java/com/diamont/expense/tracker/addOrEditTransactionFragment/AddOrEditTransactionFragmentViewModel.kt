@@ -13,6 +13,7 @@ import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
+import com.diamont.expense.tracker.util.enums.TransactionPlanned
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.*
@@ -33,6 +34,8 @@ class AddOrEditTransactionFragmentViewModel(
     private var expensePlans: List<Transaction> = listOf()
     private var incomePlanStringList: MutableList<String>  = mutableListOf()
     private var expensePlanStringList: MutableList<String>  = mutableListOf()
+
+    private var currentTransaction = Transaction()
 
     /**
      * Set up some live data
@@ -122,6 +125,14 @@ class AddOrEditTransactionFragmentViewModel(
         it != null
     }
 
+    private val _isInputValid = MutableLiveData<Boolean>(false)
+    val isInputValid : LiveData<Boolean>
+        get() = _isInputValid
+
+    private val _isCategorySelectEnabled = MutableLiveData<Boolean>(true)
+    val isCategorySelectEnabled : LiveData<Boolean>
+        get() = _isCategorySelectEnabled
+
     /**
      * Set up coroutine job and the scope
      */
@@ -133,6 +144,7 @@ class AddOrEditTransactionFragmentViewModel(
      */
     init{
         _dateString.value = dateFormat.format(date)
+        currentTransaction.date = date.time
         getDataFromDatabase()
     }
 
@@ -142,6 +154,8 @@ class AddOrEditTransactionFragmentViewModel(
     fun onSelectedDateChanged(newDate: Long){
         date.time=newDate
         _dateString.value = dateFormat.format(date)
+
+        currentTransaction.date = newDate
     }
 
     /**
@@ -156,6 +170,7 @@ class AddOrEditTransactionFragmentViewModel(
         if(index == null) return
 
         selectedTransactionType = TransactionType.getEnumValueFromIndex(index)
+        currentTransaction.transactionType = selectedTransactionType
 
         if(selectedTransactionType == TransactionType.INCOME)
         {
@@ -182,6 +197,12 @@ class AddOrEditTransactionFragmentViewModel(
             /** Set up the plan list */
             _currentPlanList.value = incomePlanStringList
 
+            /** Reset error string */
+            _descriptionErrorMessage.value = null
+
+            /** Enable category select */
+            _isCategorySelectEnabled.value = true
+
         }else if(selectedTransactionType == TransactionType.EXPENSE){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_expense)
@@ -206,6 +227,12 @@ class AddOrEditTransactionFragmentViewModel(
             /** Set up the plan list */
             _currentPlanList.value = expensePlanStringList
 
+            /** Reset error string */
+            _descriptionErrorMessage.value = null
+
+            /** Enable category select */
+            _isCategorySelectEnabled.value = true
+
         }else if(selectedTransactionType == TransactionType.DEPOSIT){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_deposit)
@@ -226,6 +253,12 @@ class AddOrEditTransactionFragmentViewModel(
             /** Set up the hints */
             _dateHint.value = appContext.resources.getString(R.string.date)
 
+            /** Reset error string */
+            _descriptionErrorMessage.value = null
+
+            /** Enable category select */
+            _isCategorySelectEnabled.value = true
+
         }else if(selectedTransactionType == TransactionType.WITHDRAW){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_withdrawal)
@@ -245,6 +278,12 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** Set up the hints */
             _dateHint.value = appContext.resources.getString(R.string.date)
+
+            /** Reset error string */
+            _descriptionErrorMessage.value = null
+
+            /** Enable category select */
+            _isCategorySelectEnabled.value = true
 
         }else if(selectedTransactionType == TransactionType.PLAN_EXPENSE){
             /** Set up the title */
@@ -267,6 +306,12 @@ class AddOrEditTransactionFragmentViewModel(
             _paymentMethodHint.value = appContext.resources.getString(R.string.payment_method)
             _dateHint.value = appContext.resources.getString(R.string.expected_date)
 
+            /** Validate description if already entered */
+            validateDescription()
+
+            /** Enable category select */
+            _isCategorySelectEnabled.value = true
+
         }else if(selectedTransactionType == TransactionType.PLAN_INCOME){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_plan_income)
@@ -288,6 +333,11 @@ class AddOrEditTransactionFragmentViewModel(
             _paymentMethodHint.value = appContext.resources.getString(R.string.receive_by)
             _dateHint.value = appContext.resources.getString(R.string.expected_date)
 
+            /** Validate description if already entered */
+            validateDescription()
+
+            /** Enable category select */
+            _isCategorySelectEnabled.value = true
         }
     }
 
@@ -310,6 +360,11 @@ class AddOrEditTransactionFragmentViewModel(
             _recipientOrVenueString.value = ""
             _planCategoryIndex.value = 0
 
+            currentTransaction.planned = TransactionPlanned.NOT_PLANNED
+
+            /** Enable category select */
+            _isCategorySelectEnabled.value = true
+
         }else{
             /** Get the correct plan */
             var plan: Transaction = if(selectedTransactionType == TransactionType.EXPENSE){
@@ -317,6 +372,12 @@ class AddOrEditTransactionFragmentViewModel(
             }else{
                 incomePlans[index-1]
             }
+
+            currentTransaction.planIdOrIsActive = plan.transactionId
+            currentTransaction.planned = TransactionPlanned.PLANNED
+
+            /** Enable category select */
+            _isCategorySelectEnabled.value = false
 
             /** If the plan is a SUM type, we don't set description and amount, otherwise we do. */
             if(plan.frequency == TransactionFrequency.MONTHLY_SUM
@@ -345,10 +406,7 @@ class AddOrEditTransactionFragmentViewModel(
                     _planPaymentMethodIndex.value = i
                 }
             }
-
-
         }
-
     }
 
     /**
@@ -358,6 +416,8 @@ class AddOrEditTransactionFragmentViewModel(
         if(selectedIndex == null) return /** A quick null check */
 
         val selectedFrequency = TransactionFrequency.getFromIndex(selectedIndex)
+        currentTransaction.frequency = selectedFrequency
+
         /**
          * If sum type, the label will be 'first date' otherwise 'expected date'
          */
@@ -377,30 +437,101 @@ class AddOrEditTransactionFragmentViewModel(
      * Call this method if the entered description changed
      */
     fun onEnteredDescriptionChanged(newDescription: String){
+        currentTransaction.description = newDescription
+        validateDescription()
+    }
+
+    /**
+     * Call this method whenever the entered amount is set
+     */
+    fun onEnteredAmountChanged(amount: Float?){
+        currentTransaction.amount = amount ?: 0f
+        validate()
+    }
+
+    /**
+     *  Call this method whenever the selected category changes
+     */
+    fun onSelectedCategoryChanged(categoryName: String){
+        val category = _categories.value?.find { it.categoryName == categoryName }
+
+        if(category != null){
+            currentTransaction.categoryId = category.categoryId
+        }
+    }
+
+    /**
+     * Call this method whenever the entered recipient/venue/source is changed
+     */
+    fun onEnteredRecipientOrVenueChanged(newRecipientOrVenue: String?){
+        currentTransaction.secondParty = newRecipientOrVenue ?: ""
+    }
+
+    /**
+     * Call this method whenever the selected payment method changes
+     */
+    fun onSelectedPaymentMethodChanged(index: Int?){
+        if(index != null) {
+            currentTransaction.method = PaymentMethod.getFromIndex(index)
+        }
+    }
+
+    /**
+     * Call this method whenever the add button is clicked
+     */
+    fun onAddButtonCLicked(){
+        Log.d("GUS", "$currentTransaction")
+    }
+
+    /**
+     * Call this method to validate the entered description
+     */
+    private fun validateDescription() {
         /**
          * If we are in plan mode we need to make sure that
-         * each plan has unique name otherwise we won't be able
+         * each plan has unique description otherwise we won't be able
          * to select them from the exposed dropdown menus...
          */
-        if(selectedTransactionType == TransactionType.PLAN_EXPENSE
-            || selectedTransactionType == TransactionType.PLAN_INCOME){
+        if (selectedTransactionType == TransactionType.PLAN_EXPENSE
+            || selectedTransactionType == TransactionType.PLAN_INCOME
+        ) {
 
-            val plans = if(selectedTransactionType == TransactionType.PLAN_EXPENSE){
+            val plans = if (selectedTransactionType == TransactionType.PLAN_EXPENSE) {
                 expensePlans
-            }else{
+            } else {
                 incomePlans
             }
 
-            val result = plans.find { it.description == newDescription }
+            val result = plans.find { it.description == currentTransaction.description }
 
-            if(result != null){
-                _descriptionErrorMessage.value = appContext.resources.getString(R.string.description_error_message)
-            }else{
+            if (result != null) {
+                _descriptionErrorMessage.value =
+                    appContext.resources.getString(R.string.description_error_message)
+            } else {
                 _descriptionErrorMessage.value = null
             }
-
         }
 
+        validate()
+    }
+
+    /**
+     * Call this method to validate the user input
+     */
+    private fun validate(){
+        var isValid = true
+
+        /** Check if there is an amount entered */
+        if(currentTransaction.amount == 0f){
+            isValid = false
+        }
+
+        /** Check if there is any description entered */
+        if(_descriptionErrorMessage.value != null){
+            isValid = false
+        }
+
+        _isInputValid.value = isValid
     }
 
     /**

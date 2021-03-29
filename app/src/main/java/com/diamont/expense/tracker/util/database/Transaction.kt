@@ -13,41 +13,41 @@ import com.diamont.expense.tracker.util.enums.TransactionType
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "transaction_id")
-    val transactionId : Int,
+    var transactionId : Int = 0,
 
     @ColumnInfo(name = "type")
     @TypeConverters(TransactionTypeConverter::class)
-    val transactionType : TransactionType,
+    var transactionType : TransactionType = TransactionType.EXPENSE,
 
     @ColumnInfo(name = "description")
-    val description : String,
+    var description : String = "",
 
     @ColumnInfo(name = "amount")
-    val amount : Float,
+    var amount : Float = 0f,
 
     @ColumnInfo(name = "category")
-    val categoryId: Int,
+    var categoryId: Int = 0,
 
     @ColumnInfo(name = "second_party")
-    val secondParty : String,
+    var secondParty : String = "",
 
     @ColumnInfo(name = "payment_method")
     @TypeConverters(PaymentMethodConverter::class)
-    val method: PaymentMethod,
+    var method: PaymentMethod = PaymentMethod.CASH,
 
     @ColumnInfo(name = "planned")
     @TypeConverters(TransactionPlannedConverter::class)
-    val planned: TransactionPlanned,
+    var planned: TransactionPlanned = TransactionPlanned.NOT_PLANNED,
 
     @ColumnInfo(name = "frequency")
     @TypeConverters(TransactionFrequencyConverter::class)
-    val frequency: TransactionFrequency,
+    var frequency: TransactionFrequency = TransactionFrequency.ONE_TIME,
 
     @ColumnInfo(name = "date")
-    val date: Long,
+    var date: Long = 0,
 
     @ColumnInfo(name = "plan_id")
-    val planIdOrIsActive : Int
+    var planIdOrIsActive : Int = 0
 ){
     /**
      * Call this method to get amount as string
