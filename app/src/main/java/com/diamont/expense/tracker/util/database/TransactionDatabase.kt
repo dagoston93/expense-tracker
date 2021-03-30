@@ -11,8 +11,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * Our room database
  */
 @Database(
-    entities = [Transaction::class, TransactionCategory::class, VenueData::class],
-    version = 11,
+    entities = [Transaction::class, TransactionCategory::class, SecondPartyData::class],
+    version = 12,
     exportSchema = false
 )
 abstract class TransactionDatabase : RoomDatabase(){
@@ -34,7 +34,7 @@ abstract class TransactionDatabase : RoomDatabase(){
                     )
                         //.fallbackToDestructiveMigration()
                         .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7,
-                            MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
+                            MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
                         .build()
 
                     INSTANCE = instance
@@ -99,6 +99,14 @@ abstract class TransactionDatabase : RoomDatabase(){
                 database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('Spar', 1)")
                 database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('Aldi', 1)")
                 database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('Lidl', 1)")
+            }
+        }
+
+        private val MIGRATION_11_12 = object : Migration(11,12){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('The boss', 0)")
+                database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('Bank', 0)")
+                database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('WHoever buys it', 0)")
             }
         }
     }

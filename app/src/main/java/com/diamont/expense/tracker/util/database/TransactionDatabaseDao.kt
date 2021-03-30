@@ -81,10 +81,22 @@ interface TransactionDatabaseDao {
     fun clearCategoryDatabase()
 
     /**
-     * Get all venues
+     * Add new venue/source
      */
-    @Query("SELECT name FROM second_party_data ORDER BY name")
+    @Insert(entity = SecondPartyData::class)
+    fun insertSecondPartyData(data: SecondPartyData)
+
+    /**
+     * Get all venues and recipients
+     */
+    @Query("SELECT name FROM second_party_data WHERE is_recipient=1 ORDER BY name")
     fun getAllVenues() : List<String>
+
+    /**
+     * Get all sources
+     */
+    @Query("SELECT name FROM second_party_data WHERE is_recipient=0 ORDER BY name")
+    fun getAllSources() : List<String>
 
     /**
      * * * * * * * * * SUSPEND FUNCTIONS * * * * * * * * * *
@@ -156,7 +168,14 @@ interface TransactionDatabaseDao {
         }
     }
 
-
+    /**
+     * Suspend function to insert second part data
+     */
+    suspend fun insertSecondPartyDataSuspend(data: SecondPartyData){
+        return withContext(Dispatchers.IO){
+            insertSecondPartyData(data)
+        }
+    }
 
     /**
      * Suspend function to retrieve venues
@@ -164,6 +183,16 @@ interface TransactionDatabaseDao {
     suspend fun getVenuesSuspend() : List<String> {
         return withContext(Dispatchers.IO){
             val data : List<String> = getAllVenues()
+            data
+        }
+    }
+
+    /**
+     * Suspend function to retrieve venues
+     */
+    suspend fun getSourcesSuspend() : List<String> {
+        return withContext(Dispatchers.IO){
+            val data : List<String> = getAllSources()
             data
         }
     }

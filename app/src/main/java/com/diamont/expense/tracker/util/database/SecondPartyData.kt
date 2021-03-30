@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "second_party_data")
-data class VenueData(
+data class SecondPartyData(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

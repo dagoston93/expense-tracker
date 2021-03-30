@@ -1,12 +1,14 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.boolToVisibility
+import com.diamont.expense.tracker.util.database.SecondPartyData
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
@@ -107,9 +109,13 @@ class AddOrEditTransactionFragmentViewModel(
     val currentPlanList : LiveData<List<String>>
         get() = _currentPlanList
 
-    private val _venues = MutableLiveData<List<String>>(listOf<String>())
-    val venues : LiveData<List<String>>
-        get() = _venues
+    private val _venueOrSourceList = MutableLiveData<List<String>>(listOf<String>())
+    val venueOrSourceList : LiveData<List<String>>
+        get() = _venueOrSourceList
+
+    private var sources = listOf<String>()
+    private var venues = listOf<String>()
+
 
     /**
      * Live data for field visibility
@@ -271,6 +277,7 @@ class AddOrEditTransactionFragmentViewModel(
             /** Set planId to 0 in the beginning if not in edit mode */
             if(!isEditMode){
                 currentTransaction.planIdOrIsActive = 0
+                _venueOrSourceList.value = sources
             }
 
         }else if(selectedTransactionType == TransactionType.EXPENSE){
@@ -308,6 +315,7 @@ class AddOrEditTransactionFragmentViewModel(
             /** Set planId to 0 in the beginning if not in edit mode */
             if(!isEditMode){
                 currentTransaction.planIdOrIsActive = 0
+                _venueOrSourceList.value = venues
             }
 
         }else if(selectedTransactionType == TransactionType.DEPOSIT){
@@ -407,6 +415,11 @@ class AddOrEditTransactionFragmentViewModel(
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
             currentTransaction.planIdOrIsActive = 1
 
+            /** Set venue/source list for autocomplete text view */
+            if(!isEditMode){
+                _venueOrSourceList.value = venues
+            }
+
         }else if(selectedTransactionType == TransactionType.PLAN_INCOME){
             /** Set up the title */
             if(!isEditMode) {
@@ -439,6 +452,11 @@ class AddOrEditTransactionFragmentViewModel(
             /** reset isPlanned property of current transaction */
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
             currentTransaction.planIdOrIsActive = 1
+
+            /** Set venue/source list for autocomplete text view */
+            if(!isEditMode){
+                _venueOrSourceList.value = sources
+            }
         }
     }
 
@@ -597,6 +615,12 @@ class AddOrEditTransactionFragmentViewModel(
      */
     fun onAddButtonCLicked(){
         validate()
+
+        /** If category id is 0 we set it to id of first category (Unspecified) */
+        if(currentTransaction.categoryId == 0){
+            currentTransaction.categoryId = _categories.value?.get(0)!!.categoryId
+        }
+
         if(_isInputValid.value == true){
             if(isEditMode){
                 updateTransaction()
@@ -722,6 +746,14 @@ class AddOrEditTransactionFragmentViewModel(
         /** Set the date */
         _date.time = currentTransaction.date
         _dateString.value = dateFormat.format(_date)
+
+        /** Set initial value for venue or source list for autocomplete text view */
+        _venueOrSourceList.value = if(currentTransaction.transactionType == TransactionType.EXPENSE
+            || currentTransaction.transactionType == TransactionType.PLAN_EXPENSE){
+            venues
+        }else{
+            sources
+        }
     }
 
     /**
@@ -730,6 +762,9 @@ class AddOrEditTransactionFragmentViewModel(
     private fun onInitialDataReceived(){
         if(isEditMode){
             setUpEditTransaction()
+        }else{
+            /** Set inital value for venue or source list for autocomplete text view */
+            _venueOrSourceList.value = venues
         }
         isInitialSetupDone = true
     }
@@ -740,7 +775,8 @@ class AddOrEditTransactionFragmentViewModel(
     private fun getDataFromDatabase(){
         uiScope.launch {
             _categories.value = databaseDao.getCategoriesSuspend()
-            _venues.value = databaseDao.getVenuesSuspend()
+            venues = databaseDao.getVenuesSuspend()
+            sources = databaseDao.getSourcesSuspend()
             incomePlans = databaseDao.getIncomePlansSuspend()
             expensePlans = databaseDao.getExpensePlansSuspend()
             createPlanStringLists()
@@ -761,6 +797,7 @@ class AddOrEditTransactionFragmentViewModel(
      */
     private fun insertTransaction(){
         uiScope.launch {
+            saveSecondPartyIfNew()
             databaseDao.insertTransactionSuspend(currentTransaction)
             _isOperationComplete.value = true
         }
@@ -771,8 +808,43 @@ class AddOrEditTransactionFragmentViewModel(
      */
     private fun updateTransaction(){
         uiScope.launch {
+            saveSecondPartyIfNew()
             databaseDao.updateTransactionSuspend(currentTransaction)
             _isOperationComplete.value = true
+        }
+    }
+
+    /**
+     * This method to saves the second party
+     * if it is not saved yet in the database
+     */
+    private suspend fun saveSecondPartyIfNew(){
+        /** We don't have second party field at withdraw/deposit so return if type is one of them */
+        if(currentTransaction.transactionType == TransactionType.WITHDRAW ||
+            currentTransaction.transactionType == TransactionType.DEPOSIT) return
+
+        /** If the recipient/source is an empty string we are done */
+        if(currentTransaction.secondParty.isEmpty()) return
+
+        /** Choose which list to check */
+        var list = listOf<String>()
+        var isRecipient = false
+
+        if(currentTransaction.transactionType == TransactionType.EXPENSE ||
+            currentTransaction.transactionType == TransactionType.PLAN_EXPENSE){
+            list = venues
+            isRecipient = true
+        }else{
+            list = sources
+        }
+
+        /** Check if list contains the new entry */
+        val item = list.find { currentTransaction.secondParty == it}
+
+        /** If it does not we save it */
+        if(item == null){
+            val secondPartyData = SecondPartyData(0, currentTransaction.secondParty, isRecipient)
+            databaseDao.insertSecondPartyDataSuspend(secondPartyData)
         }
     }
 

@@ -52,8 +52,6 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
     private lateinit var paymentMethodStringList : List<String>
     private lateinit var frequencyStringList : List<String>
 
-
-
     /**
      * onCreateView()
      */
@@ -86,6 +84,9 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
             false
         }
 
+        /**
+         * Create the view model
+         */
         val viewModelFactory = AddOrEditTransactionFragmentViewModelFactory(application, databaseDao, id, setPlanAsDefault)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddOrEditTransactionFragmentViewModel::class.java)
@@ -108,16 +109,13 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         transactionTypeAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, transactionTypeStringList)
         paymentMethodAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, paymentMethodStringList)
         frequencyAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, frequencyStringList)
-
-        transactionCategoryAdapter = TransactionCategoryAdapter(requireContext(), listOf<TransactionCategory>())
         venueAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, listOf<String>())
         planAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, listOf<String>())
+        transactionCategoryAdapter = TransactionCategoryAdapter(requireContext(), listOf<TransactionCategory>())
 
         binding.actvAddTransactionType.setText(transactionTypeAdapter.getItem(0), false)
         binding.actvAddPaymentMethod.setText(paymentMethodAdapter.getItem(0), false)
         binding.actvAddFrequency.setText(frequencyAdapter.getItem(0), false)
-
-
 
         /**
          * textChanged listener for Transaction Type dropdown menu
@@ -237,7 +235,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         /**
          * When the venues are retrieved we set the adapter for the autocomplete text view
          */
-        viewModel.venues.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.venueOrSourceList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if(it.isNotEmpty()){
                 venueAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, it)
                 binding.actvAddRecipientOrVenue.setAdapter(venueAdapter)
