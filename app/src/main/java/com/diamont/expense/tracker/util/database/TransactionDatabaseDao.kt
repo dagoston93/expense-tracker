@@ -27,6 +27,12 @@ interface TransactionDatabaseDao {
     fun updateTransaction(transaction: Transaction)
 
     /**
+     * Delete transaction
+     */
+    @Query("DELETE FROM transaction_data WHERE transaction_id=:id")
+    fun deleteTransaction(id: Int)
+
+    /**
      * Get all transactions
      */
     @Query("SELECT * FROM transaction_data ORDER BY date DESC")
@@ -138,7 +144,16 @@ interface TransactionDatabaseDao {
         }
     }
 
-     /**
+    /**
+     * Suspend function to delete a transaction
+     */
+    suspend fun deleteTransactionSuspend(id: Int){
+        return withContext(Dispatchers.IO){
+            deleteTransaction(id)
+        }
+    }
+
+    /**
      * Suspend function to retrieve categories from database
      */
     suspend fun getCategoriesSuspend() : List<TransactionCategory>{

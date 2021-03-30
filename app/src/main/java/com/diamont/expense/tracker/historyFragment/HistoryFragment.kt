@@ -58,9 +58,14 @@ class HistoryFragment : Fragment() {
         activityViewModel.setDrawerLayoutEnabled(true)
 
         /** Set up the recycler view with the adapter */
-        val adapter = TransactionRecyclerViewAdapter(binding.rvTransactionList) { id ->
-            viewModel.eventNavigateToEditFragment.value = id
-        }
+        val adapter = TransactionRecyclerViewAdapter(binding.rvTransactionList,
+            { id ->
+                viewModel.eventNavigateToEditFragment.value = id
+            },
+            {id ->
+                viewModel.deleteTransaction(id)
+            }
+        )
 
         binding.rvTransactionList.adapter = adapter
 
@@ -71,7 +76,7 @@ class HistoryFragment : Fragment() {
         viewModel.transactionData.observe(viewLifecycleOwner, Observer {
             it?.let{
                 adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
-                adapter.transactions = it
+                adapter.transactions = it.toMutableList()
             }
         })
 

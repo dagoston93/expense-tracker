@@ -15,9 +15,10 @@ import com.diamont.expense.tracker.util.view.TransactionDetailsView
  */
 class TransactionRecyclerViewAdapter
     (private val recyclerView: RecyclerView,
-     private val editIconCallback: (id: Int) -> Unit
+     private val editIconCallback: (id: Int) -> Unit,
+     private val deleteIconCallback: (id: Int)-> Unit
 ) : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
-    var transactions  = listOf<Transaction>()
+    var transactions  = mutableListOf<Transaction>()
     set(value){
         field = value
         notifyDataSetChanged()
@@ -50,11 +51,7 @@ class TransactionRecyclerViewAdapter
      * This method is responsible for binding the
      * data to the view and setting the onClickListners
      */
-    private fun bind(
-        holder: ViewHolder,
-        item: Transaction,
-        position: Int
-    ) {
+    private fun bind(holder: ViewHolder, item: Transaction, position: Int) {
         holder.view.setTransactionAndCategory(
             item,
             categories.find { it.categoryId == item.categoryId } ?: TransactionCategory()
@@ -62,6 +59,13 @@ class TransactionRecyclerViewAdapter
 
         holder.view.setEditIconOnClickListener {
             editIconCallback(item.transactionId)
+        }
+
+        holder.view.setDeleteIconOnClickListener {
+            deleteIconCallback(item.transactionId)
+            expandedPosition = -1
+            transactions.removeAt(position)
+            notifyDataSetChanged()
         }
 
         /** Set the visibility of the content */

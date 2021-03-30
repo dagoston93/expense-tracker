@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.historyFragment
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -98,6 +99,16 @@ class HistoryFragmentViewModel(
             databaseDao.insertTransaction(plan3)
             databaseDao.insertTransaction(plan4)
 
+        }
+    }
+
+    /**
+     * Call this method when user clicks the delete button of a transaction
+     */
+    fun deleteTransaction(transactionId: Int){
+        Log.d("GUS", "del: $transactionId")
+        uiScope.launch {
+            databaseDao.deleteTransactionSuspend(transactionId)
         }
     }
 
