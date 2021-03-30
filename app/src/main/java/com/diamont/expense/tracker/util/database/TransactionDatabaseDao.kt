@@ -125,7 +125,7 @@ interface TransactionDatabaseDao {
      */
     suspend fun getTransactionByIdSuspend(id: Int) : Transaction{
         return withContext(Dispatchers.IO){
-            val transaction = getTransactionByIdSuspend(id)
+            val transaction = getTransactionById(id)
             transaction
         }
     }

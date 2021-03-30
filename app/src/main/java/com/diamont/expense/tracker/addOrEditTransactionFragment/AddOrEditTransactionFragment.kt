@@ -41,9 +41,9 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
     }
 
     /** Create adapters and string lists for exposed dropdown menus */
-    private lateinit var transactionTypeAdapter : StringArrayAdapter
-    private lateinit var paymentMethodAdapter : StringArrayAdapter
-    private lateinit var frequencyAdapter : StringArrayAdapter
+    private lateinit var transactionTypeAdapter : ArrayAdapter<String>
+    private lateinit var paymentMethodAdapter : ArrayAdapter<String>
+    private lateinit var frequencyAdapter : ArrayAdapter<String>
     private lateinit var transactionCategoryAdapter: TransactionCategoryAdapter
     private lateinit var venueAdapter: ArrayAdapter<String>
     private lateinit var planAdapter: ArrayAdapter<String>
@@ -100,10 +100,14 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         paymentMethodStringList = PaymentMethod.getValuesAsStringList(requireContext())
         frequencyStringList = TransactionFrequency.getValuesAsStringList(requireContext())
 
-        transactionTypeAdapter = StringArrayAdapter(requireContext(), transactionTypeStringList)
-        paymentMethodAdapter = StringArrayAdapter(requireContext(), paymentMethodStringList)
-        frequencyAdapter = StringArrayAdapter(requireContext(), frequencyStringList)
-        transactionCategoryAdapter = TransactionCategoryAdapter(requireContext(), listOf<TransactionCategory>())
+        //transactionTypeAdapter = StringArrayAdapter(requireContext(), transactionTypeStringList)
+        transactionTypeAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, transactionTypeStringList)
+        //paymentMethodAdapter = StringArrayAdapter(requireContext(), paymentMethodStringList)
+        //frequencyAdapter = StringArrayAdapter(requireContext(), frequencyStringList)
+
+        paymentMethodAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, paymentMethodStringList)
+        frequencyAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, frequencyStringList)
+
         transactionCategoryAdapter = TransactionCategoryAdapter(requireContext(), listOf<TransactionCategory>())
         venueAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, listOf<String>())
         planAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, listOf<String>())
@@ -112,16 +116,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         binding.actvAddPaymentMethod.setText(paymentMethodAdapter.getItem(0), false)
         binding.actvAddFrequency.setText(frequencyAdapter.getItem(0), false)
 
-        /**
-         * Receive arguments
-         */
-        if(arguments != null){
-            /** Check if we have a transaction id */
-            val id = this.arguments?.getInt(KEY_BUNDLE_TRANSACTION_ID)
-            if(id != null){
-                viewModel.setEditTransactionId(id)
-            }
-        }
+
 
         /**
          * textChanged listener for Transaction Type dropdown menu
@@ -230,7 +225,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         })
 
         /**
-         * When the venues are retrieved we set the adapter for the autocomplete textview
+         * When the venues are retrieved we set the adapter for the autocomplete text view
          */
         viewModel.venues.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if(it.isNotEmpty()){
@@ -258,11 +253,28 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         })
 
         /**
+         * Select plan when transaction to edit is loaded
+         */
+        viewModel.selectedPlanIndex.observe(viewLifecycleOwner, Observer {
+            if(!planAdapter.isEmpty){
+                binding.actvAddIsPlanned.setText(planAdapter.getItem(it).toString(), false)
+            }
+        })
+
+        /**
          * Observe description error message
          */
         viewModel.descriptionErrorMessage.observe(viewLifecycleOwner, Observer {
             binding.tilAddDescription.error = it
         })
+
+
+
+
+
+
+
+
 
         /**
          * If operation complete we navigate back
@@ -278,6 +290,17 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
          */
         binding.btnAddTransaction.setOnClickListener {
             viewModel.onAddButtonCLicked()
+        }
+
+        /**
+         * Receive arguments
+         */
+        if(arguments != null){
+            /** Check if we have a transaction id */
+            val id = this.arguments?.getInt(KEY_BUNDLE_TRANSACTION_ID)
+            if(id != null){
+                viewModel.setEditTransactionId(id)
+            }
         }
 
         /** Return the inflated layout */

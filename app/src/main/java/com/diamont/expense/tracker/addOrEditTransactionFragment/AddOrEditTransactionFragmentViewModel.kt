@@ -36,6 +36,8 @@ class AddOrEditTransactionFragmentViewModel(
     private var expensePlanStringList: MutableList<String>  = mutableListOf()
 
     private var currentTransaction = Transaction()
+    private var isEditMode: Boolean = false
+    private var selectedCategoryIndex: Int = 0
 
     /**
      * Set up some live data
@@ -101,6 +103,10 @@ class AddOrEditTransactionFragmentViewModel(
     val planCategoryIndex : LiveData<Int>
         get() = _planCategoryIndex
 
+    private val _selectedPlanIndex = MutableLiveData<Int>(0)
+    val selectedPlanIndex : LiveData<Int>
+        get() = _selectedPlanIndex
+
     private val _planPaymentMethodIndex = MutableLiveData<Int>(0)
     val planPaymentMethodIndex : LiveData<Int>
         get() = _planPaymentMethodIndex
@@ -132,6 +138,10 @@ class AddOrEditTransactionFragmentViewModel(
     private val _isCategorySelectEnabled = MutableLiveData<Boolean>(true)
     val isCategorySelectEnabled : LiveData<Boolean>
         get() = _isCategorySelectEnabled
+
+    private val _isTransactionTypeSelectEnabled = MutableLiveData<Boolean>(true)
+    val isTransactionTypeSelectEnabled : LiveData<Boolean>
+        get() = _isTransactionTypeSelectEnabled
 
     private val _isOperationComplete = MutableLiveData<Boolean>(false)
     val isOperationComplete : LiveData<Boolean>
@@ -263,6 +273,9 @@ class AddOrEditTransactionFragmentViewModel(
             /** Enable category select */
             _isCategorySelectEnabled.value = true
 
+            /** reset isPlanned property of current transaction */
+            currentTransaction.planned = TransactionPlanned.NOT_PLANNED
+
         }else if(selectedTransactionType == TransactionType.WITHDRAW){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_withdrawal)
@@ -288,6 +301,9 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** Enable category select */
             _isCategorySelectEnabled.value = true
+
+            /** reset isPlanned property of current transaction */
+            currentTransaction.planned = TransactionPlanned.NOT_PLANNED
 
         }else if(selectedTransactionType == TransactionType.PLAN_EXPENSE){
             /** Set up the title */
@@ -316,6 +332,9 @@ class AddOrEditTransactionFragmentViewModel(
             /** Enable category select */
             _isCategorySelectEnabled.value = true
 
+            /** reset isPlanned property of current transaction */
+            currentTransaction.planned = TransactionPlanned.NOT_PLANNED
+
         }else if(selectedTransactionType == TransactionType.PLAN_INCOME){
             /** Set up the title */
             _titleString.value = appContext.resources.getString(R.string.add_plan_income)
@@ -342,6 +361,9 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** Enable category select */
             _isCategorySelectEnabled.value = true
+
+            /** reset isPlanned property of current transaction */
+            currentTransaction.planned = TransactionPlanned.NOT_PLANNED
         }
     }
 
@@ -355,7 +377,9 @@ class AddOrEditTransactionFragmentViewModel(
      */
     fun onSelectedPlanChanged(index: Int?){
         if(index == null) return    // Do a quick null check
+        if(index == selectedCategoryIndex) return // If same category selected we do nothing
 
+        selectedCategoryIndex = index
         /** If Not planned is selected we need to clear the selections */
         if(index == 0){
 
@@ -396,13 +420,7 @@ class AddOrEditTransactionFragmentViewModel(
             }
             _recipientOrVenueString.value = plan.secondParty
 
-            /** Find the index of the category in the list */
-            if(_categories.value!= null)
-            for(i in _categories.value!!.indices){
-                if(_categories.value!![i].categoryId == plan.categoryId){
-                    _planCategoryIndex.value = i
-                }
-            }
+            _planCategoryIndex.value=findCategoryIndex(plan.categoryId)
 
             /** Find the index of the selected payment method */
             for(i in PaymentMethod.values().indices){
@@ -411,6 +429,23 @@ class AddOrEditTransactionFragmentViewModel(
                 }
             }
         }
+    }
+
+    /**
+     * Call this method to find the index of the category in the array
+     */
+    private fun findCategoryIndex(categoryId: Int) : Int {
+        var index = 0
+        /** Find the index of the category in the list */
+        if (_categories.value != null){
+            for (i in _categories.value!!.indices) {
+                if (_categories.value!![i].categoryId == categoryId) {
+                    index = i
+                }
+            }
+        }
+
+        return index
     }
 
     /**
@@ -546,8 +581,44 @@ class AddOrEditTransactionFragmentViewModel(
      * to edit it.
      */
     fun setEditTransactionId(id: Int){
-        //getTransactionToEdit(id)
-        //Log.d("GUS", "$currentTransaction")
+        getTransactionToEdit(id)
+        isEditMode = true
+    }
+
+    /**
+     * Call this method after transaction to edit
+     * has been retrieved from database to set the form up
+     */
+    private fun setUpEditTransaction(){
+        _isTransactionTypeSelectEnabled.value = false
+        _descriptionString.value = currentTransaction.description
+        _amountString.value = currentTransaction.amount.toString()
+        _recipientOrVenueString.value = currentTransaction.secondParty
+
+        _planCategoryIndex.value=findCategoryIndex(currentTransaction.categoryId)
+
+        /** Set the plan */
+        if(currentTransaction.planned == TransactionPlanned.NOT_PLANNED){
+            _selectedPlanIndex.value = 0
+        }else{
+            val planList = if(currentTransaction.transactionType == TransactionType.EXPENSE){
+                expensePlans
+            }else{
+                incomePlans
+            }
+
+            var index = 0
+            for(i in planList.indices){
+                if(planList[i].transactionId == currentTransaction.planIdOrIsActive){
+                    index = i
+                }
+            }
+
+            Log.d("GUS", "$planList")
+            Log.d("GUS", "${currentTransaction.planIdOrIsActive}")
+            Log.d("GUS", "idx: $index")
+            _selectedPlanIndex.value = index
+        }
     }
 
     /**
@@ -575,11 +646,12 @@ class AddOrEditTransactionFragmentViewModel(
     }
 
     /**
-     * This method retrieves the transaction that needs to be editet
+     * This method retrieves the transaction that needs to be edited
      */
     private fun getTransactionToEdit(id : Int){
         uiScope.launch {
-            currentTransaction = databaseDao.getTransactionById(id)
+            currentTransaction = databaseDao.getTransactionByIdSuspend(id)
+            setUpEditTransaction()
         }
     }
 
