@@ -12,3 +12,4 @@ const val KEY_PREF_INITIAL_CASH = "key_initial_cash"
 const val KEY_PREF_INITIAL_CARD = "key_initial_card"
 
 const val KEY_BUNDLE_TRANSACTION_ID = "transaction_id"
+const val KEY_BUNDLE_SET_PLAN_AS_DEFAULT = "set_plan_as_default"

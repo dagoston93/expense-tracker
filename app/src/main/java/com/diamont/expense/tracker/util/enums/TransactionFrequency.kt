@@ -41,6 +41,21 @@ enum class TransactionFrequency(val id : Int, val stringId :Int) {
         fun getFromIndex(index: Int) = values()[index]
 
         /**
+         * This method returns the index of a transaction frequency
+         */
+        fun getIndex(type: TransactionFrequency): Int{
+            var index = 0
+            /** Find the index of the selected payment method */
+            for (i in values().indices) {
+                if (type == values()[i]) {
+                    index = i
+                }
+            }
+
+            return index
+        }
+
+        /**
          * Return the possible values as a string array
          * We need it for array adapters for exposed
          * dropdown menus

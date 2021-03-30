@@ -8,13 +8,17 @@ import java.lang.IllegalArgumentException
 
 class AddOrEditTransactionFragmentViewModelFactory(
     private val application: Application,
-    private val databaseDao: TransactionDatabaseDao
+    private val databaseDao: TransactionDatabaseDao,
+    private val transactionIdToEdit: Int?,
+    private val setPlanAsDefaultType: Boolean
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(AddOrEditTransactionFragmentViewModel::class.java)){
             return AddOrEditTransactionFragmentViewModel(
                 application,
-                databaseDao
+                databaseDao,
+                transactionIdToEdit,
+                setPlanAsDefaultType
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel given to AddOrEditTransactionFragmentViewModelFactory")

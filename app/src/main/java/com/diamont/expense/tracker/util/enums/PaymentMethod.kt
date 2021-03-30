@@ -34,6 +34,20 @@ enum class PaymentMethod(val id : Int, val stringId : Int) {
         fun getFromIndex(index: Int) = values()[index]
 
         /**
+         * This method returns the index of a payment method
+         */
+        fun getIndex(method: PaymentMethod): Int{
+            var index = 0
+            /** Find the index of the selected payment method */
+            for (i in values().indices) {
+                if (method == values()[i]) {
+                    index = i
+                }
+            }
+
+            return index
+        }
+        /**
          * Return the possible values as a string array
          * We need it for array adapters for exposed
          * dropdown menus

@@ -130,6 +130,15 @@ interface TransactionDatabaseDao {
         }
     }
 
+    /**
+     * Suspend function to update a transaction
+     */
+    suspend fun updateTransactionSuspend(transaction: Transaction){
+        return withContext(Dispatchers.IO){
+            updateTransaction(transaction)
+        }
+    }
+
      /**
      * Suspend function to retrieve categories from database
      */

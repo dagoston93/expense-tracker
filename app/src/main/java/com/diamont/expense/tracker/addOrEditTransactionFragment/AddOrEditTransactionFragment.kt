@@ -1,7 +1,6 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,8 +15,8 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentAddOrEditTransactionBinding
+import com.diamont.expense.tracker.util.KEY_BUNDLE_SET_PLAN_AS_DEFAULT
 import com.diamont.expense.tracker.util.KEY_BUNDLE_TRANSACTION_ID
-import com.diamont.expense.tracker.util.arrayAdapters.StringArrayAdapter
 import com.diamont.expense.tracker.util.arrayAdapters.TransactionCategoryAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
@@ -53,14 +52,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
     private lateinit var paymentMethodStringList : List<String>
     private lateinit var frequencyStringList : List<String>
 
-    /**
-     * The date picker
-     */
-    private val datePicker =
-        MaterialDatePicker.Builder.datePicker()
-            .setTitleText(context?.resources?.getString(R.string.select_date))
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .build()
+
 
     /**
      * onCreateView()
@@ -78,8 +70,23 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
          */
         val application = requireNotNull(this.activity).application
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
-        val viewModelFactory = AddOrEditTransactionFragmentViewModelFactory(application, databaseDao)
 
+        /**
+         * Receive arguments
+         */
+        val id: Int? = if(arguments != null){
+            this.arguments?.getInt(KEY_BUNDLE_TRANSACTION_ID)
+        }else{
+            null
+        }
+
+        val setPlanAsDefault : Boolean = if(arguments != null){
+            this.arguments?.getBoolean(KEY_BUNDLE_SET_PLAN_AS_DEFAULT) ?: false
+        }else{
+            false
+        }
+
+        val viewModelFactory = AddOrEditTransactionFragmentViewModelFactory(application, databaseDao, id, setPlanAsDefault)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddOrEditTransactionFragmentViewModel::class.java)
         binding.viewModel = viewModel
@@ -93,18 +100,12 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
 
         /**
          * Set up the Exposed Dropdown Menus
-         *
-         * TODO maybe simple ArrayAdapter enough and StringArrayAdapter class can be deleted!!!
          */
         transactionTypeStringList = TransactionType.getValuesAsStringList(requireContext())
         paymentMethodStringList = PaymentMethod.getValuesAsStringList(requireContext())
         frequencyStringList = TransactionFrequency.getValuesAsStringList(requireContext())
 
-        //transactionTypeAdapter = StringArrayAdapter(requireContext(), transactionTypeStringList)
         transactionTypeAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, transactionTypeStringList)
-        //paymentMethodAdapter = StringArrayAdapter(requireContext(), paymentMethodStringList)
-        //frequencyAdapter = StringArrayAdapter(requireContext(), frequencyStringList)
-
         paymentMethodAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, paymentMethodStringList)
         frequencyAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, frequencyStringList)
 
@@ -179,16 +180,25 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         }
 
         /**
-         * OnClickListener for the date picker OK button
-         */
-        datePicker.addOnPositiveButtonClickListener {
-            viewModel.onSelectedDateChanged(it)
-        }
-
-        /**
          * OnCLickListener for date text view
          */
         binding.etAddDate.setOnClickListener {
+            /**
+             * Create the date picker
+             */
+            val datePicker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText(context?.resources?.getString(R.string.select_date))
+                    .setSelection(viewModel.date.time)
+                    .build()
+
+            /**
+             * OnClickListener for the date picker OK button
+             */
+            datePicker.addOnPositiveButtonClickListener {
+                viewModel.onSelectedDateChanged(it)
+            }
+
             datePicker.show(childFragmentManager, "")
         }
 
@@ -235,29 +245,47 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         })
 
         /**
-         * Select category when plan is selected
+         * Observe selected selected category index
          */
-        viewModel.planCategoryIndex.observe(viewLifecycleOwner, Observer {
+        viewModel.selectedCategoryIndex.observe(viewLifecycleOwner, Observer {
             if(!transactionCategoryAdapter.isEmpty){
                 binding.actvAddCategory.setText(transactionCategoryAdapter.getItem(it).toString(), false)
             }
         })
 
         /**
-         * Select payment method when plan is selected
+         * Observe selected payment method index
          */
-        viewModel.planPaymentMethodIndex.observe(viewLifecycleOwner, Observer {
+        viewModel.selectedPaymentMethodIndex.observe(viewLifecycleOwner, Observer {
             if(!paymentMethodAdapter.isEmpty){
                 binding.actvAddPaymentMethod.setText(paymentMethodAdapter.getItem(it).toString(), false)
             }
         })
 
         /**
-         * Select plan when transaction to edit is loaded
+         * Observe selected plan index
          */
         viewModel.selectedPlanIndex.observe(viewLifecycleOwner, Observer {
             if(!planAdapter.isEmpty){
                 binding.actvAddIsPlanned.setText(planAdapter.getItem(it).toString(), false)
+            }
+        })
+
+        /**
+         * Observe selected transaction type index
+         */
+        viewModel.selectedTransactionTypeIndex.observe(viewLifecycleOwner, Observer {
+            if(!transactionTypeAdapter.isEmpty){
+                binding.actvAddTransactionType.setText(transactionTypeAdapter.getItem(it).toString(), false)
+            }
+        })
+
+        /**
+         * Observe the selected transaction frequency index
+         */
+        viewModel.selectedFrequencyIndex.observe(viewLifecycleOwner, Observer {
+            if(!frequencyAdapter.isEmpty){
+                binding.actvAddFrequency.setText(frequencyAdapter.getItem(it).toString(), false)
             }
         })
 
@@ -292,16 +320,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
             viewModel.onAddButtonCLicked()
         }
 
-        /**
-         * Receive arguments
-         */
-        if(arguments != null){
-            /** Check if we have a transaction id */
-            val id = this.arguments?.getInt(KEY_BUNDLE_TRANSACTION_ID)
-            if(id != null){
-                viewModel.setEditTransactionId(id)
-            }
-        }
+
 
         /** Return the inflated layout */
         return binding.root

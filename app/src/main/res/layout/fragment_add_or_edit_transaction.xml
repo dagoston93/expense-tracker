@@ -26,7 +26,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/transaction_type">
+                android:hint="@string/transaction_type"
+                android:enabled="@{viewModel.isTransactionTypeSelectEnabled}">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvAddTransactionType"
@@ -93,6 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="@{viewModel.isCategoryFieldVisible}"
+                android:enabled="@{viewModel.isCategorySelectEnabled}"
                 android:hint="@string/category">
 
                 <AutoCompleteTextView
@@ -181,7 +183,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="@{viewModel.isInputValid}"
-                android:text="@{viewModel.titleString}"/>
+                android:text="@{viewModel.buttonText}"/>
 
         </LinearLayout>
     </ScrollView>

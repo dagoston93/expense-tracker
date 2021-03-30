@@ -33,6 +33,21 @@ enum class TransactionType(val id : Int, val stringId :Int) {
         fun getIdFromIndex(index : Int) = values()[index].id
 
         /**
+         * This method returns the index of a transaction type
+         */
+        fun getIndex(type: TransactionType): Int{
+            var index = 0
+            /** Find the index of the selected payment method */
+            for (i in values().indices) {
+                if (type == values()[i]) {
+                    index = i
+                }
+            }
+
+            return index
+        }
+
+        /**
          * Return the enum value from the index
          */
         fun getEnumValueFromIndex(index: Int) = values()[index]
