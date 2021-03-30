@@ -17,6 +17,7 @@ import com.diamont.expense.tracker.databinding.FragmentHistoryBinding
 import com.diamont.expense.tracker.util.database.TransactionRecyclerViewAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class HistoryFragment : Fragment() {
     /** Data binding */
@@ -62,14 +63,14 @@ class HistoryFragment : Fragment() {
             { id ->
                 viewModel.eventNavigateToEditFragment.value = id
             },
-            {id ->
-                viewModel.deleteTransaction(id)
+            {id, description, typeStringId, date, position ->
+                confirmDelete(id, description, typeStringId, date, position)
             }
         )
 
         binding.rvTransactionList.adapter = adapter
 
-        /** Turn the blinking animation on item change off*/
+        /** Turn the blinking animation on item change off */
         binding.rvTransactionList.itemAnimator = null
 
         /** Observe the data and refresh recycler view if it changes */
@@ -93,5 +94,26 @@ class HistoryFragment : Fragment() {
         /** Return the inflated layout */
         return binding.root
     }
-    
+
+    /**
+     * Call this method to show the confirm delete dialog
+     */
+    private fun confirmDelete(transactionId: Int, description: String, typeStringId: Int, date: String, position: Int){
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.confirm_delete_dialog_title))
+            .setMessage(resources.getString(R.string.confirm_delete_dialog_text,
+                description,
+                resources.getString(typeStringId),
+                date
+            ))
+            .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
+            .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
+                viewModel.deleteTransaction(transactionId)
+                (binding.rvTransactionList.adapter as TransactionRecyclerViewAdapter).itemDeletedAtPos(position)
+            }
+            .show()
+
+
+    }
+
 }

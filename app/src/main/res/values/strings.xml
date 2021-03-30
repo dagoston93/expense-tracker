@@ -95,17 +95,20 @@
     <string name="add_deposit">Add deposit</string>
     <string name="add_plan_income">Add planned income</string>
     <string name="add_plan_expense">Add planned expense</string>
-
     <string name="edit_expense">Edit expense</string>
     <string name="edit_income">Edit income</string>
     <string name="edit_withdrawal">Edit withdrawal</string>
     <string name="edit_deposit">Edit deposit</string>
     <string name="edit_plan_income">Edit planned income</string>
     <string name="edit_plan_expense">Edit planned expense</string>
-
     <string name="select_date">Select date</string>
     <string name="description_error_message">Plan descriptions must be unique</string>
-
     <string name="add">Add</string>
     <string name="save">Save</string>
+
+    <!-- Confirm delete dialog -->
+    <string name="confirm_delete_dialog_title">Confirm</string>
+    <string name="confirm_delete_dialog_text">Are you sure you want to delete the following transaction?\n\nDescription: %1$s\nType: %2$s\nDate: %3$s</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>

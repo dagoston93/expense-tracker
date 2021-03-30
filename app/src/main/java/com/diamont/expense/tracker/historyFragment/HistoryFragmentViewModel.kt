@@ -106,7 +106,6 @@ class HistoryFragmentViewModel(
      * Call this method when user clicks the delete button of a transaction
      */
     fun deleteTransaction(transactionId: Int){
-        Log.d("GUS", "del: $transactionId")
         uiScope.launch {
             databaseDao.deleteTransactionSuspend(transactionId)
         }

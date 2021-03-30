@@ -1,5 +1,6 @@
 package com.diamont.expense.tracker.util.database
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ import com.diamont.expense.tracker.util.view.TransactionDetailsView
 class TransactionRecyclerViewAdapter
     (private val recyclerView: RecyclerView,
      private val editIconCallback: (id: Int) -> Unit,
-     private val deleteIconCallback: (id: Int)-> Unit
+     private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, date: String, position: Int) -> Unit
 ) : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
     var transactions  = mutableListOf<Transaction>()
     set(value){
@@ -62,10 +63,8 @@ class TransactionRecyclerViewAdapter
         }
 
         holder.view.setDeleteIconOnClickListener {
-            deleteIconCallback(item.transactionId)
-            expandedPosition = -1
-            transactions.removeAt(position)
-            notifyDataSetChanged()
+            deleteIconCallback(item.transactionId, item.description,
+                item.transactionType.stringId, item.getDateString(recyclerView.context), position)
         }
 
         /** Set the visibility of the content */
@@ -110,6 +109,16 @@ class TransactionRecyclerViewAdapter
         if (prevExpanded != -1) {
             notifyItemChanged(prevExpanded)
         }
+    }
+
+    /**
+     * Call this method if user deletes an item
+     */
+    fun itemDeletedAtPos(position: Int){
+        /** If item was deleted close the open view */
+        expandedPosition = -1
+        transactions.removeAt(position)
+        notifyDataSetChanged()
     }
 
     /**
