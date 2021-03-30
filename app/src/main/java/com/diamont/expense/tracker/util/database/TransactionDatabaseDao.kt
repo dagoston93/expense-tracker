@@ -83,21 +83,8 @@ interface TransactionDatabaseDao {
     /**
      * Get all venues
      */
-    @Query("SELECT venue_name FROM venue_data ORDER BY venue_name")
+    @Query("SELECT name FROM second_party_data ORDER BY name")
     fun getAllVenues() : List<String>
-
-    /**
-     * Insert plan
-     */
-    @Insert(entity = Plan::class)
-    fun insertPlan(plan: Plan)
-
-    /**
-     * Get all plans
-     */
-    @Query("SELECT * FROM plan_data ORDER BY plan_id DESC")
-    fun getAllPlans() : List<Plan>
-
 
     /**
      * * * * * * * * * SUSPEND FUNCTIONS * * * * * * * * * *

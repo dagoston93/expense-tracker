@@ -268,6 +268,11 @@ class AddOrEditTransactionFragmentViewModel(
             /** Enable category select */
             _isCategorySelectEnabled.value = true
 
+            /** Set planId to 0 in the beginning if not in edit mode */
+            if(!isEditMode){
+                currentTransaction.planIdOrIsActive = 0
+            }
+
         }else if(selectedTransactionType == TransactionType.EXPENSE){
             /** Set up the title */
             if(!isEditMode) {
@@ -300,6 +305,11 @@ class AddOrEditTransactionFragmentViewModel(
             /** Enable category select */
             _isCategorySelectEnabled.value = true
 
+            /** Set planId to 0 in the beginning if not in edit mode */
+            if(!isEditMode){
+                currentTransaction.planIdOrIsActive = 0
+            }
+
         }else if(selectedTransactionType == TransactionType.DEPOSIT){
             /** Set up the title */
             if(!isEditMode) {
@@ -330,6 +340,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** reset isPlanned property of current transaction */
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
+            currentTransaction.planIdOrIsActive = 0
 
         }else if(selectedTransactionType == TransactionType.WITHDRAW){
             /** Set up the title */
@@ -361,6 +372,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** reset isPlanned property of current transaction */
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
+            currentTransaction.planIdOrIsActive = 0
 
         }else if(selectedTransactionType == TransactionType.PLAN_EXPENSE){
             /** Set up the title */
@@ -393,6 +405,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** reset isPlanned property of current transaction */
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
+            currentTransaction.planIdOrIsActive = 1
 
         }else if(selectedTransactionType == TransactionType.PLAN_INCOME){
             /** Set up the title */
@@ -425,6 +438,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** reset isPlanned property of current transaction */
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
+            currentTransaction.planIdOrIsActive = 1
         }
     }
 

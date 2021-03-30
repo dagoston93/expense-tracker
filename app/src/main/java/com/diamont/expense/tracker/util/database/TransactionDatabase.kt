@@ -11,8 +11,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * Our room database
  */
 @Database(
-    entities = [Transaction::class, TransactionCategory::class, VenueData::class, Plan::class],
-    version = 7,
+    entities = [Transaction::class, TransactionCategory::class, VenueData::class],
+    version = 11,
     exportSchema = false
 )
 abstract class TransactionDatabase : RoomDatabase(){
@@ -33,7 +33,8 @@ abstract class TransactionDatabase : RoomDatabase(){
                         "transaction_database"
                     )
                         //.fallbackToDestructiveMigration()
-                        .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                        .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7,
+                            MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
                         .build()
 
                     INSTANCE = instance
@@ -45,11 +46,11 @@ abstract class TransactionDatabase : RoomDatabase(){
         private val MIGRATION_3_4 = object : Migration(3,4){
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("CREATE TABLE IF NOT EXISTS `venue_data` (`venue_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `venue_name` TEXT NOT NULL)");
-                database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('Intersparhelt')")
+                database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('Interspar')")
                 database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('TESCO')")
                 database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('Spar')")
                 database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('Aldi')")
-                database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('Lidli')")
+                database.execSQL("INSERT INTO venue_data (venue_name) VALUES ('Lidl')")
             }
         }
 
@@ -68,6 +69,36 @@ abstract class TransactionDatabase : RoomDatabase(){
         private val MIGRATION_6_7 = object : Migration(6,7){
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE `plan_data` ADD `is_active` INTEGER NOT NULL DEFAULT 1")
+            }
+        }
+
+        private val MIGRATION_7_8 = object : Migration(7,8){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE plan_data")
+            }
+        }
+
+        private val MIGRATION_8_9 = object : Migration(8,9){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE `venue_data` ADD `is_recipient` INTEGER NOT NULL DEFAULT 1")
+            }
+        }
+
+        private val MIGRATION_9_10 = object : Migration(9,10){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE `venue_data` RENAME TO `second_party_data`")
+            }
+        }
+
+        private val MIGRATION_10_11 = object : Migration(10,11){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE `second_party_data`")
+                database.execSQL("CREATE TABLE IF NOT EXISTS `second_party_data` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_recipient` INTEGER NOT NULL)")
+                database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('Interspar', 1)")
+                database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('TESCO', 1)")
+                database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('Spar', 1)")
+                database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('Aldi', 1)")
+                database.execSQL("INSERT INTO `second_party_data` (`name`, `is_recipient`) VALUES ('Lidl', 1)")
             }
         }
     }
