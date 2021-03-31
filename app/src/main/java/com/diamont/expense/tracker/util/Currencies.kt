@@ -12,6 +12,7 @@ data class Currency(
     val sign : String,
     val format: String,
     /** If null, it uses default: ',' */
+    val groupingSeparator: Char? = null,
     val decimalSeparator: Char? = null
 ){
     override fun toString(): String {
@@ -41,13 +42,13 @@ data class Currency(
             val currency = getCurrencyById(currencyId)
 
             if(currency != null) {
-                if (currency.decimalSeparator == null)
+                if (currency.groupingSeparator == null || currency.decimalSeparator == null)
                 {
                     return DecimalFormat(currency.format)
                 }else{
                     val symbols = DecimalFormatSymbols()
-                    symbols.groupingSeparator = ' '
-                    symbols.decimalSeparator = '.'
+                    symbols.groupingSeparator = currency.groupingSeparator
+                    symbols.decimalSeparator = currency.decimalSeparator
 
                     return DecimalFormat(currency.format, symbols)
                 }
@@ -60,10 +61,10 @@ data class Currency(
          * The list of currencies
          */
         val availableCurrencies : List<Currency> = listOf(
-            Currency(0,"USD", "$", "$#,###.00"),
-            Currency(1,"GBP", "£", "£#,###.00"),
-            Currency(2,"HUF", "Ft", "# ### Ft", ' '),
-            Currency(3,"EUR", "€", "€#,###.00")
+            Currency(0,"USD", "$", "$#,###.00", ',', '.'),
+            Currency(1,"GBP", "£", "£#,###.00", ',', '.'),
+            Currency(2,"HUF", "Ft", "# ### Ft", ' ', ','),
+            Currency(3,"EUR", "€", "€#,###.00", ',', '.')
         )
     }
 }

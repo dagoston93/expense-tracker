@@ -5,11 +5,17 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
 
 class ColorPicker (context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs){
 
-    private var selectedColor: Int = 0
+    /** The required variables */
+    private var selectedColorIndex: Int = 0
+    private val linearLayoutList : List<LinearLayout>
+
+    /** The list of available colors */
     private val colorList = listOf<Int>(
         R.color.category_color1,
         R.color.category_color2,
@@ -29,7 +35,13 @@ class ColorPicker (context: Context, attrs: AttributeSet) : ConstraintLayout(con
         R.color.category_color16,
     )
 
-    private val linearLayoutList : List<LinearLayout>
+    /**
+     * Live data for the currently chosen color
+     */
+    private val _selectedColor = MutableLiveData<Int>(R.color.category_color1)
+    val selectedColor: LiveData<Int>
+        get() = _selectedColor
+
 
     /**
      * Constructor
@@ -79,10 +91,11 @@ class ColorPicker (context: Context, attrs: AttributeSet) : ConstraintLayout(con
         if(index > colorList.size-1) return
 
         /** First reset the previously selected border then set the new one */
-        linearLayoutList[selectedColor].setBackgroundResource(0)
+        linearLayoutList[selectedColorIndex].setBackgroundResource(0)
 
-        selectedColor = index
-        linearLayoutList[selectedColor].setBackgroundResource(R.drawable.bg_border)
+        selectedColorIndex = index
+        linearLayoutList[selectedColorIndex].setBackgroundResource(R.drawable.bg_border)
+        _selectedColor.value = colorList[selectedColorIndex]
     }
 
     /**

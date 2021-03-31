@@ -164,6 +164,15 @@ interface TransactionDatabaseDao {
     }
 
     /**
+     * Suspend function to insert category
+     */
+    suspend fun insertCategorySuspend(category: TransactionCategory){
+        return withContext(Dispatchers.IO){
+            insertCategory(category)
+        }
+    }
+
+    /**
      * Suspend function to retrieve expense plans
      */
     suspend fun getExpensePlansSuspend() : List<Transaction>{

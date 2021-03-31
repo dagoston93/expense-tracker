@@ -5,6 +5,7 @@
     tools:context=".addOrEditTransactionFragment.AddOrEditTransactionFragment">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.diamont.expense.tracker.addOrEditTransactionFragment.AddOrEditTransactionFragmentViewModel" />
@@ -26,14 +27,14 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/transaction_type"
-                android:enabled="@{viewModel.isTransactionTypeSelectEnabled}">
+                android:enabled="@{viewModel.isTransactionTypeSelectEnabled}"
+                android:hint="@string/transaction_type">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvAddTransactionType"
-                    android:enabled="@{viewModel.isTransactionTypeSelectEnabled}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.isTransactionTypeSelectEnabled}"
                     android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -43,8 +44,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.isIsPlannedFieldVisible}"
-                android:hint="@string/plan_colon">
+                android:hint="@string/plan_colon"
+                android:visibility="@{viewModel.isIsPlannedFieldVisible}">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvAddIsPlanned"
@@ -57,17 +58,17 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilAddDescription"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:errorEnabled="@{viewModel.isErrorEnabled}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/description">
+                android:hint="@string/description"
+                app:errorEnabled="@{viewModel.isErrorEnabled}">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAddDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.descriptionString}"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:text="@{viewModel.descriptionString}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,44 +85,60 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number|numberDecimal"
-                    android:text="@{viewModel.amountString}"/>
+                    android:text="@{viewModel.amountString}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilAddCategory"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.isCategoryFieldVisible}"
-                android:enabled="@{viewModel.isCategorySelectEnabled}"
-                android:hint="@string/category">
+                android:orientation="horizontal">
 
-                <AutoCompleteTextView
-                    android:id="@+id/actvAddCategory"
-                    android:enabled="@{viewModel.isCategorySelectEnabled}"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilAddCategory"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
+                    android:layout_weight="1"
+                    android:enabled="@{viewModel.isCategorySelectEnabled}"
+                    android:hint="@string/category"
+                    android:visibility="@{viewModel.isCategoryFieldVisible}">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <AutoCompleteTextView
+                        android:id="@+id/actvAddCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="@{viewModel.isCategorySelectEnabled}"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/ivAddFragmentAddCategory"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_add"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilAddRecipientOrVenue"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.isRecipientOrVenueFieldVisible}"
                 android:hint="@{viewModel.recipientOrVenueHint}"
+                android:visibility="@{viewModel.isRecipientOrVenueFieldVisible}"
                 tools:hint="@string/recipient_venue">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvAddRecipientOrVenue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.recipientOrVenueString}"
                     android:completionThreshold="1"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:text="@{viewModel.recipientOrVenueString}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -130,8 +147,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.isPaymentMethodFieldVisible}"
                 android:hint="@{viewModel.paymentMethodHint}"
+                android:visibility="@{viewModel.isPaymentMethodFieldVisible}"
                 tools:hint="@string/payment_method">
 
                 <AutoCompleteTextView
@@ -147,8 +164,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.isFrequencyFieldVisible}"
-                android:hint="@string/frequency">
+                android:hint="@string/frequency"
+                android:visibility="@{viewModel.isFrequencyFieldVisible}">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvAddFrequency"
@@ -170,11 +187,11 @@
                     android:id="@+id/etAddDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
+                    android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:cursorVisible="false"
-                    android:text="@{viewModel.dateString}"/><!--    android:clickable="false"-->
+                    android:inputType="none"
+                    android:text="@{viewModel.dateString}" /><!--    android:clickable="false"-->
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -183,7 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="@{viewModel.isInputValid}"
-                android:text="@{viewModel.buttonText}"/>
+                android:text="@{viewModel.buttonText}" />
 
         </LinearLayout>
     </ScrollView>

@@ -20,6 +20,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.*
 import java.util.*
 
+/** TODO when editing PLAN it needs to accept current name!!! */
+
 class AddOrEditTransactionFragmentViewModel(
     private val appContext: Application,
     private val databaseDao: TransactionDatabaseDao,

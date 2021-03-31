@@ -8,10 +8,6 @@
         android:orientation="vertical"
         tools:context=".planFragment.PlanFragment">
 
-        <com.diamont.expense.tracker.util.view.ColorPicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
         <!-- TODO: Update blank fragment layout -->
         <TextView
             android:layout_width="wrap_content"

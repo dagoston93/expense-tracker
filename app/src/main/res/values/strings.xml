@@ -111,4 +111,7 @@
     <string name="confirm_delete_dialog_text">Are you sure you want to delete the following transaction?\n\nDescription: %1$s\nType: %2$s\nDate: %3$s</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="add_category_dialog_title">Add category</string>
+    <string name="category_already_exists">Category already exists</string>
+    <string name="category_name_empty">Please enter a name</string>
 </resources>

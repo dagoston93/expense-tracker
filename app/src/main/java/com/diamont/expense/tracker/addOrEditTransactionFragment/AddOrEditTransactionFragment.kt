@@ -14,16 +14,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.addCategoryDialogFragment.AddCategoryDialogFragment
 import com.diamont.expense.tracker.databinding.FragmentAddOrEditTransactionBinding
 import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.arrayAdapters.TransactionCategoryAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
+import com.diamont.expense.tracker.util.database.TransactionRecyclerViewAdapter
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
     /** Data binding and view model */
@@ -62,7 +65,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         binding.lifecycleOwner = this
 
         /**
-         *  Create the view model using a view model factory
+         *  Get the application context and tha database dao
          */
         val application = requireNotNull(this.activity).application
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
@@ -206,6 +209,13 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
             }
 
             datePicker.show(childFragmentManager, "")
+        }
+
+        /**
+         * onClickListener for the Add category button
+         */
+        binding.ivAddFragmentAddCategory.setOnClickListener {
+            AddCategoryDialogFragment().show(childFragmentManager, AddCategoryDialogFragment.TAG)
         }
 
         /**
