@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_border"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor1"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor1">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor2"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor2">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor3"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor3">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color4" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llColorPickerColor1">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor7"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor5"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor5">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color6" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor8"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor6"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor6">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color7" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor7"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor7">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color8" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor10"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llColorPickerColor5">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color9" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor11"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor9"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor9">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color10" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor12"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor10"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor10">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color11" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor11"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor11">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color12" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor14"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llColorPickerColor9">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color13" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor15"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor13"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor13">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color14" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/llColorPickerColor16"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor14"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor14">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color15" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorPickerColor16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/llColorPickerColor15"
+        app:layout_constraintTop_toTopOf="@+id/llColorPickerColor15">
+
+        <View
+            android:layout_width="@dimen/color_picker_color_size"
+            android:layout_height="@dimen/color_picker_color_size"
+            android:background="@color/category_color16" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

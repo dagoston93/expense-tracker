@@ -19,4 +19,22 @@
     <color name="background">#E0E6EB</color>
     <color name="colorGoalAchieved">@color/primaryColor</color>
     <color name="colorGoalNotAchieved">#D13E3E</color>
+
+    <!-- Category colors -->
+    <color name="category_color1">#f44336</color>
+    <color name="category_color2">#f50057</color>
+    <color name="category_color3">#9c27b0</color>
+    <color name="category_color4">#d500f9</color>
+    <color name="category_color5">#673ab7</color>
+    <color name="category_color6">#3f51b5</color>
+    <color name="category_color7">#2979ff</color>
+    <color name="category_color8">#00e5ff</color>
+    <color name="category_color9">#009688</color>
+    <color name="category_color10">#4caf50</color>
+    <color name="category_color11">#76ff03</color>
+    <color name="category_color12">#c6ff00</color>
+    <color name="category_color13">#ffeb3b</color>
+    <color name="category_color14">#ffc107</color>
+    <color name="category_color15">#ff9100</color>
+    <color name="category_color16">#ff3d00</color>
 </resources>
