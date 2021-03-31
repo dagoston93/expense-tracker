@@ -19,6 +19,7 @@ import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionPlanned
 import com.diamont.expense.tracker.util.enums.TransactionType
+import java.text.DecimalFormat
 
 class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
@@ -31,6 +32,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     private var labelTextAppearance : Int = 0
     private lateinit var transaction : Transaction
     private var category = TransactionCategory(0,"", android.R.color.black)
+    private var decimalFormat = DecimalFormat()
 
     /**
      * The required views
@@ -158,6 +160,13 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     }
 
     /**
+     * Call this method to set the decimal format
+     */
+    fun setDecimalFormat(decimalFormat: DecimalFormat){
+        this.decimalFormat = decimalFormat
+    }
+
+    /**
      * Call this method to set the transaction
      */
     fun setTransactionAndCategory(tran : Transaction, cat: TransactionCategory){
@@ -178,7 +187,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
          * Set up the always used text views
          */
         tvTitle.text = transaction.description
-        tvAmount.text = transaction.getAmountString()
+        tvAmount.text = transaction.getAmountString(decimalFormat)
         tvDate.text = transaction.getDateString(context)
         tvTransactionType.text = context.resources.getString(transaction.transactionType.stringId)
 

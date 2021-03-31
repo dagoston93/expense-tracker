@@ -17,7 +17,7 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     private var isFingerprintEnabled : Boolean = false
     private var pinCode : String = ""
     private var isFirstPinEntryAccepted : Boolean = false
-    private var selectedCurrency = Currency(0,"","")
+    private var selectedCurrency = Currency(0,"","", "")
     val selectedCurrencySign : String
         get() = selectedCurrency.sign
 

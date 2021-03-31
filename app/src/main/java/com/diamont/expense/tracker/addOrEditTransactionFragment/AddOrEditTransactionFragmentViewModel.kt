@@ -87,6 +87,9 @@ class AddOrEditTransactionFragmentViewModel(
     val dateHint: LiveData<String>
         get() = _dateHint
 
+    private val _currencySign = MutableLiveData<String>("")
+    val currencySign: LiveData<String>
+        get() = _currencySign
     /**
      * Live data for error the string
      */
@@ -767,6 +770,13 @@ class AddOrEditTransactionFragmentViewModel(
             _venueOrSourceList.value = venues
         }
         isInitialSetupDone = true
+    }
+
+    /**
+     * Cal this method when currency sign retrieved from shared prefs
+     */
+    fun setCurrencySign(sign: String){
+        _currencySign.value = sign
     }
 
     /**

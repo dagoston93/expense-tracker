@@ -14,10 +14,13 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentHistoryBinding
+import com.diamont.expense.tracker.util.Currency
+import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
 import com.diamont.expense.tracker.util.database.TransactionRecyclerViewAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.text.DecimalFormat
 
 class HistoryFragment : Fragment() {
     /** Data binding */
@@ -58,8 +61,15 @@ class HistoryFragment : Fragment() {
         activityViewModel.setUpButtonVisibility(false)
         activityViewModel.setDrawerLayoutEnabled(true)
 
+        /**
+         * Set the currency sign
+         */
+        val currencyId = activityViewModel.sharedPreferences.getInt(KEY_PREF_CURRENCY_ID, 0)
+        val decimalFormat = Currency.getDecimalFormat(currencyId) ?: DecimalFormat()
+
         /** Set up the recycler view with the adapter */
         val adapter = TransactionRecyclerViewAdapter(binding.rvTransactionList,
+            decimalFormat,
             { id ->
                 viewModel.eventNavigateToEditFragment.value = id
             },

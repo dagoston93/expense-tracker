@@ -1,9 +1,11 @@
 package com.diamont.expense.tracker
 
 import android.app.Application
+import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.preference.PreferenceManager
 
 /**
  * This view model is responsible for handling actions
@@ -28,6 +30,18 @@ class MainActivityViewModel (appContext: Application) : AndroidViewModel(appCont
     private val _isDrawerEnabled = MutableLiveData<Boolean>(false)
     val isDrawerEnabled : LiveData<Boolean>
         get() = _isDrawerEnabled
+
+    /** We need the shared preferences */
+    private var _sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
+    val sharedPreferences: SharedPreferences
+        get() = _sharedPreferences
+
+    /**
+     * Constructor
+     */
+    init{
+        /** Load shared preferences */
+    }
 
     /**
      * Trigger this event when user clicks on an edit icon

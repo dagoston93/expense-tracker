@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.view.TransactionDetailsView
+import java.text.DecimalFormat
 
 /**
  * This adapter class helps recycler view
@@ -16,6 +17,7 @@ import com.diamont.expense.tracker.util.view.TransactionDetailsView
  */
 class TransactionRecyclerViewAdapter
     (private val recyclerView: RecyclerView,
+     private val decimalFormat: DecimalFormat,
      private val editIconCallback: (id: Int) -> Unit,
      private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, date: String, position: Int) -> Unit
 ) : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
@@ -53,6 +55,7 @@ class TransactionRecyclerViewAdapter
      * data to the view and setting the onClickListners
      */
     private fun bind(holder: ViewHolder, item: Transaction, position: Int) {
+        holder.view.setDecimalFormat(decimalFormat)
         holder.view.setTransactionAndCategory(
             item,
             categories.find { it.categoryId == item.categoryId } ?: TransactionCategory()

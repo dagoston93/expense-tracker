@@ -6,6 +6,10 @@ import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionPlanned
 import com.diamont.expense.tracker.util.enums.TransactionType
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
+import java.util.*
 
 /**
  * This data class holds information about a transaction
@@ -53,8 +57,8 @@ data class Transaction(
     /**
      * Call this method to get amount as string
      */
-    fun getAmountString() : String{
-        return "$$amount"
+    fun getAmountString(decimalFormat: DecimalFormat) : String{
+        return decimalFormat.format(amount)
     }
 
     /**

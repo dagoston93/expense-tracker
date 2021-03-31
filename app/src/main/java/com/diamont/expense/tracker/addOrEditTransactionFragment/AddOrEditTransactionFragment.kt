@@ -15,15 +15,13 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentAddOrEditTransactionBinding
-import com.diamont.expense.tracker.util.KEY_BUNDLE_SET_PLAN_AS_DEFAULT
-import com.diamont.expense.tracker.util.KEY_BUNDLE_TRANSACTION_ID
+import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.arrayAdapters.TransactionCategoryAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionType
-import com.diamont.expense.tracker.util.getStringListIndexFromText
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 
@@ -98,6 +96,16 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         activityViewModel.setBottomNavBarVisibility(false)
         activityViewModel.setUpButtonVisibility(true)
         activityViewModel.setDrawerLayoutEnabled(false)
+
+        /**
+         * Set the currency sign
+         */
+        val currencyId = activityViewModel.sharedPreferences.getInt(KEY_PREF_CURRENCY_ID, 0)
+        val currency = Currency.getCurrencyById(currencyId)
+
+        if(currency != null){
+            viewModel.setCurrencySign(currency.sign)
+        }
 
         /**
          * Set up the Exposed Dropdown Menus
