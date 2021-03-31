@@ -75,6 +75,12 @@ interface TransactionDatabaseDao {
     fun updateCategory(category: TransactionCategory)
 
     /**
+     * Get category with given id
+     */
+    @Query("SELECT * FROM transaction_category WHERE category_id = :categoryId LIMIT 1")
+    fun getCategoryById(categoryId: Int) : TransactionCategory
+
+    /**
      * Get all categories
      */
     @Query("SELECT * FROM transaction_category ORDER BY category_id")
@@ -169,6 +175,24 @@ interface TransactionDatabaseDao {
     suspend fun insertCategorySuspend(category: TransactionCategory){
         return withContext(Dispatchers.IO){
             insertCategory(category)
+        }
+    }
+
+    /**
+     * Suspend function to update a category
+     */
+    suspend fun updateCategorySuspend(category: TransactionCategory){
+        return withContext(Dispatchers.IO){
+            updateCategory(category)
+        }
+    }
+
+    /**
+     * Suspend function to get a category by id
+     */
+    suspend fun getCategoryByIdSuspend(categoryId: Int) : TransactionCategory{
+        return withContext(Dispatchers.IO){
+            getCategoryById(categoryId)
         }
     }
 

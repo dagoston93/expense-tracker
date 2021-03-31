@@ -312,14 +312,6 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
             binding.tilAddDescription.error = it
         })
 
-
-
-
-
-
-
-
-
         /**
          * If operation complete we navigate back
          */
@@ -335,8 +327,6 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         binding.btnAddTransaction.setOnClickListener {
             viewModel.onAddButtonCLicked()
         }
-
-
 
         /** Return the inflated layout */
         return binding.root

@@ -38,4 +38,8 @@
         android:id="@+id/menu_drawer_about"
         android:name="com.diamont.expense.tracker.aboutFragment.AboutFragment"
         android:label="AboutFragment" />
+    <fragment
+        android:id="@+id/menu_drawer_manage_categories"
+        android:name="com.diamont.expense.tracker.manageCategoriesFragment.ManageCategoriesFragment"
+        android:label="ManageCategoriesFragment" />
 </navigation>

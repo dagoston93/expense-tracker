@@ -11,7 +11,7 @@ data class Currency(
     val name : String,
     val sign : String,
     val format: String,
-    /** If null, it uses default: ',' */
+    /** If null, it uses default by the system locale */
     val groupingSeparator: Char? = null,
     val decimalSeparator: Char? = null
 ){

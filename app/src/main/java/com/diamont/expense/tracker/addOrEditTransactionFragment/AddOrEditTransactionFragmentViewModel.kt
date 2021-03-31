@@ -877,5 +877,12 @@ class AddOrEditTransactionFragmentViewModel(
         }
     }
 
-
+    /**
+     * onCleared() is called when view model is destroyed
+     * in this case we need to cancel coroutines
+     */
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
 }

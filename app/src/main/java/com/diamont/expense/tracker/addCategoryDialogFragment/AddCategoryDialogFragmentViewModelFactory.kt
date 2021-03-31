@@ -9,12 +9,14 @@ import java.lang.IllegalArgumentException
 class AddCategoryDialogFragmentViewModelFactory (
     private val application: Application,
     private val databaseDao: TransactionDatabaseDao,
+    private val editCategoryId: Int?
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(AddCategoryDialogFragmentViewModel::class.java)){
             return AddCategoryDialogFragmentViewModel(
                 application,
-                databaseDao
+                databaseDao,
+                editCategoryId
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel given to AddCategoryDialogFragmentViewModelFactory")

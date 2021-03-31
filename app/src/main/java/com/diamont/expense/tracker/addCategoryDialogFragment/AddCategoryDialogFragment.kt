@@ -2,7 +2,6 @@ package com.diamont.expense.tracker.addCategoryDialogFragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class AddCategoryDialogFragment() : DialogFragment(){
+class AddCategoryDialogFragment(
+    private val editCategoryId: Int? = null,
+    val positiveButtonCallBack: () -> Unit = {}) : DialogFragment(){
     /** Declare required variables */
     private lateinit var viewModel :AddCategoryDialogFragmentViewModel
 
@@ -32,7 +33,7 @@ class AddCategoryDialogFragment() : DialogFragment(){
     private lateinit var etCategoryName: TextInputEditText
     private lateinit var tilCategoryName: TextInputLayout
     private lateinit var dialog: AlertDialog
-    private lateinit var addButton: Button
+    private var addButton: Button? = null
 
     /**
      * onCreateDialog()
@@ -47,7 +48,7 @@ class AddCategoryDialogFragment() : DialogFragment(){
         /**
          * Create the view model
          */
-        val viewModelFactory = AddCategoryDialogFragmentViewModelFactory(application, databaseDao)
+        val viewModelFactory = AddCategoryDialogFragmentViewModelFactory(application, databaseDao, editCategoryId)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddCategoryDialogFragmentViewModel::class.java)
 
@@ -75,16 +76,32 @@ class AddCategoryDialogFragment() : DialogFragment(){
          * We need to return the dialog we want to show()
          */
         dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(resources.getString(R.string.add_category_dialog_title))
+            .setTitle(
+                if(editCategoryId == null)
+                {
+                    resources.getString(R.string.add_category_dialog_title)
+                }else{
+                    resources.getString(R.string.edit_category_dialog_title)
+                }
+            )
             .setView(layout)
             .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
-            .setPositiveButton(resources.getString(R.string.add)) { _, _ -> onAddButtonClicked() }
+            .setPositiveButton(
+                if(editCategoryId == null) {
+                    resources.getString(R.string.add)
+                }else{
+                    resources.getString(R.string.save)
+                }
+            ) { _, _ ->
+                onAddButtonClicked()
+                positiveButtonCallBack()
+            }
             .create()
 
         /** Disable the add button in the beginning */
         dialog.setOnShowListener {
             addButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            addButton.isEnabled = false
+            addButton?.isEnabled = false
         }
 
         return dialog
@@ -108,6 +125,24 @@ class AddCategoryDialogFragment() : DialogFragment(){
             viewColorIndicator.setBackgroundResource(it)
         })
 
+        /**
+         * Observe category name (for edit)
+         */
+        viewModel.currentCategoryName.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                etCategoryName.setText(it)
+            }
+        })
+
+        /**
+         * Observe category color (for edit)
+         */
+        viewModel.currentCategoryColorId.observe(viewLifecycleOwner, Observer {
+            if(it != -1){
+                colorPicker.setSelectedColorByResourceId(it)
+            }
+        })
+
 
 
         return layout
@@ -117,7 +152,7 @@ class AddCategoryDialogFragment() : DialogFragment(){
      * onCLickListener for the positive button
      */
     private fun onAddButtonClicked(){
-        viewModel.addCategory(
+        viewModel.onPositiveButtonClick(
             etCategoryName.text.toString(),
             colorPicker.selectedColor.value ?: android.R.color.black
         )
@@ -130,11 +165,11 @@ class AddCategoryDialogFragment() : DialogFragment(){
         val error = viewModel.validateCategoryName(etCategoryName.text.toString())
 
         if(error == null){
-            addButton.isEnabled = true
+            addButton?.isEnabled = true
             tilCategoryName.isErrorEnabled = false
             tilCategoryName.error = ""
         }else{
-            addButton.isEnabled = false
+            addButton?.isEnabled = false
             tilCategoryName.isErrorEnabled = true
             tilCategoryName.error = error
         }

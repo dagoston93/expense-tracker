@@ -12,13 +12,13 @@ import com.diamont.expense.tracker.R
 data class TransactionCategory(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "category_id")
-    val categoryId : Int = 0,
+    var categoryId : Int = 0,
 
     @ColumnInfo(name = "category_name")
-    val categoryName: String = "",
+    var categoryName: String = "",
 
     @ColumnInfo(name = "color_res_id")
-    val categoryColorResId : Int = R.color.black
+    var categoryColorResId : Int = R.color.black
 ){
     override fun toString(): String {
         return "$categoryName"

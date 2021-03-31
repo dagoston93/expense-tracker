@@ -70,7 +70,7 @@
     <!-- Strings for planned/unplanned transactions -->
     <string name="planned">Planned</string>
     <string name="not_planned">Not planned</string>
-    
+
     <!-- Strings for the TransactionDetailView -->
     <string name="date">Date:</string>
     <string name="first_date">First date:</string>
@@ -112,6 +112,8 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="add_category_dialog_title">Add category</string>
+    <string name="edit_category_dialog_title">Edit category</string>
     <string name="category_already_exists">Category already exists</string>
     <string name="category_name_empty">Please enter a name</string>
+    <string name="manage_categories">Manage categories</string>
 </resources>
