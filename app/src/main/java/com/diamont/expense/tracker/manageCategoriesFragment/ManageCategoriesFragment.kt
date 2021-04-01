@@ -18,6 +18,7 @@ import com.diamont.expense.tracker.databinding.FragmentManageCategoriesBinding
 import com.diamont.expense.tracker.util.database.TransactionCategoryListAdapter
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.android.synthetic.main.fragment_manage_categories.*
 
 class ManageCategoriesFragment : Fragment() {
     /** Data binding and view model */
@@ -58,9 +59,9 @@ class ManageCategoriesFragment : Fragment() {
         /** Set up the recycler view with the adapter */
         val adapter = TransactionCategoryListAdapter(
             { id -> AddCategoryDialogFragment(id) {
-                viewModel.getCategories()
-                Log.d("GUS", "its called")
-            }.show(childFragmentManager, AddCategoryDialogFragment.TAG)},
+                    viewModel.onCategoryListChanged()
+                }.show(childFragmentManager, AddCategoryDialogFragment.TAG)
+            },
             {id, name, position ->
                 confirmDeleteCategory(id, name, position)
             }
@@ -74,6 +75,15 @@ class ManageCategoriesFragment : Fragment() {
                 adapter.submitList(it)
             }
         })
+
+        /**
+         * Add onClickListener to add category
+         */
+        binding.llAddCategory.setOnClickListener {
+            AddCategoryDialogFragment(null) {
+                viewModel.onCategoryListChanged()
+            }.show(childFragmentManager, AddCategoryDialogFragment.TAG)
+        }
 
         /** Return the inflated layout */
         return binding.root
@@ -89,7 +99,6 @@ class ManageCategoriesFragment : Fragment() {
             .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
             .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
                 viewModel.deleteCategory(id)
-                //(binding.rvTransactionCategoryList.adapter as TransactionCategoryRecyclerViewAdapter).itemDeletedAtPos(position)
             }
             .show()
     }

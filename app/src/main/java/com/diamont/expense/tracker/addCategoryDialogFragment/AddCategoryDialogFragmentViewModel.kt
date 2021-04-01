@@ -83,7 +83,7 @@ class AddCategoryDialogFragmentViewModel(
     private fun addCategory(name: String, colorResId: Int){
         val category = TransactionCategory(0, name, colorResId)
         uiScope.launch {
-            databaseDao.insertCategorySuspend(category)
+            databaseDao.insertCategorySuspend(category, categoryListChangeCallBack)
         }
     }
 
@@ -91,7 +91,6 @@ class AddCategoryDialogFragmentViewModel(
      * This method updates an existing category
      */
     private fun updateCategory(name: String, colorResId: Int){
-        Log.d("GUS", "oldcolor: ${_categoryToEdit.categoryColorResId}")
         _categoryToEdit.categoryName = name
         _categoryToEdit.categoryColorResId = colorResId
         uiScope.launch {
@@ -123,7 +122,7 @@ class AddCategoryDialogFragmentViewModel(
     /**
      * This method retrieves the category to edit
      */
-    fun getCategoryToEdit(){
+    private fun getCategoryToEdit(){
         uiScope.launch {
             if(editCategoryId != null) {
                 _categoryToEdit = databaseDao.getCategoryByIdSuspend(editCategoryId)

@@ -179,9 +179,10 @@ interface TransactionDatabaseDao {
     /**
      * Suspend function to insert category
      */
-    suspend fun insertCategorySuspend(category: TransactionCategory){
+    suspend fun insertCategorySuspend(category: TransactionCategory, onInsertDone: () -> Unit = {}){
         return withContext(Dispatchers.IO){
             insertCategory(category)
+            onInsertDone()
         }
     }
 

@@ -8,8 +8,40 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/background"
+        android:paddingTop="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp">
+
+
+
+        <LinearLayout
+            android:id="@+id/llAddCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg_card">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:text="@string/add_category"
+                android:textAlignment="center" />
+
+
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTransactionCategoryList"

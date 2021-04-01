@@ -38,10 +38,17 @@ class ManageCategoriesFragmentViewModel(
     /**
      * This method retrieves the categories
      */
-    fun getCategories(){
+    private fun getCategories(){
         uiScope.launch {
             _categories.value = databaseDao.getCategoriesSuspend()
         }
+    }
+
+    /**
+     * Call this method if the category list changes (add/edit/delete)
+     */
+    fun onCategoryListChanged(){
+        getCategories()
     }
 
     /**

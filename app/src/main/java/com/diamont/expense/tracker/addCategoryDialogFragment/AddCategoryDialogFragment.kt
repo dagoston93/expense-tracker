@@ -94,6 +94,15 @@ class AddCategoryDialogFragment(
         dialog.setOnShowListener {
             addButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             addButton?.isEnabled = false
+
+            /**
+             *  Sometimes textChange happens first when edit mode so then button remains disabled
+             *  In that case we cannot change color without changing text first
+             *  So if in edit mode call we call validate here as well
+             * */
+            if(editCategoryId != null) {
+                validateCategoryName()
+            }
         }
 
         /**
