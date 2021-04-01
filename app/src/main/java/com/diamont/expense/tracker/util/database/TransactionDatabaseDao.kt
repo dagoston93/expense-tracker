@@ -1,7 +1,5 @@
 package com.diamont.expense.tracker.util.database
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -62,6 +60,12 @@ interface TransactionDatabaseDao {
      */
     @Query("DELETE FROM transaction_data")
     fun clearTransactionDatabase()
+
+    /**
+     * Replace the categoryId in transaction_data when category deleted with id of 'Unspecified' category
+     */
+    @Query("UPDATE transaction_data SET category=:replacementId WHERE category=:deletedId")
+    fun replaceCategoryIds(deletedId: Int, replacementId: Int)
 
     /**
      * Insert a new category
@@ -208,9 +212,10 @@ interface TransactionDatabaseDao {
     /**
      * Suspend function to delete a category
      */
-    suspend fun deleteCategorySuspend(categoryId: Int){
+    suspend fun deleteCategorySuspend(categoryIdToDelete: Int, replacementCategoryId: Int){
         return withContext(Dispatchers.IO){
-            deleteCategory(categoryId)
+            deleteCategory(categoryIdToDelete)
+            replaceCategoryIds(categoryIdToDelete, replacementCategoryId)
         }
 
     }

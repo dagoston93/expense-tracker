@@ -151,8 +151,6 @@ class AddCategoryDialogFragment(
             }
         })
 
-
-
         return layout
     }
 

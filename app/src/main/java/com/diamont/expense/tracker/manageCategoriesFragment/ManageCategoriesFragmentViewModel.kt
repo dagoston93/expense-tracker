@@ -56,7 +56,7 @@ class ManageCategoriesFragmentViewModel(
      */
     fun deleteCategory(categoryId: Int){
         uiScope.launch {
-            databaseDao.deleteCategorySuspend(categoryId)
+            databaseDao.deleteCategorySuspend(categoryId, _categories.value?.get(0)!!.categoryId)
             _categories.value = databaseDao.getCategoriesSuspend()
         }
     }
