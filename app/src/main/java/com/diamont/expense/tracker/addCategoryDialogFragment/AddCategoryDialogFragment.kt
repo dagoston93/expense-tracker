@@ -12,7 +12,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.view.ColorPicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -21,7 +20,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 class AddCategoryDialogFragment(
     private val editCategoryId: Int? = null,
-    val positiveButtonCallBack: (newCategory: TransactionCategory) -> Unit = {}) : DialogFragment(){
+    private val categoryListChangeCallBack: () -> Unit = {}) : DialogFragment(){
     /** Declare required variables */
     private lateinit var viewModel :AddCategoryDialogFragmentViewModel
 
@@ -49,7 +48,7 @@ class AddCategoryDialogFragment(
         /**
          * Create the view model
          */
-        val viewModelFactory = AddCategoryDialogFragmentViewModelFactory(application, databaseDao, editCategoryId)
+        val viewModelFactory = AddCategoryDialogFragmentViewModelFactory(application, databaseDao, editCategoryId, categoryListChangeCallBack)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddCategoryDialogFragmentViewModel::class.java)
 
@@ -65,13 +64,6 @@ class AddCategoryDialogFragment(
         colorPicker = layout.findViewById<ColorPicker>(R.id.cpAddCategoryColorPicker) as ColorPicker
         etCategoryName = layout.findViewById<TextInputEditText>(R.id.etDialogAddCategoryName) as TextInputEditText
         tilCategoryName = layout.findViewById<TextInputLayout>(R.id.tilDialogAddCategoryName) as TextInputLayout
-
-        /**
-         * Text changed listener for the edit text
-         */
-        etCategoryName.addTextChangedListener {
-            validateCategoryName()
-        }
 
         /**
          * We need to return the dialog we want to show()
@@ -95,7 +87,6 @@ class AddCategoryDialogFragment(
                 }
             ) { _, _ ->
                 onAddButtonClicked()
-                positiveButtonCallBack(viewModel.categoryToEdit)
             }
             .create()
 
@@ -103,6 +94,13 @@ class AddCategoryDialogFragment(
         dialog.setOnShowListener {
             addButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             addButton?.isEnabled = false
+        }
+
+        /**
+         * Text changed listener for the edit text
+         */
+        etCategoryName.addTextChangedListener {
+            validateCategoryName()
         }
 
         return dialog

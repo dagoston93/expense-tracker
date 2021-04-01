@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.manageCategoriesFragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,7 @@ import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.addCategoryDialogFragment.AddCategoryDialogFragment
 import com.diamont.expense.tracker.databinding.FragmentManageCategoriesBinding
-import com.diamont.expense.tracker.util.database.TransactionCategoryRecyclerViewAdapter
+import com.diamont.expense.tracker.util.database.TransactionCategoryListAdapter
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -55,9 +56,10 @@ class ManageCategoriesFragment : Fragment() {
         activityViewModel.setDrawerLayoutEnabled(false)
 
         /** Set up the recycler view with the adapter */
-        val adapter = TransactionCategoryRecyclerViewAdapter(
-            { id, position -> AddCategoryDialogFragment(id) { newCateory ->
-                (binding.rvTransactionCategoryList.adapter as TransactionCategoryRecyclerViewAdapter).itemChanged(position, newCateory)
+        val adapter = TransactionCategoryListAdapter(
+            { id -> AddCategoryDialogFragment(id) {
+                viewModel.getCategories()
+                Log.d("GUS", "its called")
             }.show(childFragmentManager, AddCategoryDialogFragment.TAG)},
             {id, name, position ->
                 confirmDeleteCategory(id, name, position)
@@ -69,7 +71,7 @@ class ManageCategoriesFragment : Fragment() {
         /** Observe the data and refresh recycler view if it changes */
         viewModel.categories.observe(viewLifecycleOwner, Observer {
             it?.let{
-                adapter.categories = it.toMutableList()
+                adapter.submitList(it)
             }
         })
 
@@ -87,7 +89,7 @@ class ManageCategoriesFragment : Fragment() {
             .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
             .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
                 viewModel.deleteCategory(id)
-                (binding.rvTransactionCategoryList.adapter as TransactionCategoryRecyclerViewAdapter).itemDeletedAtPos(position)
+                //(binding.rvTransactionCategoryList.adapter as TransactionCategoryRecyclerViewAdapter).itemDeletedAtPos(position)
             }
             .show()
     }

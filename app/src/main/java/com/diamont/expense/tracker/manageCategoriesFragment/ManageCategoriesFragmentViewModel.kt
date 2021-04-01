@@ -38,7 +38,7 @@ class ManageCategoriesFragmentViewModel(
     /**
      * This method retrieves the categories
      */
-    private fun getCategories(){
+    fun getCategories(){
         uiScope.launch {
             _categories.value = databaseDao.getCategoriesSuspend()
         }
@@ -50,6 +50,7 @@ class ManageCategoriesFragmentViewModel(
     fun deleteCategory(categoryId: Int){
         uiScope.launch {
             databaseDao.deleteCategorySuspend(categoryId)
+            _categories.value = databaseDao.getCategoriesSuspend()
         }
     }
 

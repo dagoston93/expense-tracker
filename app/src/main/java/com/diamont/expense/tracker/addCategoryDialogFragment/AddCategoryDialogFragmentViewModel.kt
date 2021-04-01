@@ -1,21 +1,20 @@
 package com.diamont.expense.tracker.addCategoryDialogFragment
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class AddCategoryDialogFragmentViewModel(
     private val appContext: Application,
     private val databaseDao: TransactionDatabaseDao,
-    private val editCategoryId: Int?
+    private val editCategoryId: Int?,
+    private val categoryListChangeCallBack: () -> Unit
 ) : AndroidViewModel(appContext) {
 
     private var _categories: List<TransactionCategory> = listOf<TransactionCategory>()
@@ -92,10 +91,12 @@ class AddCategoryDialogFragmentViewModel(
      * This method updates an existing category
      */
     private fun updateCategory(name: String, colorResId: Int){
+        Log.d("GUS", "oldcolor: ${_categoryToEdit.categoryColorResId}")
         _categoryToEdit.categoryName = name
         _categoryToEdit.categoryColorResId = colorResId
         uiScope.launch {
-            databaseDao.updateCategorySuspend(_categoryToEdit)
+            databaseDao.updateCategorySuspend(_categoryToEdit, categoryListChangeCallBack)
+
         }
     }
 

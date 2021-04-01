@@ -1,5 +1,6 @@
 package com.diamont.expense.tracker.util.database
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -187,9 +188,10 @@ interface TransactionDatabaseDao {
     /**
      * Suspend function to update a category
      */
-    suspend fun updateCategorySuspend(category: TransactionCategory){
+    suspend fun updateCategorySuspend(category: TransactionCategory, onUpdateDone: ()-> Unit = {}){
         return withContext(Dispatchers.IO){
             updateCategory(category)
+            onUpdateDone()
         }
     }
 
