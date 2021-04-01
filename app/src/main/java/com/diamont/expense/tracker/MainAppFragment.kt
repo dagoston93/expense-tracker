@@ -50,6 +50,9 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
         binding.bottomNavView.background = null
         binding.bottomNavView.menu.getItem(2).isEnabled = false
 
+        /** Set the home as active menu item on startup */
+        setActiveMenuItemIcon(binding.bottomNavView.menu.findItem(R.id.menu_btm_home))
+
         /** We need to set it to true to be able to handle the up button */
         setHasOptionsMenu(true)
 
@@ -131,7 +134,7 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
         })
 
         /**
-         * Observe if navigate to edit fragment event
+         * Observe if navigate to edit transaction fragment event
          */
         activityViewModel.eventNavigateToEditFragment.observe(viewLifecycleOwner, Observer {
             if(it!= null)
