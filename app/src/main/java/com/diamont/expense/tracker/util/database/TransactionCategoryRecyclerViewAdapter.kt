@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.view.TransactionDetailsView
@@ -75,6 +76,10 @@ class TransactionCategoryRecyclerViewAdapter(
             editIconCallback(categories[position].categoryId, position)
         }
 
+        ivDeleteIcon.setOnClickListener {
+            deleteIconCallback(categories[position].categoryId, categories[position].categoryName, position)
+        }
+
     }
 
     /**
@@ -116,3 +121,4 @@ class TransactionCategoryRecyclerViewAdapter(
         }
     }
 }
+

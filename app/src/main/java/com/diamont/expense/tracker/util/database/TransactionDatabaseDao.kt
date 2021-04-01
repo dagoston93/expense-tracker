@@ -75,6 +75,12 @@ interface TransactionDatabaseDao {
     fun updateCategory(category: TransactionCategory)
 
     /**
+     * Delete a category
+     */
+    @Query("DELETE FROM transaction_category WHERE category_id=:categoryId")
+    fun deleteCategory(categoryId: Int)
+
+    /**
      * Get category with given id
      */
     @Query("SELECT * FROM transaction_category WHERE category_id = :categoryId LIMIT 1")
@@ -195,6 +201,17 @@ interface TransactionDatabaseDao {
             getCategoryById(categoryId)
         }
     }
+
+    /**
+     * Suspend function to delete a category
+     */
+    suspend fun deleteCategorySuspend(categoryId: Int){
+        return withContext(Dispatchers.IO){
+            deleteCategory(categoryId)
+        }
+
+    }
+
 
     /**
      * Suspend function to retrieve expense plans

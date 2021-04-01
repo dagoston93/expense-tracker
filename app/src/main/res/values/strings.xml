@@ -108,12 +108,15 @@
 
     <!-- Confirm delete dialog -->
     <string name="confirm_delete_dialog_title">Confirm</string>
-    <string name="confirm_delete_dialog_text">Are you sure you want to delete the following transaction?\n\nDescription: %1$s\nType: %2$s\nDate: %3$s</string>
+    <string name="confirm_delete_transaction_dialog_text">Are you sure you want to delete the following transaction?\n\nDescription: %1$s\nType: %2$s\nDate: %3$s</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Add or edit category dialog fragment -->
     <string name="add_category_dialog_title">Add category</string>
     <string name="edit_category_dialog_title">Edit category</string>
     <string name="category_already_exists">Category already exists</string>
     <string name="category_name_empty">Please enter a name</string>
     <string name="manage_categories">Manage categories</string>
+    <string name="confirm_delete_category_dialog_text">Are you sure you wnt to delete the following category?\n\nCategory: %s</string>
 </resources>

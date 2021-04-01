@@ -45,6 +45,15 @@ class ManageCategoriesFragmentViewModel(
     }
 
     /**
+     * This method deletes a category
+     */
+    fun deleteCategory(categoryId: Int){
+        uiScope.launch {
+            databaseDao.deleteCategorySuspend(categoryId)
+        }
+    }
+
+    /**
      * onCleared() is called when view model is destroyed
      * in this case we need to cancel coroutines
      */

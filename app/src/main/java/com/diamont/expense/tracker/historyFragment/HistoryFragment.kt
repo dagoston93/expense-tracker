@@ -1,7 +1,6 @@
 package com.diamont.expense.tracker.historyFragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -74,7 +73,7 @@ class HistoryFragment : Fragment() {
                 viewModel.eventNavigateToEditFragment.value = id
             },
             {id, description, typeStringId, date, position ->
-                confirmDelete(id, description, typeStringId, date, position)
+                confirmDeleteTransaction(id, description, typeStringId, date, position)
             }
         )
 
@@ -108,10 +107,10 @@ class HistoryFragment : Fragment() {
     /**
      * Call this method to show the confirm delete dialog
      */
-    private fun confirmDelete(transactionId: Int, description: String, typeStringId: Int, date: String, position: Int){
+    private fun confirmDeleteTransaction(transactionId: Int, description: String, typeStringId: Int, date: String, position: Int){
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.confirm_delete_dialog_title))
-            .setMessage(resources.getString(R.string.confirm_delete_dialog_text,
+            .setMessage(resources.getString(R.string.confirm_delete_transaction_dialog_text,
                 description,
                 resources.getString(typeStringId),
                 date
@@ -122,8 +121,6 @@ class HistoryFragment : Fragment() {
                 (binding.rvTransactionList.adapter as TransactionRecyclerViewAdapter).itemDeletedAtPos(position)
             }
             .show()
-
-
     }
 
 }

@@ -14,12 +14,9 @@ import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.addCategoryDialogFragment.AddCategoryDialogFragment
 import com.diamont.expense.tracker.databinding.FragmentManageCategoriesBinding
-import com.diamont.expense.tracker.historyFragment.HistoryFragmentViewModel
-import com.diamont.expense.tracker.historyFragment.HistoryFragmentViewModelFactory
-import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionCategoryRecyclerViewAdapter
 import com.diamont.expense.tracker.util.database.TransactionDatabase
-import com.diamont.expense.tracker.util.database.TransactionRecyclerViewAdapter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ManageCategoriesFragment : Fragment() {
     /** Data binding and view model */
@@ -62,7 +59,9 @@ class ManageCategoriesFragment : Fragment() {
             { id, position -> AddCategoryDialogFragment(id) { newCateory ->
                 (binding.rvTransactionCategoryList.adapter as TransactionCategoryRecyclerViewAdapter).itemChanged(position, newCateory)
             }.show(childFragmentManager, AddCategoryDialogFragment.TAG)},
-            {id, name, position -> }
+            {id, name, position ->
+                confirmDeleteCategory(id, name, position)
+            }
         )
 
         binding.rvTransactionCategoryList.adapter = adapter
@@ -76,5 +75,20 @@ class ManageCategoriesFragment : Fragment() {
 
         /** Return the inflated layout */
         return binding.root
+    }
+
+    /**
+     * Call this method to show the confirmation dialog for deleting a category
+     */
+    private fun confirmDeleteCategory(id: Int, name: String, position: Int){
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.confirm_delete_dialog_title))
+            .setMessage(resources.getString(R.string.confirm_delete_category_dialog_text, name))
+            .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
+            .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
+                viewModel.deleteCategory(id)
+                (binding.rvTransactionCategoryList.adapter as TransactionCategoryRecyclerViewAdapter).itemDeletedAtPos(position)
+            }
+            .show()
     }
 }
