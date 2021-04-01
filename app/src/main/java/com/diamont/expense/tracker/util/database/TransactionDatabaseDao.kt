@@ -220,7 +220,6 @@ interface TransactionDatabaseDao {
 
     }
 
-
     /**
      * Suspend function to retrieve expense plans
      */

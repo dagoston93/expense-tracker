@@ -636,6 +636,16 @@ class AddOrEditTransactionFragmentViewModel(
     }
 
     /**
+     * Call this method when user adds a new category
+     */
+    fun onCategoryAdded(){
+        uiScope.launch {
+            _categories.value = databaseDao.getCategoriesSuspend()
+            _selectedCategoryIndex.value = _categories.value?.size!!-1
+        }
+    }
+
+    /**
      * Call this method to validate the entered description
      */
     private fun validateDescription() {
@@ -827,7 +837,7 @@ class AddOrEditTransactionFragmentViewModel(
     }
 
     /**
-     * This method to saves the second party
+     * This method saves the second party
      * if it is not saved yet in the database
      */
     private suspend fun saveSecondPartyIfNew(){

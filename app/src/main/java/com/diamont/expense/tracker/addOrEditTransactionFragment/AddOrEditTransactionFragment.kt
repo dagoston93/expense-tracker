@@ -215,7 +215,9 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
          * onClickListener for the Add category button
          */
         binding.ivAddFragmentAddCategory.setOnClickListener {
-            AddCategoryDialogFragment().show(childFragmentManager, AddCategoryDialogFragment.TAG)
+            AddCategoryDialogFragment(){
+                viewModel.onCategoryAdded()
+            }.show(childFragmentManager, AddCategoryDialogFragment.TAG)
         }
 
         /**
