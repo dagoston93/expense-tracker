@@ -4,13 +4,13 @@
         android:icon="@drawable/ic_home_outline"
         android:title="@string/home"/>
 
-    <item android:id="@+id/menu_drawer_settings"
-        android:icon="@drawable/ic_settings_filled"
-        android:title="@string/settings"/>
-
     <item android:id="@+id/menu_drawer_manage_categories"
         android:icon="@drawable/ic_manage_categories"
         android:title="@string/manage_categories"/>
+
+    <item android:id="@+id/menu_drawer_settings"
+        android:icon="@drawable/ic_settings_filled"
+        android:title="@string/settings"/>
 
     <item android:id="@+id/menu_drawer_about"
         android:icon="@drawable/ic_info_filled"

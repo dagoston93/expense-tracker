@@ -112,12 +112,24 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
 
+    <!-- Strings for ManageCategoriesFragment -->
+    <string name="manage_categories">Manage categories</string>
+
     <!-- Add or edit category dialog fragment -->
     <string name="add_category_dialog_title">Add category</string>
     <string name="edit_category_dialog_title">Edit category</string>
     <string name="category_already_exists">Category already exists</string>
     <string name="category_name_empty">Please enter a name</string>
-    <string name="manage_categories">Manage categories</string>
     <string name="confirm_delete_category_dialog_text">Are you sure you wnt to delete the following category?\n\nCategory: %s</string>
     <string name="add_category">Add category</string>
+    <string name="add_category_dialog_text">Enter a name and choose a color for the new category.</string>
+    <string name="category_name">Category name:</string>
+
+    <!-- Strings for SettingsFragment -->
+    <string name="settings_authentication_description">Requires authentication on app startup to protect your data.</string>
+    <string name="fingerprint_authentication">Fingerprint authentication</string>
+    <string name="settings_fingerprint_description">Uses the fingerprint sensor to authenticate on app startup.</string>
+    <string name="change_pin_code">Change PIN code</string>
+    <string name="settings_change_pin_description">Change the PIN code given on first app startup.</string>
+
 </resources>

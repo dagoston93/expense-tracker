@@ -7,10 +7,10 @@
 
     <TextView
         android:id="@+id/textView37"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Enter a name and choose a color for the new category."
+        android:text="@string/add_category_dialog_text"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +35,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:hint="Category name:"
+        android:hint="@string/category_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/viewAddCategoryColorIndicator"
         app:layout_constraintTop_toBottomOf="@+id/textView37">
