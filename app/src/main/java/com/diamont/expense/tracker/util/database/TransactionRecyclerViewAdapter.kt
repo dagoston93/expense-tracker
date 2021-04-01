@@ -22,10 +22,10 @@ class TransactionRecyclerViewAdapter
      private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, date: String, position: Int) -> Unit
 ) : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
     var transactions  = mutableListOf<Transaction>()
-    set(value){
-        field = value
-        notifyDataSetChanged()
-    }
+        set(value){
+            field = value
+            notifyDataSetChanged()
+        }
 
     var categories = listOf<TransactionCategory>()
     var expandedPosition : Int = -1
@@ -146,4 +146,3 @@ class TransactionRecyclerViewAdapter
         }
     }
 }
-

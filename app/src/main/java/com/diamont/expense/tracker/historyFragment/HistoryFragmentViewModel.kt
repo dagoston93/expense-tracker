@@ -57,48 +57,8 @@ class HistoryFragmentViewModel(
      */
     private fun getTransactionData(){
         uiScope.launch {
-            //insertTransactionSuspend()
-            //insertCategorySuspend()
             _categories.value = databaseDao.getCategoriesSuspend()
             _transactionData.value = databaseDao.getAllTransactionsExcludePlansSuspend()
-        }
-    }
-
-    /**
-     * Suspend function for inserting transaction
-     */
-    private suspend fun insertTransactionSuspend(){
-        return withContext(Dispatchers.IO){
-            val plan1 = Transaction(0, TransactionType.PLAN_EXPENSE, "Sth to spend money on", 55.55f,
-                2, "Any shop", PaymentMethod.CARD, TransactionPlanned.PLANNED,
-                TransactionFrequency.ONE_TIME, 1617207973000, 0)
-
-            val plan2 = Transaction(0, TransactionType.PLAN_EXPENSE, "Monthly food", 99.88f,
-                0, "Food shops", PaymentMethod.CARD, TransactionPlanned.PLANNED,
-                TransactionFrequency.MONTHLY_SUM, 1612113973000, 0)
-
-            val plan3 = Transaction(0, TransactionType.PLAN_INCOME, "Sell a car", 4555.00f,
-                2, "Whoever buys it", PaymentMethod.CARD, TransactionPlanned.PLANNED,
-                TransactionFrequency.ONE_TIME, 1618935973000, 0)
-
-            val plan4 = Transaction(0, TransactionType.PLAN_INCOME, "Saaaaaalary", 1250.00f,
-                2, "The boossss", PaymentMethod.CARD, TransactionPlanned.PLANNED,
-                TransactionFrequency.MONTHLY_ONCE, 1597249573000, 0)
-
-//            val plan2 = Plan(0, TransactionType.EXPENSE, "Monthly food", 99.88f,
-//                2, "Food shops", TransactionFrequency.MONTHLY_SUM, 1612113973000)
-//
-//            val plan3 = Plan(0, TransactionType.INCOME, "Sell a car", 4555.00f,
-//                2, "Whoever buys it", TransactionFrequency.ONE_TIME, 1618935973000)
-//
-//            val plan4 = Plan(0, TransactionType.INCOME, "Saaaaaalary", 1250.00f,
-//                2, "The boossss", TransactionFrequency.MONTHLY_ONCE, 1597249573000)
-
-            databaseDao.insertTransaction(plan1)
-            databaseDao.insertTransaction(plan2)
-            databaseDao.insertTransaction(plan3)
-            databaseDao.insertTransaction(plan4)
-
         }
     }
 
@@ -112,23 +72,6 @@ class HistoryFragmentViewModel(
     }
 
     /**
-     * Suspend function for inserting category
-     */
-    private suspend fun insertCategorySuspend(){
-        return withContext(Dispatchers.IO){
-            val cat3 = TransactionCategory(0,"Unspecified", android.R.color.holo_blue_dark)
-            val cat1 = TransactionCategory(0,"Food", R.color.secondaryColor)
-            val cat2 = TransactionCategory(0,"Clothes", R.color.circularProgressbarBackground)
-            val cat5 = TransactionCategory(0,"Salary", android.R.color.holo_purple)
-
-            databaseDao.insertCategory(cat3)
-            databaseDao.insertCategory(cat1)
-            databaseDao.insertCategory(cat2)
-            databaseDao.insertCategory(cat5)
-        }
-    }
-
-    /**
      * onCleared() is called when view model is destroyed
      * in this case we need to cancel coroutines
      */
@@ -136,6 +79,4 @@ class HistoryFragmentViewModel(
         super.onCleared()
         viewModelJob.cancel()
     }
-
-
 }
