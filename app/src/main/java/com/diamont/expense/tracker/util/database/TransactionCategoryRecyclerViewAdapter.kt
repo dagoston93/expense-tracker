@@ -77,7 +77,14 @@ class TransactionCategoryRecyclerViewAdapter(
 
     }
 
-
+    /**
+     * Call this method from add/edit dialog if an item changes
+     */
+    fun itemChanged(position: Int, newItem: TransactionCategory)
+    {
+        categories[position] = newItem
+        notifyItemChanged(position)
+    }
     /**
      * Call this method if user deletes an item
      */

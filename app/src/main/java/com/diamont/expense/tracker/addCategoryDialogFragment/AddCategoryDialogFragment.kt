@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.view.ColorPicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -20,7 +21,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 class AddCategoryDialogFragment(
     private val editCategoryId: Int? = null,
-    val positiveButtonCallBack: () -> Unit = {}) : DialogFragment(){
+    val positiveButtonCallBack: (newCategory: TransactionCategory) -> Unit = {}) : DialogFragment(){
     /** Declare required variables */
     private lateinit var viewModel :AddCategoryDialogFragmentViewModel
 
@@ -94,7 +95,7 @@ class AddCategoryDialogFragment(
                 }
             ) { _, _ ->
                 onAddButtonClicked()
-                positiveButtonCallBack()
+                positiveButtonCallBack(viewModel.categoryToEdit)
             }
             .create()
 

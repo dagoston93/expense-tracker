@@ -59,9 +59,8 @@ class ManageCategoriesFragment : Fragment() {
 
         /** Set up the recycler view with the adapter */
         val adapter = TransactionCategoryRecyclerViewAdapter(
-            { id, position -> AddCategoryDialogFragment(id) {
-                (binding.rvTransactionCategoryList.adapter as TransactionCategoryRecyclerViewAdapter).notifyItemChanged(position)
-                //TODO doesn't update recycler view
+            { id, position -> AddCategoryDialogFragment(id) { newCateory ->
+                (binding.rvTransactionCategoryList.adapter as TransactionCategoryRecyclerViewAdapter).itemChanged(position, newCateory)
             }.show(childFragmentManager, AddCategoryDialogFragment.TAG)},
             {id, name, position -> }
         )

@@ -19,7 +19,9 @@ class AddCategoryDialogFragmentViewModel(
 ) : AndroidViewModel(appContext) {
 
     private var _categories: List<TransactionCategory> = listOf<TransactionCategory>()
-    private var categoryToEdit = TransactionCategory()
+    private var _categoryToEdit = TransactionCategory()
+    val categoryToEdit
+        get() = _categoryToEdit
 
     private val _currentCategoryName = MutableLiveData<String>("")
     val currentCategoryName: LiveData<String>
@@ -60,7 +62,7 @@ class AddCategoryDialogFragmentViewModel(
         if(result != null){
             /** If we are in edit mode check if it is the current category name*/
             if(editCategoryId != null){
-                if(categoryToEdit.categoryName != name){
+                if(_categoryToEdit.categoryName != name){
                     error = appContext.resources.getString(R.string.category_already_exists)
                 }
             }else{
@@ -90,10 +92,10 @@ class AddCategoryDialogFragmentViewModel(
      * This method updates an existing category
      */
     private fun updateCategory(name: String, colorResId: Int){
-        categoryToEdit.categoryName = name
-        categoryToEdit.categoryColorResId = colorResId
+        _categoryToEdit.categoryName = name
+        _categoryToEdit.categoryColorResId = colorResId
         uiScope.launch {
-            databaseDao.updateCategorySuspend(categoryToEdit)
+            databaseDao.updateCategorySuspend(_categoryToEdit)
         }
     }
 
@@ -123,9 +125,9 @@ class AddCategoryDialogFragmentViewModel(
     fun getCategoryToEdit(){
         uiScope.launch {
             if(editCategoryId != null) {
-                categoryToEdit = databaseDao.getCategoryByIdSuspend(editCategoryId)
-                _currentCategoryName.value = categoryToEdit.categoryName
-                _currentCategoryColorId.value = categoryToEdit.categoryColorResId
+                _categoryToEdit = databaseDao.getCategoryByIdSuspend(editCategoryId)
+                _currentCategoryName.value = _categoryToEdit.categoryName
+                _currentCategoryColorId.value = _categoryToEdit.categoryColorResId
             }
         }
     }
