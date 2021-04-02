@@ -18,7 +18,7 @@
     <string name="yes">Yes</string>
     <string name="set_pin_code">Set Pin Code</string>
     <string name="confirm_pin_code">Confirm Pin Code</string>
-    <string name="pin_entry_error">The entered codes don\'t match. \n Please try again!</string>
+    <string name="pin_codes_do_not_match">The entered codes don\'t match. \n Please try again!</string>
     <string name="fingerprint">Fingerprint</string>
     <string name="ask_fingerprint_auth">Would you like to enable authentication using your fingerprint?</string>
     <string name="congratulations">Congratulations!</string>
@@ -131,5 +131,10 @@
     <string name="settings_fingerprint_description">Uses the fingerprint sensor to authenticate on app startup.</string>
     <string name="change_pin_code">Change PIN code</string>
     <string name="settings_change_pin_description">Change the PIN code given on first app startup.</string>
+    <string name="enter_old_pin">Enter old pin code</string>
+    <string name="enter_new_pin">Enter new pin code</string>
+    <string name="confirm_new_pin">Confirm new pin code</string>
+    <string name="enter_pin_code">Enter pin code</string>
+    <string name="create_pin_code">Create pin code</string>
 
 </resources>

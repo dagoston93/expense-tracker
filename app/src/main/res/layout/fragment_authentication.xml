@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.diamont.expense.tracker.authentication.AuthenticationFragmentViewModel" />
@@ -32,22 +33,23 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/initial_setup_subtitle_top_margin"
             android:text="@string/invalid_pin"
+            android:visibility="@{viewModel.isErrorMessageVisible}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView18"
-            android:visibility="@{viewModel.isErrorMessageVisible}"
             tools:visibility="visible" />
 
         <com.diamont.expense.tracker.util.view.PinCodeInputView
             android:id="@+id/pcivAuthentication"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:pinCodeInputLength="4"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+            app:layout_constraintTop_toBottomOf="@+id/textView19"
+            app:pinCodeInputLength="4" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout></layout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

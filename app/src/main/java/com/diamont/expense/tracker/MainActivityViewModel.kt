@@ -37,13 +37,6 @@ class MainActivityViewModel (appContext: Application) : AndroidViewModel(appCont
         get() = _sharedPreferences
 
     /**
-     * Constructor
-     */
-    init{
-        /** Load shared preferences */
-    }
-
-    /**
      * Trigger this event when user clicks on an edit icon
      * by setting the transaction id as the value.
      *

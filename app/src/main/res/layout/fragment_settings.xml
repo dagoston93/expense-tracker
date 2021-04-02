@@ -4,6 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".settingsFragment.SettingsFragment">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.diamont.expense.tracker.settingsFragment.SettingsFragmentViewModel" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,33 +20,36 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvSettingsAuth"
+                android:id="@+id/tvSettingsAuthTitle"
+                style="@style/Theme.ExpenseTracker.TextAppearance.SettingsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/authentication"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.SettingsDescription"
+                android:id="@+id/tvSettingsAuthDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="@string/settings_authentication_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/swSettingsAuthentication"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvSettingsAuth" />
+                app:layout_constraintTop_toBottomOf="@+id/tvSettingsAuthTitle" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/swSettingsAuthentication"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -50,40 +59,43 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/circularProgressbarBackground"/>
+            android:background="@color/settingsSeparatorColor"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvSettingsFingerprint"
+                android:id="@+id/tvSettingsFingerprintTitle"
+                style="@style/Theme.ExpenseTracker.TextAppearance.SettingsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/fingerprint_authentication"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.SettingsDescription"
+                android:id="@+id/tvSettingsFingerprintDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="@string/settings_fingerprint_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/swSettingsFingerprint"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvSettingsFingerprint" />
+                app:layout_constraintTop_toBottomOf="@+id/tvSettingsFingerprintTitle" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/swSettingsFingerprint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -93,40 +105,43 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/circularProgressbarBackground"/>
+            android:background="@color/settingsSeparatorColor"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clSettingsChangePin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvSettingsChangePin"
+                android:id="@+id/tvSettingsChangePinTitle"
+                style="@style/Theme.ExpenseTracker.TextAppearance.SettingsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/change_pin_code"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.SettingsDescription"
+                android:id="@+id/tvSettingsChangePinDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="@string/settings_change_pin_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvSettingsChangePin" />
+                app:layout_constraintTop_toBottomOf="@+id/tvSettingsChangePinTitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/circularProgressbarBackground"/>
+            android:background="@color/settingsSeparatorColor"/>
 
     </LinearLayout>
 </layout>

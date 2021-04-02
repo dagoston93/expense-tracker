@@ -72,13 +72,13 @@ class StartupFragment : Fragment() {
     /** TEST METHODS */
     private fun clearPrefsForTest() {
         with(sharedPreferences.edit()) {
-            putBoolean(KEY_PREF_INITIAL_SETUP_DONE, false)
+            //putBoolean(KEY_PREF_INITIAL_SETUP_DONE, false)
             putBoolean(KEY_PREF_AUTHENTICATION_REQUIRED, false)
             putBoolean(KEY_PREF_FINGERPRINT_ENABLED, false)
             putString(KEY_PREF_PIN_CODE, "")
-            putInt(KEY_PREF_CURRENCY_ID, 0)
-            putFloat(KEY_PREF_INITIAL_CARD, 0f)
-            putFloat(KEY_PREF_INITIAL_CASH, 0f)
+            //putInt(KEY_PREF_CURRENCY_ID, 0)
+            //putFloat(KEY_PREF_INITIAL_CARD, 0f)
+            //putFloat(KEY_PREF_INITIAL_CASH, 0f)
 
             apply()
         }

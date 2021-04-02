@@ -1,11 +1,11 @@
 package com.diamont.expense.tracker.settingsFragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.TextViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -13,10 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.addCategoryDialogFragment.AddCategoryDialogFragmentViewModel
-import com.diamont.expense.tracker.addCategoryDialogFragment.AddCategoryDialogFragmentViewModelFactory
 import com.diamont.expense.tracker.databinding.FragmentSettingsBinding
-import com.diamont.expense.tracker.util.database.TransactionDatabase
+import com.diamont.expense.tracker.settingsFragment.changePinDialogFragment.ChangeOrConfirmPinDialogFragment
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 
 
@@ -32,6 +30,9 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
         )
     }
 
+    /**
+     * onCreateView()
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,6 +49,8 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(SettingsFragmentViewModel::class.java)
+        binding.viewModel = viewModel
+
 
         /** Set up values for activity view model */
         activityViewModel.setTitle(getString(R.string.settings))
@@ -59,7 +62,20 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
          * Add onClickListeners for the switches
          */
         binding.swSettingsAuthentication.setOnClickListener {
-            viewModel.onAuthenticationSwitchClicked(binding.swSettingsAuthentication.isChecked)
+            /** We only turn on authentication after user enters the pin */
+            if(binding.swSettingsAuthentication.isChecked){
+                binding.swSettingsAuthentication.isChecked = false
+                ChangeOrConfirmPinDialogFragment(
+                    activityViewModel.sharedPreferences,
+                    true
+                ){
+                    viewModel.onAuthenticationSwitchClicked(true)
+                    binding.swSettingsAuthentication.isChecked = true
+                }.show(childFragmentManager, ChangeOrConfirmPinDialogFragment.TAG)
+            }else{
+                /** If turning off we don't need to confirm pin */
+                viewModel.onAuthenticationSwitchClicked(false)
+            }
         }
 
         binding.swSettingsFingerprint.setOnClickListener {
@@ -71,15 +87,49 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
          */
         viewModel.isAuthenticationRequired.observe(viewLifecycleOwner, Observer {
             if(it != null){
-                binding.swSettingsAuthentication.isChecked = it
+                /** First change state of the switch */
+                if(binding.swSettingsAuthentication.isChecked != it) {
+                    binding.swSettingsAuthentication.isChecked = it
+                }
+
+                /**
+                 * Change the text style of the fingerprint and change pin options
+                 * and enable/disable the switch
+                 * */
+                if(it){
+                    TextViewCompat.setTextAppearance(binding.tvSettingsFingerprintTitle, R.style.Theme_ExpenseTracker_TextAppearance_SettingsTitle)
+                    TextViewCompat.setTextAppearance(binding.tvSettingsFingerprintDescription, R.style.Theme_ExpenseTracker_TextAppearance_SettingsDescription)
+                    TextViewCompat.setTextAppearance(binding.tvSettingsChangePinTitle, R.style.Theme_ExpenseTracker_TextAppearance_SettingsTitle)
+                    TextViewCompat.setTextAppearance(binding.tvSettingsChangePinDescription, R.style.Theme_ExpenseTracker_TextAppearance_SettingsDescription)
+
+                    binding.swSettingsFingerprint.isEnabled = true
+                }else{
+                    TextViewCompat.setTextAppearance(binding.tvSettingsFingerprintTitle, R.style.Theme_ExpenseTracker_TextAppearance_SettingsTitleDisabled)
+                    TextViewCompat.setTextAppearance(binding.tvSettingsFingerprintDescription, R.style.Theme_ExpenseTracker_TextAppearance_SettingsDescriptionDisabled)
+                    TextViewCompat.setTextAppearance(binding.tvSettingsChangePinTitle, R.style.Theme_ExpenseTracker_TextAppearance_SettingsTitleDisabled)
+                    TextViewCompat.setTextAppearance(binding.tvSettingsChangePinDescription, R.style.Theme_ExpenseTracker_TextAppearance_SettingsDescriptionDisabled)
+
+                    binding.swSettingsFingerprint.isEnabled = false
+                }
             }
         })
 
         viewModel.isFingerprintEnabled.observe(viewLifecycleOwner, Observer {
             if(it != null){
-                binding.swSettingsFingerprint.isChecked = it
+                /** Change state of the switch */
+                if(binding.swSettingsFingerprint.isChecked != it) {
+                    binding.swSettingsFingerprint.isChecked = it
+                }
             }
         })
+
+        /** Set the onClickListener for the Change Pin option */
+        binding.clSettingsChangePin.setOnClickListener {
+            /** Only execute if enabled */
+            if(binding.swSettingsAuthentication.isChecked){
+                ChangeOrConfirmPinDialogFragment(activityViewModel.sharedPreferences).show(childFragmentManager, ChangeOrConfirmPinDialogFragment.TAG)
+            }
+        }
 
         /** Return the inflated layout */
         return binding.root

@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/pin_entry_error"
+            android:text="@string/pin_codes_do_not_match"
             android:visibility="@{viewModel.isPinEntryErrorMessageVisible}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

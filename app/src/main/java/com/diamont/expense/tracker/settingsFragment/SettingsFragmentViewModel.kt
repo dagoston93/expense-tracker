@@ -37,7 +37,10 @@ class SettingsFragmentViewModel(
      * Call this method if user switches the authentication switch
      */
     fun onAuthenticationSwitchClicked(isTurnedOn: Boolean){
-        /** Save the new state */
+        /** Save state to live data */
+        _isAuthenticationRequired.value = isTurnedOn
+
+        /** Save the new state in shared prefs*/
         with(sharedPreferences.edit()){
             putBoolean(KEY_PREF_AUTHENTICATION_REQUIRED, isTurnedOn)
             apply()
@@ -48,7 +51,10 @@ class SettingsFragmentViewModel(
      * Call this method if user switches the fingerprint switch
      */
     fun onFingerprintSwitchClicked(isTurnedOn: Boolean){
-        /** Save the new state */
+        /** Save state to live data */
+        _isFingerprintEnabled.value = isTurnedOn
+
+        /** Save the new state in shared prefs*/
         with(sharedPreferences.edit()){
             putBoolean(KEY_PREF_FINGERPRINT_ENABLED, isTurnedOn)
             apply()
