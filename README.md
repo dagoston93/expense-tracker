@@ -22,6 +22,6 @@ While creating this app I used the following features of the Android API:
 
 # A few screenshots from tha application 
 
-![alt text](https://github.com/dagoston93/expense-tracker/blob/master/Screenshoths/Screenshots_123.png)
+![alt text](https://github.com/dagoston93/expense-tracker/blob/master/Screenshoths/Screenshots_123.jpg)
 
 
