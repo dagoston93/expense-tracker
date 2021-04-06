@@ -14,6 +14,7 @@ While creating this app I used the following features of the Android API:
 	- Kotlin coroutines
 	- Navigation component
 	- Animations
+	- Biometric prompt
 	- Recycler Views
 	- List Adapters
 	- Array Adapters
@@ -22,6 +23,8 @@ While creating this app I used the following features of the Android API:
 
 # A few screenshots from tha application 
 
-![alt text](https://github.com/dagoston93/expense-tracker/blob/master/Screenshoths/Screenshots_123.jpg)
+![Screenshots](https://github.com/dagoston93/expense-tracker/blob/master/Screenshoths/Screenshots_123.jpg)
+![Screenshots](https://github.com/dagoston93/expense-tracker/blob/master/Screenshoths/Screenshots_456.jpg)
+![Screenshots](https://github.com/dagoston93/expense-tracker/blob/master/Screenshoths/Screenshots_789.jpg)
 
 
