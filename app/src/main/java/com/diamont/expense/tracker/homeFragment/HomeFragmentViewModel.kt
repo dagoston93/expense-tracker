@@ -34,7 +34,7 @@ class HomeFragmentViewModel(
         if(_totalBalance.value == null || decimalFormat == null){
             ""
         }else{
-            decimalFormat!!.format(_totalBalance.value).toString()
+            decimalFormat!!.format(_totalBalance.value)
         }
     }
 
@@ -43,7 +43,7 @@ class HomeFragmentViewModel(
         if(_totalCash.value == null || decimalFormat == null){
             ""
         }else{
-            decimalFormat!!.format(_totalCash.value).toString()
+            decimalFormat!!.format(_totalCash.value)
         }
     }
 
@@ -52,7 +52,7 @@ class HomeFragmentViewModel(
         if(_totalCard.value == null || decimalFormat == null){
             ""
         }else{
-            decimalFormat!!.format(_totalCard.value).toString()
+            decimalFormat!!.format(_totalCard.value)
         }
     }
 
@@ -116,6 +116,8 @@ class HomeFragmentViewModel(
          */
         if(transactionData.isEmpty()){
             _totalBalance.value = 0f
+            _totalCash.value = 0f
+            _totalCard.value = 0f
         }else{
             /** The required variables */
             var total: Float = initialCard + initialCash
@@ -125,25 +127,39 @@ class HomeFragmentViewModel(
             /** Iterate through all transactions */
             for(transaction in transactionData){
                 if(transaction.transactionType == TransactionType.EXPENSE){
+                    /**
+                     * Expense
+                     */
                     total -= transaction.amount
 
+                    /** Check if it is cash or card */
                     if(transaction.method == PaymentMethod.CARD){
                         card -= transaction.amount
                     }else{
                         cash -= transaction.amount
                     }
                 }else if(transaction.transactionType == TransactionType.INCOME){
+                    /**
+                     * Income
+                     */
                     total += transaction.amount
 
+                    /** Check if it is cash or card */
                     if(transaction.method == PaymentMethod.CARD){
                         card += transaction.amount
                     }else{
                         cash += transaction.amount
                     }
                 }else if(transaction.transactionType == TransactionType.DEPOSIT){
+                    /**
+                     * Deposit
+                     */
                     cash -= transaction.amount
                     card += transaction.amount
                 }else if(transaction.transactionType == TransactionType.WITHDRAW){
+                    /**
+                     * Withdrawal
+                     */
                     cash += transaction.amount
                     card -= transaction.amount
                 }

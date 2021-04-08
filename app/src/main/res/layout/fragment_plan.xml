@@ -1,18 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".planFragment.PlanFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.diamont.expense.tracker.planFragment.PlanFragmentViewModel" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".planFragment.PlanFragment">
+        android:background="@color/background">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tlPlanTabs"
+            android:background="@color/primaryColor"
+            app:tabTextColor="@drawable/sel_tab_text_color"
+            app:tabIndicatorColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabExpenses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expenses"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabIncomes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/incomes"/>
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/Theme.ExpenseTracker.CardLayout"
+            android:background="@drawable/bg_card"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="PLAN" />
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp">
+
+            <TextView
+                android:id="@+id/textView38"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:text="@{viewModel.cardViewTitle}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:id="@+id/tvPlanThisMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="$1,1538.54"
+                android:text=""
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView40"
+                app:layout_constraintEnd_toEndOf="@+id/tvPlanThisYear" />
+
+
+            <TextView
+                android:id="@+id/textView39"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/this_year"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView40"
+                app:layout_constraintTop_toBottomOf="@+id/textView40" />
+
+            <TextView
+                android:id="@+id/tvPlanThisYear"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text=""
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView39"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="$130.50" />
+
+            <TextView
+                android:id="@+id/textView40"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/this_month"
+                app:layout_constraintStart_toStartOf="@+id/textView38"
+                app:layout_constraintTop_toBottomOf="@+id/textView38" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPlanList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
 </layout>

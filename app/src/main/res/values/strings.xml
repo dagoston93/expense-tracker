@@ -137,4 +137,12 @@
     <string name="enter_pin_code">Enter pin code</string>
     <string name="create_pin_code">Create pin code</string>
 
+    <!-- Strings for Plan Fragment -->
+    <string name="expenses">Expenses</string>
+    <string name="incomes">Incomes</string>
+    <string name="total_planned_expenses">Total planned expenses</string>
+    <string name="total_planned_incomes">Total planned incomes</string>
+    <string name="this_year">This year:</string>
+    <string name="this_month">This month:</string>
+
 </resources>

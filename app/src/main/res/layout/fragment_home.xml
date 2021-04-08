@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".homeFragment.HomeFragment">
 
     <data>
         <variable
@@ -15,8 +16,7 @@
         android:background="@color/background"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:orientation="vertical"
-        tools:context=".homeFragment.HomeFragment">
+        android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             style="@style/Theme.ExpenseTracker.CardLayout"
