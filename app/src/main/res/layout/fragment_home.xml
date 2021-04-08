@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.diamont.expense.tracker.homeFragment.HomeFragmentViewModel" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,10 +38,11 @@
 
             <TextView
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
-                android:id="@+id/tvHomeTotalBalance"
+                android:id="@+id/tvHomeCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$1,1538.54"
+                tools:text="$1,1538.54"
+                android:text="@{viewModel.totalCard}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView22"
                 app:layout_constraintEnd_toEndOf="@+id/tvHomeCash" />
 
@@ -67,9 +74,10 @@
                 android:id="@+id/tvHomeCash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$130.50"
+                tools:text="$130.50"
+                android:text="@{viewModel.totalCash}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView21"
-                app:layout_constraintEnd_toEndOf="@+id/tvHOmeCard" />
+                app:layout_constraintEnd_toEndOf="@+id/tvHomeTotalBalance" />
 
             <TextView
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
@@ -84,11 +92,12 @@
 
             <TextView
                 style="@style/Theme.ExpenseTracker.TextAppearance.TotalBalance"
-                android:id="@+id/tvHOmeCard"
+                android:id="@+id/tvHomeTotalBalance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="$1408.04"
+                tools:text="$1,408.04"
+                android:text="@{viewModel.totalBalance}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView20"
                 app:layout_constraintEnd_toEndOf="parent" />
 
