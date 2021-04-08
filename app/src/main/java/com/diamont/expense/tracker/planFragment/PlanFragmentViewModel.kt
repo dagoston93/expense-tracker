@@ -69,6 +69,7 @@ class PlanFragmentViewModel (
      */
     private fun getPlanData(){
         uiScope.launch {
+            _categories.value = databaseDao.getCategoriesSuspend()
             expensePlans = databaseDao.getExpensePlansSuspend()
             incomePlans = databaseDao.getIncomePlansSuspend()
 

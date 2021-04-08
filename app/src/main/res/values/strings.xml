@@ -77,8 +77,12 @@
     <string name="expected_date">Expected date:</string>
     <string name="category">Category:</string>
     <string name="transaction_type">Transaction type:</string>
+    <string name="plan_type">Plan type:</string>
     <string name="plan_colon">Plan:</string>
     <string name="frequency">Frequency:</string>
+    <string name="status">Status:</string>
+    <string name="active">Active</string>
+    <string name="inactive">Inactive</string>
     <string name="recipient_venue">Recipient/venue:</string>
     <string name="payment_method">Payment method:</string>
     <string name="received_by">Received by:</string>

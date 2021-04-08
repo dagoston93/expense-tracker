@@ -17,6 +17,7 @@ import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionPlanned
 import com.diamont.expense.tracker.util.enums.TransactionType
 import java.text.DecimalFormat
@@ -59,6 +60,8 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     private var tvIsPlannedLabel : TextView
     private var tvFrequency : TextView
     private var tvFrequencyLabel : TextView
+    private var tvStatus: TextView
+    private var tvStatusLabel: TextView
 
     var clExpandable : ConstraintLayout
     private var llContainer : LinearLayout
@@ -112,6 +115,8 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         tvIsPlannedLabel = root.findViewById<TextView>(R.id.tvTransactionDetailIsPlannedLabel) as TextView
         tvFrequency = root.findViewById<TextView>(R.id.tvTransactionDetailFrequency) as TextView
         tvFrequencyLabel = root.findViewById<TextView>(R.id.tvTransactionDetailFrequencyLabel) as TextView
+        tvStatus = root.findViewById<TextView>(R.id.tvTransactionDetailStatus) as TextView
+        tvStatusLabel = root.findViewById<TextView>(R.id.tvTransactionDetailStatusLabel) as TextView
 
         clExpandable = root.findViewById<ConstraintLayout>(R.id.clTransactionDetailsExpandable) as ConstraintLayout
         llContainer = root.findViewById<LinearLayout>(R.id.llTransactionDetailsContainer) as LinearLayout
@@ -134,6 +139,8 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         TextViewCompat.setTextAppearance(tvIsPlannedLabel, labelTextAppearance)
         TextViewCompat.setTextAppearance(tvFrequency, labelTextAppearance)
         TextViewCompat.setTextAppearance(tvFrequencyLabel, labelTextAppearance)
+        TextViewCompat.setTextAppearance(tvStatus, labelTextAppearance)
+        TextViewCompat.setTextAppearance(tvStatusLabel, labelTextAppearance)
 
         /** Set the colors */
         ImageViewCompat.setImageTintList(ivEditIcon, ColorStateList.valueOf(editIconColor))
@@ -189,13 +196,11 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         tvTitle.text = transaction.description
         tvAmount.text = transaction.getAmountString(decimalFormat)
         tvDate.text = transaction.getDateString(context)
-        tvTransactionType.text = context.resources.getString(transaction.transactionType.stringId)
 
         /**
          * Configure the rest according to the transaction type
          */
-        if(transaction.transactionType == TransactionType.DEPOSIT || transaction.transactionType == TransactionType.WITHDRAW)
-        {
+        if(transaction.transactionType == TransactionType.DEPOSIT || transaction.transactionType == TransactionType.WITHDRAW) {
             /** If withdraw/deposit we hide the unnecessary text fields */
             tvCategory.visibility = GONE
             tvCategoryLabel.visibility = GONE
@@ -228,7 +233,19 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
                     }
                 )
             ))
-        }else {
+
+            /** Set transaction type and label */
+            tvTransactionTypeLabel.text = context.resources.getString(R.string.transaction_type)
+            tvTransactionType.text = context.resources.getString(transaction.transactionType.stringId)
+
+            /** Set date label */
+            tvDateLabel.text = context.resources.getString(R.string.date)
+
+            /** Hide status */
+            tvStatus.visibility = GONE
+            tvStatusLabel.visibility = GONE
+
+        }else if(transaction.transactionType == TransactionType.INCOME || transaction.transactionType == TransactionType.EXPENSE){
             /** Display the category title */
             tvCategory.visibility = VISIBLE
             tvCategoryLabel.visibility = VISIBLE
@@ -288,6 +305,102 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
                     }
                 )
             ))
+
+            /** Set transaction type and label */
+            tvTransactionTypeLabel.text = context.resources.getString(R.string.transaction_type)
+            tvTransactionType.text = context.resources.getString(transaction.transactionType.stringId)
+
+            /** Set date label */
+            tvDateLabel.text = context.resources.getString(R.string.date)
+
+            /** Hide status */
+            tvStatus.visibility = GONE
+            tvStatusLabel.visibility = GONE
+
+        }else if(transaction.transactionType == TransactionType.PLAN_EXPENSE || transaction.transactionType == TransactionType.PLAN_INCOME){
+            /** Display the category title */
+            tvCategory.visibility = VISIBLE
+            tvCategoryLabel.visibility = VISIBLE
+            tvCategory.text = category.categoryName
+
+            /** Is planned */
+            tvIsPlanned.visibility = GONE
+            tvIsPlannedLabel.visibility = GONE
+
+            /** Set transaction type and label */
+            tvTransactionTypeLabel.text = context.resources.getString(R.string.plan_type)
+            tvTransactionType.text = context.resources.getString(
+                if(transaction.transactionType == TransactionType.PLAN_EXPENSE){
+                    R.string.expense
+                }else{
+                    R.string.income
+                }
+            )
+
+            /** Set up source/venue label depending on if it is expense or income */
+            if(transaction.transactionType == TransactionType.PLAN_INCOME){
+                tvVenueLabel.text = context.resources.getString(R.string.source)
+                tvPaymentMethodLabel.text = context.resources.getString(R.string.receive_by)
+            }else{
+                tvVenueLabel.text = context.resources.getString(R.string.recipient_venue)
+                tvPaymentMethodLabel.text = context.resources.getString(R.string.payment_method)
+            }
+
+            /** Set the transaction frequency */
+            tvFrequency.visibility = VISIBLE
+            tvFrequencyLabel.visibility = VISIBLE
+            tvFrequency.text = context.resources.getString(transaction.frequency.stringId)
+
+            /** Set the date label depending on transaction frequency */
+            if(transaction.frequency == TransactionFrequency.MONTHLY_SUM
+                || transaction.frequency == TransactionFrequency.FORTNIGHTLY_SUM
+                || transaction.frequency == TransactionFrequency.WEEKLY_SUM
+                || transaction.frequency == TransactionFrequency.YEARLY_SUM){
+
+                tvDateLabel.text = context.resources.getString(R.string.first_date)
+            }else{
+                tvDateLabel.text = context.resources.getString(R.string.expected_date)
+            }
+
+            /** Show status if it is a repeated expense */
+            if(transaction.frequency == TransactionFrequency.ONE_TIME){
+                tvStatus.visibility = GONE
+                tvStatusLabel.visibility = GONE
+            }else{
+                tvStatus.visibility = VISIBLE
+                tvStatusLabel.visibility = VISIBLE
+
+                tvStatus.text = context.resources.getString(
+                    if(transaction.planIdOrIsActive == 1){
+                        R.string.active
+                    }else{
+                        R.string.inactive
+                    }
+                )
+            }
+
+
+            /** Set the icon*/
+            ivTransaction.setImageResource(
+                if(transaction.transactionType == TransactionType.PLAN_INCOME){
+                    R.drawable.ic_income
+                }else{
+                    R.drawable.ic_expense
+                }
+            )
+
+            /** Set icon color */
+            ImageViewCompat.setImageTintList(ivTransaction, ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    context,
+                    if(transaction.transactionType == TransactionType.PLAN_EXPENSE){
+                        R.color.colorGoalNotAchieved
+                    }else{
+                        R.color.colorGoalAchieved
+                    }
+                )
+            ))
+
         }
     }
 }

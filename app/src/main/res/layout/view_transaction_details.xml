@@ -66,6 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
             android:text="$15.45"
             app:layout_constraintBottom_toBottomOf="@+id/tvTransactionDetailDateLabel"
             app:layout_constraintEnd_toStartOf="@+id/ivTransactionDetailsShowMore"
@@ -144,6 +145,23 @@
                 app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailFrequencyLabel" />
 
             <TextView
+                android:id="@+id/tvTransactionDetailStatusLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailFrequencyLabel" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Monthly (sum)"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailStatusLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailStatusLabel" />
+
+            <TextView
                 android:id="@+id/tvTransactionDetailIsPlannedLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -166,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/recipient_venue"
                 app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailCategoryLabel"
-                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailFrequencyLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailStatusLabel" />
 
             <TextView
                 android:id="@+id/tvTransactionDetailVenue"
