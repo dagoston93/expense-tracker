@@ -215,7 +215,6 @@ class AddOrEditTransactionFragmentViewModel(
             currentTransaction.date = _date.time
         }
 
-
         getDataFromDatabase()
     }
 

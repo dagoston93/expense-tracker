@@ -8,13 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentPlanBinding
+import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
+import com.diamont.expense.tracker.util.database.TransactionRecyclerViewAdapter
 import com.google.android.material.tabs.TabLayout
+import java.text.DecimalFormat
 
 class PlanFragment : Fragment() {
     /** Data binding and view model */
@@ -70,6 +74,29 @@ class PlanFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
+        /** Set up the recycler view with the adapter */
+        val adapter = TransactionRecyclerViewAdapter(binding.rvPlanList,
+            viewModel.decimalFormat ?: DecimalFormat(),
+            { id ->
+                //viewModel.eventNavigateToEditFragment.value = id
+            },
+            {id, description, typeStringId, date, position ->
+                //confirmDeleteTransaction(id, description, typeStringId, date, position)
+            }
+        )
+
+        binding.rvPlanList.adapter = adapter
+
+        /** Turn the blinking animation on item change off */
+        binding.rvPlanList.itemAnimator = null
+
+        /** Observe the data and refresh recycler view if it changes */
+        viewModel.plansToDisplay.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
+                adapter.transactions = it.toMutableList()
+            }
+        })
 
         /** Return the inflated layout */
         return binding.root

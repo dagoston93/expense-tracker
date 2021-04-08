@@ -2,7 +2,6 @@ package com.diamont.expense.tracker.planFragment
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +9,7 @@ import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
 import com.diamont.expense.tracker.util.database.Transaction
+import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +25,15 @@ class PlanFragmentViewModel (
     /**
      * Set up some live data
      */
+    private val _categories = MutableLiveData<List<TransactionCategory>>()
+    val categories : LiveData<List<TransactionCategory>>
+        get() = _categories
+
+    private val _plansToDisplay = MutableLiveData<List<Transaction>>()
+    val plansToDisplay: LiveData<List<Transaction>>
+        get() = _plansToDisplay
+
+
     private val _cardViewTitle = MutableLiveData<String>(appContext.resources.getString(R.string.total_planned_expenses))
     val cardViewTitle: LiveData<String>
         get() = _cardViewTitle
@@ -33,9 +42,13 @@ class PlanFragmentViewModel (
     /**
      * Set up some variables
      */
-    private var plans = listOf<Transaction>()
     private var currencyInUse: Currency? = null
-    private var decimalFormat: DecimalFormat? = null
+    private var _decimalFormat: DecimalFormat? = null
+    val decimalFormat: DecimalFormat?
+        get() = _decimalFormat
+
+    private var incomePlans = listOf<Transaction>()
+    private var expensePlans = listOf<Transaction>()
 
     /**
      * Set up coroutine job and the scope
@@ -56,7 +69,10 @@ class PlanFragmentViewModel (
      */
     private fun getPlanData(){
         uiScope.launch {
-            plans = databaseDao.getAllTransactionsExcludePlansSuspend()
+            expensePlans = databaseDao.getExpensePlansSuspend()
+            incomePlans = databaseDao.getIncomePlansSuspend()
+
+            _plansToDisplay.value = expensePlans
         }
     }
 
@@ -66,7 +82,7 @@ class PlanFragmentViewModel (
     private fun getCurrencyInUse() {
         val currencyId = sharedPreferences.getInt(KEY_PREF_CURRENCY_ID, 0)
         currencyInUse = Currency.availableCurrencies[currencyId]
-        decimalFormat = Currency.getDecimalFormat(currencyId)
+        _decimalFormat = Currency.getDecimalFormat(currencyId)
     }
 
     /**
@@ -81,11 +97,13 @@ class PlanFragmentViewModel (
              * Expense tab selected
              */
             _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_expenses)
+            _plansToDisplay.value = expensePlans
         }else{
             /**
              * Income tab selected
              */
             _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_incomes)
+            _plansToDisplay.value = incomePlans
         }
     }
 }
