@@ -1,7 +1,6 @@
 package com.diamont.expense.tracker.planFragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +13,7 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentPlanBinding
-import com.diamont.expense.tracker.util.database.TransactionCategory
-import com.diamont.expense.tracker.util.database.TransactionDatabase
-import com.diamont.expense.tracker.util.database.TransactionRecyclerViewAdapter
+import com.diamont.expense.tracker.util.database.*
 import com.google.android.material.tabs.TabLayout
 import java.text.DecimalFormat
 
@@ -94,7 +91,7 @@ class PlanFragment : Fragment() {
         viewModel.plansToDisplay.observe(viewLifecycleOwner, Observer {
             it?.let{
                 adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
-                adapter.transactions = it.toMutableList()
+                /*adapter.transactions = it.toMutableList()*/listOf<Transaction>()
             }
         })
 

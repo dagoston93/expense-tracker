@@ -15,9 +15,7 @@ import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentHistoryBinding
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
-import com.diamont.expense.tracker.util.database.TransactionRecyclerViewAdapter
-import com.diamont.expense.tracker.util.database.TransactionCategory
-import com.diamont.expense.tracker.util.database.TransactionDatabase
+import com.diamont.expense.tracker.util.database.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.DecimalFormat
 
@@ -86,7 +84,8 @@ class HistoryFragment : Fragment() {
         viewModel.transactionData.observe(viewLifecycleOwner, Observer {
             it?.let{
                 adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
-                adapter.transactions = it.toMutableList()
+                adapter.plans = viewModel.plans.value ?: listOf<Plan>()
+                adapter.items = it.toMutableList()
             }
         })
 
@@ -118,7 +117,7 @@ class HistoryFragment : Fragment() {
             .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
             .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
                 viewModel.deleteTransaction(transactionId)
-                (binding.rvTransactionList.adapter as TransactionRecyclerViewAdapter).itemDeletedAtPos(position)
+                (binding.rvTransactionList.adapter as TransactionDetailViewAdapter<Transaction>).itemDeletedAtPos(position)
             }
             .show()
     }

@@ -13,13 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat
 import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.util.database.Transaction
-import com.diamont.expense.tracker.util.database.TransactionCategory
-import com.diamont.expense.tracker.util.enums.PaymentMethod
-import com.diamont.expense.tracker.util.enums.TransactionFrequency
-import com.diamont.expense.tracker.util.enums.TransactionPlanned
-import com.diamont.expense.tracker.util.enums.TransactionType
-import java.text.DecimalFormat
 
 class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
@@ -30,9 +23,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     private var deleteIconColor : Int = 0
     private var titleTextAppearance : Int = 0
     private var labelTextAppearance : Int = 0
-    private lateinit var transaction : Transaction
-    private var category = TransactionCategory(0,"", android.R.color.black)
-    private var decimalFormat = DecimalFormat()
+    private var nextDataFieldIndex: Int = 0
 
     /**
      * The required views
@@ -45,22 +36,9 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
 
     private var tvTitle : TextView
     private var tvAmount : TextView
-    private var tvDateLabel : TextView
-    private var tvDate : TextView
-    private var tvCategoryLabel : TextView
-    private var tvCategory : TextView
-    private var tvVenueLabel : TextView
-    private var tvVenue : TextView
-    private var tvPaymentMethodLabel : TextView
-    private var tvPaymentMethod : TextView
-    private var tvTransactionType : TextView
-    private var tvTransactionTypeLabel : TextView
-    private var tvIsPlanned : TextView
-    private var tvIsPlannedLabel : TextView
-    private var tvFrequency : TextView
-    private var tvFrequencyLabel : TextView
-    private var tvStatus: TextView
-    private var tvStatusLabel: TextView
+
+    private var labelTextViews = listOf<TextView>()
+    private var dataTextViews = listOf<TextView>()
 
     var clExpandable : ConstraintLayout
     private var llContainer : LinearLayout
@@ -100,22 +78,32 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
 
         tvTitle = root.findViewById<TextView>(R.id.tvTransactionDetailTitle) as TextView
         tvAmount = root.findViewById<TextView>(R.id.tvTransactionDetailAmount) as TextView
-        tvDate = root.findViewById<TextView>(R.id.tvTransactionDetailDate) as TextView
-        tvDateLabel = root.findViewById<TextView>(R.id.tvTransactionDetailDateLabel) as TextView
-        tvCategory = root.findViewById<TextView>(R.id.tvTransactionDetailCategory) as TextView
-        tvCategoryLabel = root.findViewById<TextView>(R.id.tvTransactionDetailCategoryLabel) as TextView
-        tvVenue = root.findViewById<TextView>(R.id.tvTransactionDetailVenue) as TextView
-        tvVenueLabel = root.findViewById<TextView>(R.id.tvTransactionDetailVenueLabel) as TextView
-        tvPaymentMethod = root.findViewById<TextView>(R.id.tvTransactionDetailPaymentMethod) as TextView
-        tvPaymentMethodLabel = root.findViewById<TextView>(R.id.tvTransactionDetailPaymentMethodLabel) as TextView
-        tvTransactionType = root.findViewById<TextView>(R.id.tvTransactionDetailType) as TextView
-        tvTransactionTypeLabel = root.findViewById<TextView>(R.id.tvTransactionDetailTypeLabel) as TextView
-        tvIsPlanned = root.findViewById<TextView>(R.id.tvTransactionDetailIsPlanned) as TextView
-        tvIsPlannedLabel = root.findViewById<TextView>(R.id.tvTransactionDetailIsPlannedLabel) as TextView
-        tvFrequency = root.findViewById<TextView>(R.id.tvTransactionDetailFrequency) as TextView
-        tvFrequencyLabel = root.findViewById<TextView>(R.id.tvTransactionDetailFrequencyLabel) as TextView
-        tvStatus = root.findViewById<TextView>(R.id.tvTransactionDetailStatus) as TextView
-        tvStatusLabel = root.findViewById<TextView>(R.id.tvTransactionDetailStatusLabel) as TextView
+
+        dataTextViews = listOf(
+            root.findViewById<TextView>(R.id.tvTransactionDetailData1) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailData2) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailData3) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailData4) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailData5) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailData6) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailData7) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailData8) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailData9) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailData10) as TextView,
+        )
+
+        labelTextViews = listOf(
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel1) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel2) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel3) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel4) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel5) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel6) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel7) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel8) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel9) as TextView,
+            root.findViewById<TextView>(R.id.tvTransactionDetailLabel10) as TextView
+        )
 
         clExpandable = root.findViewById<ConstraintLayout>(R.id.clTransactionDetailsExpandable) as ConstraintLayout
         llContainer = root.findViewById<LinearLayout>(R.id.llTransactionDetailsContainer) as LinearLayout
@@ -124,22 +112,10 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         TextViewCompat.setTextAppearance(tvTitle, titleTextAppearance)
         TextViewCompat.setTextAppearance(tvAmount, titleTextAppearance)
 
-        TextViewCompat.setTextAppearance(tvDate, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvDateLabel, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvCategory, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvCategoryLabel, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvVenue, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvVenueLabel, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvPaymentMethod, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvPaymentMethodLabel, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvTransactionType, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvTransactionTypeLabel, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvIsPlanned, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvIsPlannedLabel, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvFrequency, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvFrequencyLabel, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvStatus, labelTextAppearance)
-        TextViewCompat.setTextAppearance(tvStatusLabel, labelTextAppearance)
+        for(i in dataTextViews.indices){
+            TextViewCompat.setTextAppearance(labelTextViews[i], labelTextAppearance)
+            TextViewCompat.setTextAppearance(dataTextViews[i], labelTextAppearance)
+        }
 
         /** Set the colors */
         ImageViewCompat.setImageTintList(ivEditIcon, ColorStateList.valueOf(editIconColor))
@@ -166,12 +142,78 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
     }
 
     /**
-     * Call this method to set the decimal format
+     * Call this method to add a field of data
+     *
+     * @param label The label to display.
+     * @param data  The value to display.
      */
-    fun setDecimalFormat(decimalFormat: DecimalFormat){
-        this.decimalFormat = decimalFormat
+    fun addDataField(label: String, data: String){
+        /** Check if we have any more fields available. If not, return */
+        if(nextDataFieldIndex == labelTextViews.size) return
+
+        /** Set the next field visibility and texts */
+        labelTextViews[nextDataFieldIndex].visibility = VISIBLE
+        labelTextViews[nextDataFieldIndex].text = label
+
+        dataTextViews[nextDataFieldIndex].visibility = VISIBLE
+        dataTextViews[nextDataFieldIndex].text = data
+
+        /** Increase next index */
+        nextDataFieldIndex++
     }
 
+    /**
+     * Call this method to reset the fields
+     */
+    fun resetFields(){
+        /** First hide all text views */
+        for(i in labelTextViews.indices){
+            labelTextViews[i].visibility = GONE
+            dataTextViews[i].visibility = GONE
+        }
+
+        /** Reset the next field index */
+        nextDataFieldIndex = 0
+    }
+
+    /**
+     * Call this method to set the icon and its color
+     *
+     * @param iconResId The drawable resource id of the required icon.
+     * @param colorResId The required color resource id.
+     */
+    fun setIcon(iconResId: Int, colorResId: Int){
+        ivTransaction.setImageResource(iconResId)
+
+        ImageViewCompat.setImageTintList(ivTransaction, ColorStateList.valueOf(
+            ContextCompat.getColor(context, colorResId)
+        ))
+    }
+
+    /**
+     * Call this method to set the strip color
+     *
+     * @param colorResId The required color resource id.
+     */
+    fun setStripColor(colorResId: Int){
+        ImageViewCompat.setImageTintList(ivStrip, ColorStateList.valueOf(
+            ContextCompat.getColor(context, colorResId)
+        ))
+    }
+
+    /**
+     * Call this method to set the title and the amount
+     *
+     * @param title The title to be displayed.
+     * @param amount The amount to be displayed.
+     */
+    fun setTitleAndAmount(title: String, amount: String){
+        tvTitle.text = title
+        tvAmount.text = amount
+    }
+
+
+    /*
     /**
      * Call this method to set the transaction
      */
@@ -401,5 +443,5 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
             ))
 
         }
-    }
+    }*/
 }

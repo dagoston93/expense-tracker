@@ -53,7 +53,7 @@ data class Transaction(
 
     @ColumnInfo(name = "plan_id")
     var planId : Int = -1
-){
+): TransactionDetailViewAdaptable() {
     /**
      * Call this method to get amount as string
      */

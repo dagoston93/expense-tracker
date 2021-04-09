@@ -6,7 +6,7 @@ import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionType
 
 @Entity(tableName = "plan_data")
-data class Plan(
+data class Plan (
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -50,4 +50,4 @@ data class Plan(
 
     @ColumnInfo(name = "is_status_active")
     var isStatusActive: Boolean = true
-)
+) : TransactionDetailViewAdaptable()

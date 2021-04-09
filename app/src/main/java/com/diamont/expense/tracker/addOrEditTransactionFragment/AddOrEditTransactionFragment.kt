@@ -20,13 +20,11 @@ import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.arrayAdapters.TransactionCategoryAdapter
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabase
-import com.diamont.expense.tracker.util.database.TransactionRecyclerViewAdapter
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
     /** Data binding and view model */

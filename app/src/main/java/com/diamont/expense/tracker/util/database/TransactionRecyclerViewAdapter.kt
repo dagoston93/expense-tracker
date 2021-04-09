@@ -1,13 +1,10 @@
 package com.diamont.expense.tracker.util.database
 
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.TransitionManager
 import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.util.view.TransactionDetailsView
+import com.diamont.expense.tracker.util.enums.PaymentMethod
+import com.diamont.expense.tracker.util.enums.TransactionType
 import java.text.DecimalFormat
 
 /**
@@ -15,52 +12,140 @@ import java.text.DecimalFormat
  * to display Transaction data in our
  * TransactionDetailView
  */
-class TransactionRecyclerViewAdapter
-    (private val recyclerView: RecyclerView,
-     private val decimalFormat: DecimalFormat,
-     private val editIconCallback: (id: Int) -> Unit,
-     private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, date: String, position: Int) -> Unit
-) : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
-    var transactions  = mutableListOf<Transaction>()
-        set(value){
-            field = value
-            notifyDataSetChanged()
+class TransactionRecyclerViewAdapter(
+    private val recyclerView: RecyclerView,
+    private val decimalFormat: DecimalFormat,
+    private val editIconCallback: (id: Int) -> Unit,
+    private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, date: String, position: Int) -> Unit
+): TransactionDetailViewAdapter<Transaction>(recyclerView) {
+    /** We need a list of plans */
+    var plans = listOf<Plan>()
+
+    /**
+     * This method is called by parent when view and item needs to be bound together
+     */
+    override fun bind(holder: ViewHolder, item: Transaction, position: Int){
+        /** First reset the view */
+        holder.view.resetFields()
+
+        /** Set the color of the strip */
+        val category = categories.find { it.categoryId == item.categoryId }
+
+        if(category != null){
+            holder.view.setStripColor(category.categoryColorResId)
         }
 
-    var categories = listOf<TransactionCategory>()
-    var expandedPosition : Int = -1
+        /** Get the plan */
+        val plan = plans.find{ it.id == item.planId }
 
-    /**
-     * This method needs to return the data count
-     */
-    override fun getItemCount(): Int = transactions.size
-
-    /**
-     * This method is responsible for binding data to views
-     */
-    override fun onBindViewHolder(holder: TransactionRecyclerViewAdapter.ViewHolder, position: Int) {
-        val item = transactions[position]
-        bind(holder, item, position)
-    }
-
-    /**
-     * Create new view holder
-     */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : TransactionRecyclerViewAdapter.ViewHolder {
-        return TransactionRecyclerViewAdapter.ViewHolder.from(parent)
-    }
-
-    /**
-     * This method is responsible for binding the
-     * data to the view and setting the onClickListners
-     */
-    private fun bind(holder: ViewHolder, item: Transaction, position: Int) {
-        holder.view.setDecimalFormat(decimalFormat)
-        holder.view.setTransactionAndCategory(
-            item,
-            categories.find { it.categoryId == item.categoryId } ?: TransactionCategory()
+        /** Set the title and the amount */
+        holder.view.setTitleAndAmount(
+            item.description,
+            item.getAmountString(decimalFormat)
         )
 
+        /** Set the date */
+        holder.view.addDataField(
+            recyclerView.context.getString(R.string.date),
+            item.getDateString(recyclerView.context)
+        )
+
+        /** Set the icon and color */
+        var iconResId: Int = 0
+        var iconColorId: Int = 0
+
+        when(item.transactionType){
+            /**
+             * Expense
+             */
+            TransactionType.EXPENSE -> {
+                iconResId = if(item.method == PaymentMethod.CASH){
+                    R.drawable.ic_cash
+                }else{
+                    R.drawable.ic_credit_card
+                }
+
+                iconColorId = R.color.colorGoalNotAchieved
+            }
+
+            /**
+             * Income
+             */
+            TransactionType.INCOME -> {
+                iconResId = if(item.method == PaymentMethod.CASH){
+                    R.drawable.ic_cash
+                }else{
+                    R.drawable.ic_credit_card
+                }
+
+                iconColorId = R.color.colorGoalAchieved
+            }
+
+            /**
+             * Withdraw
+             */
+            TransactionType.WITHDRAW -> {
+                iconResId = R.drawable.ic_withdraw
+                iconColorId = R.color.colorGoalNotAchieved
+            }
+
+            /**
+             * Deposit
+             */
+            TransactionType.DEPOSIT -> {
+                iconResId = R.drawable.ic_deposit
+                iconColorId = R.color.colorGoalAchieved
+            }
+        }
+
+        holder.view.setIcon(iconResId, iconColorId)
+
+        /** Display transaction type */
+        holder.view.addDataField(
+            recyclerView.context.getString(R.string.transaction_type),
+            recyclerView.context.getString(item.transactionType.stringId)
+        )
+
+        /** Display the fields we only need for income/expense */
+        if(item.transactionType == TransactionType.EXPENSE || item.transactionType == TransactionType.INCOME){
+            /** Set category */
+            holder.view.addDataField(
+                recyclerView.context.getString(R.string.category),
+                category?.categoryName ?: ""
+            )
+
+            /** Display the plan if it is planned otherwise show 'Not planned' */
+            holder.view.addDataField(
+                recyclerView.context.getString(R.string.plan_colon),
+                plan?.description ?: recyclerView.context.getString(R.string.not_planned)
+            )
+
+            /** Show recipient/source */
+            holder.view.addDataField(
+                recyclerView.context.getString(
+                    if(item.transactionType == TransactionType.EXPENSE){
+                        R.string.recipient_venue
+                    }else{
+                        R.string.source
+                    }
+                ),
+                item.secondParty
+            )
+
+            /** Show method */
+            holder.view.addDataField(
+                recyclerView.context.getString(
+                    if(item.transactionType == TransactionType.EXPENSE){
+                        R.string.payment_method
+                    }else{
+                        R.string.received_by
+                    }
+                ),
+                recyclerView.context.getString(item.method.stringId)
+            )
+        }
+
+        /** Set the onClickListeners for the icons */
         holder.view.setEditIconOnClickListener {
             editIconCallback(item.transactionId)
         }
@@ -80,69 +165,7 @@ class TransactionRecyclerViewAdapter
 
         /** Set the onClickListener for the show more icon*/
         holder.view.setOnClickListener {
-            transactionOnClick(isExpanded, position)
-        }
-    }
-
-    /**
-     *  This method keeps track of the currently expanded transaction detail view
-     */
-    private fun transactionOnClick(isExpanded: Boolean, position: Int) {
-        /**
-         * If this view was expanded we are closing it, so expanded position will be set to -1
-         * If another view was expanded we save the new expanded position and also the old one
-         * */
-        var prevExpanded = -1
-        if (isExpanded) {
-            expandedPosition = -1
-        } else {
-            prevExpanded = expandedPosition
-            expandedPosition = position
-        }
-
-        /** Start the transition (this will be animated) */
-        TransitionManager.beginDelayedTransition(recyclerView)
-
-        /**
-         *  Notify recycler view that this view is changed
-         *  And if a different one was open before notify
-         *  that that one has changed too
-         */
-        notifyItemChanged(position)
-        if (prevExpanded != -1) {
-            notifyItemChanged(prevExpanded)
-        }
-    }
-
-    /**
-     * Call this method if user deletes an item
-     */
-    fun itemDeletedAtPos(position: Int){
-        /** If item was deleted close the open view */
-        expandedPosition = -1
-        transactions.removeAt(position)
-        notifyDataSetChanged()
-    }
-
-    /**
-     * RecyclerView and the adapter needs this ViewHolder class
-     */
-    class ViewHolder private constructor(val view: TransactionDetailsView): RecyclerView.ViewHolder(view){
-        companion object {
-            /**
-             * Creates a ViewHolder from the given view group
-             * for our TransactionDetailView
-             */
-            fun from(viewGroup: ViewGroup): ViewHolder {
-                val layoutInflater = LayoutInflater.from(viewGroup.context)
-                val layout = layoutInflater.inflate(
-                    R.layout.item_transaction_detail,
-                    viewGroup,
-                    false
-                ) as TransactionDetailsView
-
-                return ViewHolder(layout)
-            }
+            super.transactionOnClick(isExpanded, position)
         }
     }
 }

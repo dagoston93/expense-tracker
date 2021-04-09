@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_credit_card"
-            app:layout_constraintBottom_toBottomOf="@+id/tvTransactionDetailDateLabel"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTransactionDetailLabel1"
             app:layout_constraintStart_toEndOf="@+id/ivTransactionDetailColoredStrip"
             app:layout_constraintTop_toTopOf="@+id/tvTransactionDetailTitle" />
 
@@ -38,28 +38,28 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
-            tools:text="Food shopping"
+            tools:text="Title"
             app:layout_constraintStart_toEndOf="@+id/ivTransactionDetailIcon"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvTransactionDetailDateLabel"
+            android:id="@+id/tvTransactionDetailLabel1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:paddingBottom="8dp"
-            android:text="@string/date"
+            tools:text="Label 1:"
             app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailTitle" />
 
         <TextView
-            android:id="@+id/tvTransactionDetailDate"
+            android:id="@+id/tvTransactionDetailData1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            tools:text="2021. 02. 12."
-            app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailDateLabel"
-            app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailDateLabel" />
+            tools:text="Data 1"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel1"
+            app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel1" />
 
         <TextView
             android:id="@+id/tvTransactionDetailAmount"
@@ -68,7 +68,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             tools:text="$15.45"
-            app:layout_constraintBottom_toBottomOf="@+id/tvTransactionDetailDateLabel"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTransactionDetailLabel1"
             app:layout_constraintEnd_toStartOf="@+id/ivTransactionDetailsShowMore"
             app:layout_constraintTop_toTopOf="@+id/tvTransactionDetailTitle" />
 
@@ -87,131 +87,165 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
+            android:paddingBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailDateLabel"
-            app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailDate">
+            app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailLabel1"
+            app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailData1">
 
             <TextView
-                android:id="@+id/tvTransactionDetailCategoryLabel"
+                android:id="@+id/tvTransactionDetailLabel2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="@string/category"
+                tools:text="Label 2:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailCategory"
+                android:id="@+id/tvTransactionDetailData2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="Food"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailCategoryLabel"
-                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailCategoryLabel" />
+                tools:text="Data 2"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel2"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel2" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailTypeLabel"
+                android:id="@+id/tvTransactionDetailLabel3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/transaction_type"
+                tools:text="Label 3:"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailCategoryLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailLabel2" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailType"
+                android:id="@+id/tvTransactionDetailData3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="Expense"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailTypeLabel"
-                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailTypeLabel" />
+                tools:text="Data 3"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel3"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel3" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailFrequencyLabel"
+                android:id="@+id/tvTransactionDetailLabel5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/frequency"
+                tools:text="Label 5:"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailIsPlannedLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailLabel4" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailFrequency"
+                android:id="@+id/tvTransactionDetailData5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="Monthly (sum)"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailFrequencyLabel"
-                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailFrequencyLabel" />
+                tools:text="Data 5"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel5"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel5" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailStatusLabel"
+                android:id="@+id/tvTransactionDetailLabel6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/status"
+                tools:text="Label 6:"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailFrequencyLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailLabel5" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailStatus"
+                android:id="@+id/tvTransactionDetailData6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="Active"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailStatusLabel"
-                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailStatusLabel" />
+                tools:text="Data 6"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel6"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel6" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailIsPlannedLabel"
+                android:id="@+id/tvTransactionDetailLabel4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/plan_colon"
+                tools:text="Label 4:"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailTypeLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailLabel3" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailIsPlanned"
+                android:id="@+id/tvTransactionDetailData4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="Planned"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailIsPlannedLabel"
-                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailIsPlannedLabel" />
+                tools:text="Data 4"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel4"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel4" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailVenueLabel"
+                android:id="@+id/tvTransactionDetailLabel7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/recipient_venue"
-                app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailCategoryLabel"
-                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailStatusLabel" />
+                tools:text="Label 7:"
+                app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailLabel2"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailLabel6" />
 
             <TextView
-                android:id="@+id/tvTransactionDetailVenue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                tools:text="Walmart"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailVenueLabel"
-                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailVenueLabel" />
-
-            <TextView
-                android:id="@+id/tvTransactionDetailPaymentMethodLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/payment_method"
-                android:paddingBottom="8dp"
-                app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailCategoryLabel"
-                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailVenueLabel" />
-
-            <TextView
-                android:id="@+id/tvTransactionDetailPaymentMethod"
+                android:id="@+id/tvTransactionDetailData7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="Card"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailPaymentMethodLabel"
-                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailPaymentMethodLabel" />
+                tools:text="Data 7"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel7"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel7" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailLabel8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Label 8:"
+                app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailLabel2"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailLabel7" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailData8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                tools:text="Data 8"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel8"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel8" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailLabel9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Label 9:"
+                app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailLabel2"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailLabel8" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailData9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                tools:text="Data 9"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel9"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel9" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailLabel10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Label 10:"
+                app:layout_constraintStart_toStartOf="@+id/tvTransactionDetailLabel2"
+                app:layout_constraintTop_toBottomOf="@+id/tvTransactionDetailLabel9" />
+
+            <TextView
+                android:id="@+id/tvTransactionDetailData10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                tools:text="Data 10"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailLabel10"
+                app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailLabel10" />
 
             <ImageView
                 android:id="@+id/ivTransactionDetailsEdit"

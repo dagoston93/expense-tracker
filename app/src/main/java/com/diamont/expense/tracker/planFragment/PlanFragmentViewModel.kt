@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
+import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
@@ -29,8 +30,8 @@ class PlanFragmentViewModel (
     val categories : LiveData<List<TransactionCategory>>
         get() = _categories
 
-    private val _plansToDisplay = MutableLiveData<List<Transaction>>()
-    val plansToDisplay: LiveData<List<Transaction>>
+    private val _plansToDisplay = MutableLiveData<List<Plan>>()
+    val plansToDisplay: LiveData<List<Plan>>
         get() = _plansToDisplay
 
 
@@ -47,8 +48,8 @@ class PlanFragmentViewModel (
     val decimalFormat: DecimalFormat?
         get() = _decimalFormat
 
-    private var incomePlans = listOf<Transaction>()
-    private var expensePlans = listOf<Transaction>()
+    private var incomePlans = listOf<Plan>()
+    private var expensePlans = listOf<Plan>()
 
     /**
      * Set up coroutine job and the scope
@@ -70,8 +71,8 @@ class PlanFragmentViewModel (
     private fun getPlanData(){
         uiScope.launch {
             _categories.value = databaseDao.getCategoriesSuspend()
-            //expensePlans = databaseDao.getExpensePlansSuspend()
-            //incomePlans = databaseDao.getIncomePlansSuspend()
+            expensePlans = databaseDao.getExpensePlansSuspend()
+            incomePlans = databaseDao.getIncomePlansSuspend()
 
             _plansToDisplay.value = expensePlans
         }
@@ -89,8 +90,8 @@ class PlanFragmentViewModel (
     /**
      * Call this method if tabs are changed
      *
-     * @param tabPosition:  0 if Expense tab selected
-     *                      1 id Income tab selected
+     * @param tabPosition 0 if Expense tab selected,
+     *                    1 if Income tab selected
      */
     fun selectedTabChanged(tabPosition: Int){
         if(tabPosition == 0){

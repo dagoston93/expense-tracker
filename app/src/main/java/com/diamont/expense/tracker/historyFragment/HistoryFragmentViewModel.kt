@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.diamont.expense.tracker.util.database.Transaction
@@ -29,6 +30,10 @@ class HistoryFragmentViewModel(
     private val _categories = MutableLiveData<List<TransactionCategory>>()
     val categories : LiveData<List<TransactionCategory>>
         get() = _categories
+
+    private val _plans = MutableLiveData<List<Plan>>()
+    val plans : LiveData<List<Plan>>
+        get() = _plans
 
     /**
      * Trigger this event when user clicks on an edit icon
@@ -58,6 +63,7 @@ class HistoryFragmentViewModel(
     private fun getTransactionData(){
         uiScope.launch {
             _categories.value = databaseDao.getCategoriesSuspend()
+            _plans.value = databaseDao.getAllPlansSuspend()
             _transactionData.value = databaseDao.getAllTransactionsSuspend()
         }
     }
