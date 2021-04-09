@@ -38,12 +38,6 @@ interface TransactionDatabaseDao {
     fun getAllTransactions() : List<Transaction>
 
     /**
-     * Get transactions, exclude plans
-     */
-    @Query("SELECT * FROM transaction_data WHERE type != :expensePlan AND type != :incomePlan ORDER BY date DESC")
-    fun getAllTransactionsExcludePlans(expensePlan: TransactionType, incomePlan: TransactionType) : List<Transaction>
-
-    /**
      * Get Transaction types
      */
     @Query("SELECT * FROM transaction_data WHERE type = :type ORDER BY DATE DESC")
@@ -122,6 +116,42 @@ interface TransactionDatabaseDao {
     fun getAllSources() : List<String>
 
     /**
+     * Insert plan
+     */
+    @Insert(entity = Plan::class)
+    fun insertPlan(plan: Plan)
+
+    /**
+     * Update plan
+     */
+    @Update(entity = Plan::class)
+    fun updatePlan(plan: Plan)
+
+    /**
+     * Delete plan
+     */
+    @Query("DELETE FROM plan_data WHERE id=:id")
+    fun deletePlan(id: Int)
+
+    /**
+     * Get all plans
+     */
+    @Query("SELECT * FROM plan_data ORDER BY first_expected_date DESC")
+    fun getAllPlans() : List<Plan>
+
+    /**
+     * Get plan by type
+     */
+    @Query("SELECT * FROM plan_data WHERE transaction_type = :type ORDER BY first_expected_date DESC")
+    fun getPlansByType(type : TransactionType) : List<Plan>
+
+    /**
+     * Get plan with given id
+     */
+    @Query("SELECT * FROM plan_data WHERE id = :id LIMIT 1")
+    fun getPlanById(id: Int) : Plan
+
+    /**
      * * * * * * * * * SUSPEND FUNCTIONS * * * * * * * * * *
      *
      * Suspend function to insert a transaction
@@ -133,11 +163,11 @@ interface TransactionDatabaseDao {
     }
 
     /**
-     * Suspend function to get all transaction excluded plans
+     * Suspend function to get all transactions
      */
-    suspend fun getAllTransactionsExcludePlansSuspend() : List<Transaction>{
+    suspend fun getAllTransactionsSuspend() : List<Transaction>{
         return withContext(Dispatchers.IO){
-            val data : List<Transaction> = getAllTransactionsExcludePlans(TransactionType.PLAN_EXPENSE, TransactionType.PLAN_INCOME)
+            val data : List<Transaction> = getAllTransactions()
             data
         }
     }
@@ -217,27 +247,6 @@ interface TransactionDatabaseDao {
             deleteCategory(categoryIdToDelete)
             replaceCategoryIds(categoryIdToDelete, replacementCategoryId)
         }
-
-    }
-
-    /**
-     * Suspend function to retrieve expense plans
-     */
-    suspend fun getExpensePlansSuspend() : List<Transaction>{
-        return withContext(Dispatchers.IO){
-            val data : List<Transaction> = getTransactionsByType(TransactionType.PLAN_EXPENSE)
-            data
-        }
-    }
-
-    /**
-     * Suspend function to retrieve income plans
-     */
-    suspend fun getIncomePlansSuspend() : List<Transaction>{
-        return withContext(Dispatchers.IO){
-            val data : List<Transaction> = getTransactionsByType(TransactionType.PLAN_INCOME)
-            data
-        }
     }
 
     /**
@@ -269,5 +278,71 @@ interface TransactionDatabaseDao {
         }
     }
 
+    /**
+     * Suspend function to insert plan
+     */
+    suspend fun insertPlanSuspend(plan: Plan){
+        return withContext(Dispatchers.IO){
+            insertPlan(plan)
+        }
+    }
+
+    /**
+     * Suspend function to update a plan
+     */
+    suspend fun updatePlanSuspend(plan: Plan){
+        return withContext(Dispatchers.IO){
+            updatePlan(plan)
+        }
+    }
+
+    /**
+     * Suspend function to delete a plan
+     */
+    suspend fun deletePlanSuspend(id: Int){
+        return withContext(Dispatchers.IO){
+            deletePlan(id)
+        }
+    }
+
+    /**
+     * Suspend function to get all plans
+     */
+    suspend fun getAllPlansSuspend() : List<Plan>{
+        return withContext(Dispatchers.IO){
+            val data : List<Plan> = getAllPlans()
+            data
+        }
+    }
+
+    /**
+     * Suspend function to get a transaction by its id
+     */
+    suspend fun getPlanByIdSuspend(id: Int) : Plan{
+        return withContext(Dispatchers.IO){
+            val plan = getPlanById(id)
+            plan
+        }
+    }
+
+    /**
+     * Suspend function to retrieve expense plans
+     */
+    suspend fun getExpensePlansSuspend() : List<Plan>{
+        return withContext(Dispatchers.IO){
+            val data : List<Plan> = getPlansByType(TransactionType.PLAN_EXPENSE)
+            data
+        }
+    }
+
+    /**
+     * Suspend function to retrieve income plans
+     */
+    suspend fun getIncomePlansSuspend() : List<Plan>{
+        return withContext(Dispatchers.IO){
+            val data : List<Plan> = getPlansByType(TransactionType.PLAN_INCOME)
+            data
+        }
+    }
 
 }

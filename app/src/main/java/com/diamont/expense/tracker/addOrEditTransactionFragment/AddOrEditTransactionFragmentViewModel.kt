@@ -1,7 +1,6 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -280,7 +279,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** Set planId to 0 in the beginning if not in edit mode */
             if(!isEditMode){
-                currentTransaction.planIdOrIsActive = 0
+                currentTransaction.planId = 0
                 _venueOrSourceList.value = sources
             }
 
@@ -318,7 +317,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** Set planId to 0 in the beginning if not in edit mode */
             if(!isEditMode){
-                currentTransaction.planIdOrIsActive = 0
+                currentTransaction.planId = 0
                 _venueOrSourceList.value = venues
             }
 
@@ -352,7 +351,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** reset isPlanned property of current transaction */
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
-            currentTransaction.planIdOrIsActive = 0
+            currentTransaction.planId = 0
 
         }else if(selectedTransactionType == TransactionType.WITHDRAW){
             /** Set up the title */
@@ -384,7 +383,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** reset isPlanned property of current transaction */
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
-            currentTransaction.planIdOrIsActive = 0
+            currentTransaction.planId = 0
 
         }else if(selectedTransactionType == TransactionType.PLAN_EXPENSE){
             /** Set up the title */
@@ -417,7 +416,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** reset isPlanned property of current transaction */
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
-            currentTransaction.planIdOrIsActive = 1
+            currentTransaction.planId = 1
 
             /** Set venue/source list for autocomplete text view */
             if(!isEditMode){
@@ -455,7 +454,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             /** reset isPlanned property of current transaction */
             currentTransaction.planned = TransactionPlanned.NOT_PLANNED
-            currentTransaction.planIdOrIsActive = 1
+            currentTransaction.planId = 1
 
             /** Set venue/source list for autocomplete text view */
             if(!isEditMode){
@@ -499,7 +498,7 @@ class AddOrEditTransactionFragmentViewModel(
                 incomePlans[index-1]
             }
 
-            currentTransaction.planIdOrIsActive = plan.transactionId
+            currentTransaction.planId = plan.transactionId
             currentTransaction.planned = TransactionPlanned.PLANNED
 
             /** Enable category select */
@@ -738,7 +737,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             var index = 0
             for(i in planList.indices){
-                if(planList[i].transactionId == currentTransaction.planIdOrIsActive){
+                if(planList[i].transactionId == currentTransaction.planId){
                     index = i
                 }
             }
@@ -798,8 +797,8 @@ class AddOrEditTransactionFragmentViewModel(
             _categories.value = databaseDao.getCategoriesSuspend()
             venues = databaseDao.getVenuesSuspend()
             sources = databaseDao.getSourcesSuspend()
-            incomePlans = databaseDao.getIncomePlansSuspend()
-            expensePlans = databaseDao.getExpensePlansSuspend()
+            //incomePlans = databaseDao.getIncomePlansSuspend()
+            //expensePlans = databaseDao.getExpensePlansSuspend()
             createPlanStringLists()
             _currentPlanList.value = expensePlanStringList
 

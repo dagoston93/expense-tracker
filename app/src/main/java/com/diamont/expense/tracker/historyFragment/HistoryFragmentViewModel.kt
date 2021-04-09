@@ -58,7 +58,7 @@ class HistoryFragmentViewModel(
     private fun getTransactionData(){
         uiScope.launch {
             _categories.value = databaseDao.getCategoriesSuspend()
-            _transactionData.value = databaseDao.getAllTransactionsExcludePlansSuspend()
+            _transactionData.value = databaseDao.getAllTransactionsSuspend()
         }
     }
 

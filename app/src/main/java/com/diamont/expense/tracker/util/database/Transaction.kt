@@ -52,7 +52,7 @@ data class Transaction(
     var date: Long = 0,
 
     @ColumnInfo(name = "plan_id")
-    var planIdOrIsActive : Int = 0
+    var planId : Int = -1
 ){
     /**
      * Call this method to get amount as string

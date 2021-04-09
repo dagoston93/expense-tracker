@@ -85,7 +85,7 @@ class HomeFragmentViewModel(
      */
     private fun getTransactionData(){
         uiScope.launch {
-            transactionData = databaseDao.getAllTransactionsExcludePlansSuspend()
+            transactionData = databaseDao.getAllTransactionsSuspend()
             calculateBalance()
         }
     }

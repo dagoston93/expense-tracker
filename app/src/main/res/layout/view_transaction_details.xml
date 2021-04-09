@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
-            android:text="Food shopping"
+            tools:text="Food shopping"
             app:layout_constraintStart_toEndOf="@+id/ivTransactionDetailIcon"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="2021. 02. 12."
+            tools:text="2021. 02. 12."
             app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailDateLabel"
             app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailDateLabel" />
 
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
-            android:text="$15.45"
+            tools:text="$15.45"
             app:layout_constraintBottom_toBottomOf="@+id/tvTransactionDetailDateLabel"
             app:layout_constraintEnd_toStartOf="@+id/ivTransactionDetailsShowMore"
             app:layout_constraintTop_toTopOf="@+id/tvTransactionDetailTitle" />
@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Food"
+                tools:text="Food"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailCategoryLabel"
                 app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailCategoryLabel" />
 
@@ -123,7 +123,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Expense"
+                tools:text="Expense"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailTypeLabel"
                 app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailTypeLabel" />
 
@@ -140,7 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Monthly (sum)"
+                tools:text="Monthly (sum)"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailFrequencyLabel"
                 app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailFrequencyLabel" />
 
@@ -157,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Monthly (sum)"
+                tools:text="Active"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailStatusLabel"
                 app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailStatusLabel" />
 
@@ -174,7 +174,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Planned"
+                tools:text="Planned"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailIsPlannedLabel"
                 app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailIsPlannedLabel" />
 
@@ -191,7 +191,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Walmart"
+                tools:text="Walmart"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailVenueLabel"
                 app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailVenueLabel" />
 
@@ -209,7 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Card"
+                tools:text="Card"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvTransactionDetailPaymentMethodLabel"
                 app:layout_constraintStart_toEndOf="@+id/tvTransactionDetailPaymentMethodLabel" />
 

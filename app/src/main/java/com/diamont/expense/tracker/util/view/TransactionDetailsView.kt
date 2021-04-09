@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -371,7 +370,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
                 tvStatusLabel.visibility = VISIBLE
 
                 tvStatus.text = context.resources.getString(
-                    if(transaction.planIdOrIsActive == 1){
+                    if(transaction.planId == 1){
                         R.string.active
                     }else{
                         R.string.inactive
