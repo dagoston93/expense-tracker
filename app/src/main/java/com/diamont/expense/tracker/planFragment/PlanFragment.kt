@@ -72,7 +72,7 @@ class PlanFragment : Fragment() {
         })
 
         /** Set up the recycler view with the adapter */
-        val adapter = TransactionRecyclerViewAdapter(binding.rvPlanList,
+        val adapter = PlanRecyclerViewAdapter(binding.rvPlanList,
             viewModel.decimalFormat ?: DecimalFormat(),
             { id ->
                 //viewModel.eventNavigateToEditFragment.value = id
@@ -91,7 +91,7 @@ class PlanFragment : Fragment() {
         viewModel.plansToDisplay.observe(viewLifecycleOwner, Observer {
             it?.let{
                 adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
-                /*adapter.transactions = it.toMutableList()*/listOf<Transaction>()
+                adapter.items = it.toMutableList()
             }
         })
 

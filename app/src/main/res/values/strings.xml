@@ -74,6 +74,7 @@
     <!-- Strings for the TransactionDetailView -->
     <string name="date">Date:</string>
     <string name="first_date">First date:</string>
+    <string name="next_date">Next date:</string>
     <string name="expected_date">Expected date:</string>
     <string name="category">Category:</string>
     <string name="transaction_type">Transaction type:</string>

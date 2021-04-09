@@ -1,9 +1,11 @@
 package com.diamont.expense.tracker.util.database
 
+import android.content.Context
 import androidx.room.*
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionType
+import java.text.DecimalFormat
 
 @Entity(tableName = "plan_data")
 data class Plan (
@@ -50,4 +52,20 @@ data class Plan (
 
     @ColumnInfo(name = "is_status_active")
     var isStatusActive: Boolean = true
-) : TransactionDetailViewAdaptable()
+) : TransactionDetailViewAdaptable(){
+    /**
+     * Call this method to get amount as string
+     */
+    fun getAmountString(decimalFormat: DecimalFormat) : String{
+        return decimalFormat.format(amount)
+    }
+
+    /**
+     * Call this method to get the date as string
+     */
+    fun getDateString(date:Long, context: Context) : String {
+        val dateFormat = android.text.format.DateFormat.getDateFormat(context)
+        return dateFormat.format(date)
+    }
+
+}
