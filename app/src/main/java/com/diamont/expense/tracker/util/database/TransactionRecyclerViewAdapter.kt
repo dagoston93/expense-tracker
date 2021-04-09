@@ -51,8 +51,8 @@ class TransactionRecyclerViewAdapter(
         )
 
         /** Set the icon and color */
-        var iconResId: Int = 0
-        var iconColorId: Int = 0
+        var iconResId: Int = R.drawable.ic_cash
+        var iconColorId: Int = R.color.primaryColor
 
         when(item.transactionType){
             /**

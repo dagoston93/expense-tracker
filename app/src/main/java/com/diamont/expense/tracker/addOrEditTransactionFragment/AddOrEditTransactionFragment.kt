@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -77,8 +78,14 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
             null
         }
 
+        val isTransactionToEdit: Boolean = if(arguments != null){
+            this.arguments?.getBoolean(KEY_BUNDLE_IS_TRANSACTION_TO_EDIT, true) ?: true
+        }else{
+            true
+        }
+
         val setPlanAsDefault : Boolean = if(arguments != null){
-            this.arguments?.getBoolean(KEY_BUNDLE_SET_PLAN_AS_DEFAULT) ?: false
+            this.arguments?.getBoolean(KEY_BUNDLE_SET_PLAN_AS_DEFAULT, false) ?: false
         }else{
             false
         }
@@ -86,7 +93,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
         /**
          * Create the view model
          */
-        val viewModelFactory = AddOrEditTransactionFragmentViewModelFactory(application, databaseDao, id, setPlanAsDefault)
+        val viewModelFactory = AddOrEditTransactionFragmentViewModelFactory(application, databaseDao, id, isTransactionToEdit, setPlanAsDefault)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddOrEditTransactionFragmentViewModel::class.java)
         binding.viewModel = viewModel

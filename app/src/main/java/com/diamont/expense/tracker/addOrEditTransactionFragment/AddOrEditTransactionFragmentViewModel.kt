@@ -1,16 +1,14 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.boolToVisibility
-import com.diamont.expense.tracker.util.database.SecondPartyData
-import com.diamont.expense.tracker.util.database.Transaction
-import com.diamont.expense.tracker.util.database.TransactionCategory
-import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
+import com.diamont.expense.tracker.util.database.*
 import com.diamont.expense.tracker.util.enums.PaymentMethod
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionPlanned
@@ -19,33 +17,43 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.*
 import java.util.*
 
-/** TODO when editing PLAN it needs to accept current name!!! */
-
 class AddOrEditTransactionFragmentViewModel(
     private val appContext: Application,
     private val databaseDao: TransactionDatabaseDao,
-    private val transactionIdToEdit: Int?,
+    private val idToEdit: Int?,
+    private val isTransactionToEdit: Boolean,
     private val setPlanAsDefaultType: Boolean
 ) : AndroidViewModel(appContext) {
+
     /**
      * Declare required variables
      */
     private var _date : Date = Date(MaterialDatePicker.todayInUtcMilliseconds())
     val date : Date
         get() = _date
-    private val dateFormat = android.text.format.DateFormat.getDateFormat(appContext)
-    private var selectedTransactionType : TransactionType = TransactionType.EXPENSE
 
-    private var incomePlans: List<Transaction> = listOf()
-    private var expensePlans: List<Transaction> = listOf()
-    private var incomePlanStringList: MutableList<String>  = mutableListOf()
-    private var expensePlanStringList: MutableList<String>  = mutableListOf()
+    private val dateFormat = android.text.format.DateFormat.getDateFormat(appContext)
+
+    private var selectedTransactionType : TransactionType = TransactionType.EXPENSE
+    private var selectedDate: Long = 0
+    private var selectedPlanId: Int = -1
+    private var enteredDescription: String = ""
+    private var enteredAmount: Float = 0f
+    private var selectedCategoryId: Int = 0
+    private var enteredRecipientOrSource: String = ""
+    private var selectedPaymentMethod: PaymentMethod = PaymentMethod.CASH
+    private var selectedTransactionFrequency: TransactionFrequency = TransactionFrequency.ONE_TIME
 
     private var currentTransaction = Transaction()
+    private var currentPlan = Plan()
+
     private var isEditMode: Boolean = false
-    private var currentCategoryIndex: Int = 0
     private var isInitialSetupDone: Boolean = false
 
+    private var incomePlans: List<Plan> = listOf()
+    private var expensePlans: List<Plan> = listOf()
+    private var incomePlanStringList: MutableList<String>  = mutableListOf()
+    private var expensePlanStringList: MutableList<String>  = mutableListOf()
     /**
      * Live data for the string values
      */
@@ -91,6 +99,7 @@ class AddOrEditTransactionFragmentViewModel(
     private val _currencySign = MutableLiveData<String>("")
     val currencySign: LiveData<String>
         get() = _currencySign
+
     /**
      * Live data for error the string
      */
@@ -98,7 +107,7 @@ class AddOrEditTransactionFragmentViewModel(
     val descriptionErrorMessage: LiveData<String?>
         get() = _descriptionErrorMessage
 
-    val isErrorEnabled :LiveData<Boolean> = Transformations.map(_descriptionErrorMessage){
+    val isErrorEnabled: LiveData<Boolean> = Transformations.map(_descriptionErrorMessage){
         it != null
     }
 
@@ -119,7 +128,6 @@ class AddOrEditTransactionFragmentViewModel(
 
     private var sources = listOf<String>()
     private var venues = listOf<String>()
-
 
     /**
      * Live data for field visibility
@@ -204,14 +212,14 @@ class AddOrEditTransactionFragmentViewModel(
         /**
          * Check if we need to edit a transaction or create a new one
          */
-        if(transactionIdToEdit != null) {
+        if(idToEdit != null) {
             isEditMode = true
             _buttonText.value = appContext.resources.getString(R.string.save)
         }else{
             _buttonText.value = appContext.resources.getString(R.string.add)
             /** Get the date for today */
             _dateString.value = dateFormat.format(_date)
-            currentTransaction.date = _date.time
+            selectedDate = _date.time
         }
 
         getDataFromDatabase()
@@ -223,10 +231,10 @@ class AddOrEditTransactionFragmentViewModel(
     fun onSelectedDateChanged(newDate: Long){
         if(!isInitialSetupDone) return /** Only process after initial setup done */
 
-        _date.time=newDate
+        _date.time = newDate
         _dateString.value = dateFormat.format(_date)
 
-        currentTransaction.date = newDate
+        selectedDate = newDate
     }
 
     /**
@@ -474,31 +482,23 @@ class AddOrEditTransactionFragmentViewModel(
     fun onSelectedPlanChanged(index: Int?){
         if(!isInitialSetupDone) return /** Only process after initial setup done */
         if(index == null) return    // Do a quick null check
-        //if(index == currentCategoryIndex) return // If same category selected we do nothing
 
-        //currentCategoryIndex = index
         /** If Not planned is selected we need to clear the selections */
         if(index == 0){
-
-            //_descriptionString.value = ""
-            //_amountString.value = ""
-            //_recipientOrVenueString.value = ""
             _selectedCategoryIndex.value = 0
-
-            currentTransaction.planned = TransactionPlanned.NOT_PLANNED
+            selectedPlanId = -1
 
             /** Enable category select */
             _isCategorySelectEnabled.value = true
-
         }else{
             /** Get the correct plan */
-            val plan: Transaction = if(selectedTransactionType == TransactionType.EXPENSE){
+            val plan: Plan = if(selectedTransactionType == TransactionType.EXPENSE){
                 expensePlans[index-1]
             }else{
                 incomePlans[index-1]
             }
 
-            currentTransaction.planId = plan.transactionId
+            selectedPlanId = plan.id
             currentTransaction.planned = TransactionPlanned.PLANNED
 
             /** Enable category select */
@@ -515,7 +515,7 @@ class AddOrEditTransactionFragmentViewModel(
                 _descriptionString.value = plan.description
                 _amountString.value = plan.amount.toString()
             }
-            _recipientOrVenueString.value = plan.secondParty
+            _recipientOrVenueString.value = plan.sourceOrRecipient
 
             _selectedCategoryIndex.value=findCategoryIndex(plan.categoryId)
 
@@ -548,7 +548,7 @@ class AddOrEditTransactionFragmentViewModel(
         if(selectedIndex == null) return /** A quick null check */
 
         val selectedFrequency = TransactionFrequency.getFromIndex(selectedIndex)
-        currentTransaction.frequency = selectedFrequency
+        selectedTransactionFrequency = selectedFrequency
 
         /**
          * If sum type, the label will be 'first date' otherwise 'expected date'
@@ -570,7 +570,7 @@ class AddOrEditTransactionFragmentViewModel(
      */
     fun onEnteredDescriptionChanged(newDescription: String){
         if(!isInitialSetupDone) return /** Only process after initial setup done */
-        currentTransaction.description = newDescription
+        enteredDescription = newDescription
         validateDescription()
     }
 
@@ -579,7 +579,7 @@ class AddOrEditTransactionFragmentViewModel(
      */
     fun onEnteredAmountChanged(amount: Float?){
         if(!isInitialSetupDone) return /** Only process after initial setup done */
-        currentTransaction.amount = amount ?: 0f
+        enteredAmount = amount ?: 0f
         validate()
     }
 
@@ -591,7 +591,7 @@ class AddOrEditTransactionFragmentViewModel(
         val category = _categories.value?.find { it.categoryName == categoryName }
 
         if(category != null){
-            currentTransaction.categoryId = category.categoryId
+            selectedCategoryId = category.categoryId
         }
     }
 
@@ -600,7 +600,7 @@ class AddOrEditTransactionFragmentViewModel(
      */
     fun onEnteredRecipientOrVenueChanged(newRecipientOrVenue: String?){
         if(!isInitialSetupDone) return /** Only process after initial setup done */
-        currentTransaction.secondParty = newRecipientOrVenue ?: ""
+        enteredRecipientOrSource = newRecipientOrVenue ?: ""
     }
 
     /**
@@ -609,7 +609,7 @@ class AddOrEditTransactionFragmentViewModel(
     fun onSelectedPaymentMethodChanged(index: Int?){
         if(!isInitialSetupDone) return /** Only process after initial setup done */
         if(index != null) {
-            currentTransaction.method = PaymentMethod.getFromIndex(index)
+            selectedPaymentMethod = PaymentMethod.getFromIndex(index)
         }
     }
 
@@ -620,15 +620,52 @@ class AddOrEditTransactionFragmentViewModel(
         validate()
 
         /** If category id is 0 we set it to id of first category (Unspecified) */
-        if(currentTransaction.categoryId == 0){
-            currentTransaction.categoryId = _categories.value?.get(0)!!.categoryId
+        if(selectedCategoryId == 0){
+            selectedCategoryId = _categories.value?.get(0)!!.categoryId
         }
 
+        /** Save the user input to the plan or transaction */
+        if(selectedTransactionType == TransactionType.PLAN_EXPENSE || selectedTransactionType == TransactionType.PLAN_INCOME){
+            /**
+             * Plan
+             */
+            currentPlan.transactionType = selectedTransactionType
+            currentPlan.firstExpectedDate = selectedDate
+            currentPlan.description = enteredDescription
+            currentPlan.amount = enteredAmount
+            currentPlan.categoryId = selectedCategoryId
+            currentPlan.sourceOrRecipient = enteredRecipientOrSource
+            currentPlan.method = selectedPaymentMethod
+            currentPlan.frequency = selectedTransactionFrequency
+        }else{
+            /**
+             * Transaction
+             */
+            currentTransaction.transactionType = selectedTransactionType
+            currentTransaction.date = selectedDate
+            currentTransaction.description = enteredDescription
+            currentTransaction.planId = selectedPlanId
+            currentTransaction.amount = enteredAmount
+            currentTransaction.categoryId = selectedCategoryId
+            currentTransaction.secondParty = enteredRecipientOrSource
+            currentTransaction.method = selectedPaymentMethod
+            currentTransaction.frequency = selectedTransactionFrequency
+        }
+
+        /** Update or insert category or plan */
         if(_isInputValid.value == true){
             if(isEditMode){
-                updateTransaction()
+                if(selectedTransactionType == TransactionType.PLAN_EXPENSE || selectedTransactionType == TransactionType.PLAN_INCOME){
+                    updatePlan()
+                }else {
+                    updateTransaction()
+                }
             }else{
-                insertTransaction()
+                if(selectedTransactionType == TransactionType.PLAN_EXPENSE || selectedTransactionType == TransactionType.PLAN_INCOME){
+                    insertPlan()
+                }else {
+                    insertTransaction()
+                }
             }
         }
     }
@@ -664,6 +701,7 @@ class AddOrEditTransactionFragmentViewModel(
 
             val result = plans.find { it.description == currentTransaction.description }
 
+//TODO need to accept original name if editing plan
             if (result != null) {
                 _descriptionErrorMessage.value =
                     appContext.resources.getString(R.string.description_error_message)
@@ -682,12 +720,12 @@ class AddOrEditTransactionFragmentViewModel(
         var isValid = true
 
         /** Check if there is an amount entered */
-        if(currentTransaction.amount == 0f){
+        if(enteredAmount == 0f){
             isValid = false
         }
 
-        /** Check if there is any description entered */
-        if(_descriptionErrorMessage.value != null){
+        /** Check if there is any description entered and is there any error */
+        if(_descriptionErrorMessage.value != null || enteredDescription.isEmpty()){
             isValid = false
         }
 
@@ -699,14 +737,127 @@ class AddOrEditTransactionFragmentViewModel(
      * has been retrieved from database to set the form up
      */
     private fun setUpEditTransaction(){
-        /**
-         * Set transaction type
-         */
-        _selectedTransactionTypeIndex.value = TransactionType.getIndex(currentTransaction.transactionType)
+
         _isTransactionTypeSelectEnabled.value = false
 
+        if(isTransactionToEdit) {
+            /**
+             * Set transaction type
+             */
+            _selectedTransactionTypeIndex.value =
+                TransactionType.getIndex(currentTransaction.transactionType)
+
+            /** Set the title */
+            setTitle(currentTransaction.transactionType)
+
+            /** Set the editable text field values **/
+            _descriptionString.value = currentTransaction.description
+            _amountString.value = currentTransaction.amount.toString()
+            _recipientOrVenueString.value = currentTransaction.secondParty
+
+            enteredDescription = currentTransaction.description
+            enteredAmount = currentTransaction.amount
+            enteredRecipientOrSource = currentTransaction.secondParty
+
+            /** Set the selected category */
+            _selectedCategoryIndex.value = findCategoryIndex(currentTransaction.categoryId)
+            selectedCategoryId = currentTransaction.categoryId
+
+            /** Set the plan */
+            if (currentTransaction.planned == TransactionPlanned.NOT_PLANNED) {
+                _selectedPlanIndex.value = 0
+            } else {
+                val planList = if (currentTransaction.transactionType == TransactionType.EXPENSE) {
+                    expensePlans
+                } else {
+                    incomePlans
+                }
+
+                var index = 0
+                for (i in planList.indices) {
+                    if (planList[i].id == currentTransaction.planId) {
+                        index = i
+                    }
+                }
+                _selectedPlanIndex.value = index + 1
+            }
+            selectedPlanId = currentTransaction.planId
+
+            /** If planned transaction, disable category choice */
+            if (currentTransaction.planned == TransactionPlanned.PLANNED) {
+                _isCategorySelectEnabled.value = false
+            }
+
+            /** Set payment method */
+            _selectedPaymentMethodIndex.value = PaymentMethod.getIndex(currentTransaction.method)
+            selectedPaymentMethod = currentTransaction.method
+
+            /** Set the frequency **/
+            _selectedFrequencyIndex.value =
+                TransactionFrequency.getIndex((currentTransaction.frequency))
+            selectedTransactionFrequency = currentTransaction.frequency
+
+            /** Set the date */
+            _date.time = currentTransaction.date
+            _dateString.value = dateFormat.format(_date)
+
+            /** Set initial value for venue or source list for autocomplete text view */
+            _venueOrSourceList.value =
+                if (currentTransaction.transactionType == TransactionType.EXPENSE) {
+                    venues
+                } else {
+                    sources
+                }
+        }else{
+            /**
+             * Set transaction type
+             */
+            _selectedTransactionTypeIndex.value =
+                TransactionType.getIndex(currentPlan.transactionType)
+
+            /** Set the title */
+            setTitle(currentPlan.transactionType)
+
+            /** Set the editable text field values **/
+            _descriptionString.value = currentPlan.description
+            _amountString.value = currentPlan.amount.toString()
+            _recipientOrVenueString.value = currentPlan.sourceOrRecipient
+
+            enteredDescription = currentPlan.description
+            enteredAmount = currentPlan.amount
+            enteredRecipientOrSource = currentPlan.sourceOrRecipient
+
+            /** Set the selected category */
+            _selectedCategoryIndex.value = findCategoryIndex(currentPlan.categoryId)
+            selectedCategoryId = currentPlan.categoryId
+
+            /** Set payment method */
+            _selectedPaymentMethodIndex.value = PaymentMethod.getIndex(currentPlan.method)
+            selectedPaymentMethod = currentPlan.method
+
+            /** Set the frequency **/
+            _selectedFrequencyIndex.value =
+                TransactionFrequency.getIndex((currentPlan.frequency))
+            selectedTransactionFrequency = currentPlan.frequency
+
+            /** Set the date */
+            _date.time = currentPlan.firstExpectedDate
+            _dateString.value = dateFormat.format(_date)
+            selectedDate = currentPlan.firstExpectedDate
+
+            /** Set initial value for venue or source list for autocomplete text view */
+            _venueOrSourceList.value =
+                if (currentTransaction.transactionType == TransactionType.PLAN_EXPENSE) {
+                    venues
+                } else {
+                    sources
+                }
+        }
+    }
+
+    private fun setTitle(transactionType: TransactionType) {
         /** Set the title */
-        val titleStringRes = when(currentTransaction.transactionType){
+        val titleStringRes = when (transactionType) {
             TransactionType.EXPENSE -> R.string.edit_expense
             TransactionType.INCOME -> R.string.edit_income
             TransactionType.DEPOSIT -> R.string.edit_deposit
@@ -716,57 +867,6 @@ class AddOrEditTransactionFragmentViewModel(
         }
 
         _titleString.value = appContext.resources.getString(titleStringRes)
-
-        /** Set the editable text field values **/
-        _descriptionString.value = currentTransaction.description
-        _amountString.value = currentTransaction.amount.toString()
-        _recipientOrVenueString.value = currentTransaction.secondParty
-
-        /** Set the selected category */
-        _selectedCategoryIndex.value=findCategoryIndex(currentTransaction.categoryId)
-
-        /** Set the plan */
-        if(currentTransaction.planned == TransactionPlanned.NOT_PLANNED){
-            _selectedPlanIndex.value = 0
-        }else{
-            val planList = if(currentTransaction.transactionType == TransactionType.EXPENSE){
-                expensePlans
-            }else{
-                incomePlans
-            }
-
-            var index = 0
-            for(i in planList.indices){
-                if(planList[i].transactionId == currentTransaction.planId){
-                    index = i
-                }
-            }
-            _selectedPlanIndex.value = index+1
-        }
-
-        /** If planned expense, disable category choice */
-        if(currentTransaction.planned == TransactionPlanned.PLANNED)
-        {
-            _isCategorySelectEnabled.value = false
-        }
-
-        /** Set payment method */
-        _selectedPaymentMethodIndex.value = PaymentMethod.getIndex(currentTransaction.method)
-
-        /** Set the frequency **/
-        _selectedFrequencyIndex.value = TransactionFrequency.getIndex((currentTransaction.frequency))
-
-        /** Set the date */
-        _date.time = currentTransaction.date
-        _dateString.value = dateFormat.format(_date)
-
-        /** Set initial value for venue or source list for autocomplete text view */
-        _venueOrSourceList.value = if(currentTransaction.transactionType == TransactionType.EXPENSE
-            || currentTransaction.transactionType == TransactionType.PLAN_EXPENSE){
-            venues
-        }else{
-            sources
-        }
     }
 
     /**
@@ -783,7 +883,7 @@ class AddOrEditTransactionFragmentViewModel(
     }
 
     /**
-     * Cal this method when currency sign retrieved from shared prefs
+     * Call this method when currency sign retrieved from shared prefs
      */
     fun setCurrencySign(sign: String){
         _currencySign.value = sign
@@ -797,14 +897,18 @@ class AddOrEditTransactionFragmentViewModel(
             _categories.value = databaseDao.getCategoriesSuspend()
             venues = databaseDao.getVenuesSuspend()
             sources = databaseDao.getSourcesSuspend()
-            //incomePlans = databaseDao.getIncomePlansSuspend()
-            //expensePlans = databaseDao.getExpensePlansSuspend()
+            incomePlans = databaseDao.getIncomePlansSuspend()
+            expensePlans = databaseDao.getExpensePlansSuspend()
             createPlanStringLists()
             _currentPlanList.value = expensePlanStringList
 
             /** Check if we are in edit mode or not */
-            if(isEditMode && transactionIdToEdit != null){
-                currentTransaction = databaseDao.getTransactionByIdSuspend(transactionIdToEdit)
+            if(isEditMode && idToEdit != null){
+                if(isTransactionToEdit) {
+                    currentTransaction = databaseDao.getTransactionByIdSuspend(idToEdit)
+                }else{
+                    currentPlan = databaseDao.getPlanByIdSuspend(idToEdit)
+                }
             }
 
             /** Now we can do the set up for which we needed the data */
@@ -824,12 +928,34 @@ class AddOrEditTransactionFragmentViewModel(
     }
 
     /**
+     * This method inserts the plan to the database
+     */
+    private fun insertPlan(){
+        uiScope.launch {
+            saveSecondPartyIfNew()
+            databaseDao.insertPlanSuspend(currentPlan)
+            _isOperationComplete.value = true
+        }
+    }
+
+    /**
      * This method updates the transaction being edited
      */
     private fun updateTransaction(){
         uiScope.launch {
             saveSecondPartyIfNew()
             databaseDao.updateTransactionSuspend(currentTransaction)
+            _isOperationComplete.value = true
+        }
+    }
+
+    /**
+     * This method updates the transaction being edited
+     */
+    private fun updatePlan(){
+        uiScope.launch {
+            saveSecondPartyIfNew()
+            databaseDao.updatePlanSuspend(currentPlan)
             _isOperationComplete.value = true
         }
     }

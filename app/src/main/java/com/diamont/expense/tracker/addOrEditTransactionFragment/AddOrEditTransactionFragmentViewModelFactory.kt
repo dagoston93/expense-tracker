@@ -10,6 +10,7 @@ class AddOrEditTransactionFragmentViewModelFactory(
     private val application: Application,
     private val databaseDao: TransactionDatabaseDao,
     private val transactionIdToEdit: Int?,
+    private val isTransactionToEdit: Boolean,
     private val setPlanAsDefaultType: Boolean
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -18,6 +19,7 @@ class AddOrEditTransactionFragmentViewModelFactory(
                 application,
                 databaseDao,
                 transactionIdToEdit,
+                isTransactionToEdit,
                 setPlanAsDefaultType
             ) as T
         }
