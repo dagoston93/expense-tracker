@@ -114,6 +114,7 @@
     <!-- Confirm delete dialog -->
     <string name="confirm_delete_dialog_title">Confirm</string>
     <string name="confirm_delete_transaction_dialog_text">Are you sure you want to delete the following transaction?\n\nDescription: %1$s\nType: %2$s\nDate: %3$s</string>
+    <string name="confirm_delete_plan_dialog_text">Are you sure you want to delete the following plan?\n\nDescription: %1$s\nType: %2$s\n%3$s: %4$s</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
 

@@ -62,6 +62,12 @@ interface TransactionDatabaseDao {
     fun replaceCategoryIds(deletedId: Int, replacementId: Int)
 
     /**
+     * Replace the planId in transaction_data when plan deleted with -1 (not planned)
+     */
+    @Query("UPDATE transaction_data SET plan_id=-1 WHERE plan_id=:deletedId")
+    fun replaceDeletedPlanIds(deletedId: Int)
+
+    /**
      * Insert a new category
      */
     @Insert(entity = TransactionCategory::class)
@@ -308,6 +314,7 @@ interface TransactionDatabaseDao {
     suspend fun deletePlanSuspend(id: Int){
         return withContext(Dispatchers.IO){
             deletePlan(id)
+            replaceDeletedPlanIds(id)
         }
     }
 

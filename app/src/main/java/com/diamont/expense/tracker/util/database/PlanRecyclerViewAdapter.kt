@@ -16,7 +16,7 @@ class PlanRecyclerViewAdapter(
     private val recyclerView: RecyclerView,
     private val decimalFormat: DecimalFormat,
     private val editIconCallback: (id: Int) -> Unit,
-    private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, date: String, position: Int) -> Unit
+    private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, dateLabel: String, date: String, position: Int) -> Unit
 ): TransactionDetailViewAdapter<Plan>(recyclerView) {
 
     /**
@@ -109,16 +109,7 @@ class PlanRecyclerViewAdapter(
             ),
             recyclerView.context.getString(item.method.stringId)
         )
-
-
-
-
-
-
-
-
-
-
+        
         /** Set the onClickListeners for the icons */
         holder.view.setEditIconOnClickListener {
             editIconCallback(item.id)
@@ -128,6 +119,14 @@ class PlanRecyclerViewAdapter(
             deleteIconCallback(
                 item.id, item.description,
                 item.transactionType.stringId,
+                recyclerView.context.getString(
+                    if(item.frequency == TransactionFrequency.ONE_TIME){
+                        R.string.expected_date
+                    }else{
+                        R.string.first_date
+                    }
+                ),
+
                 item.getDateString(item.firstExpectedDate, recyclerView.context),
                 position
             )

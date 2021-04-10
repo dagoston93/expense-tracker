@@ -9,7 +9,6 @@ import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
 import com.diamont.expense.tracker.util.database.Plan
-import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import kotlinx.coroutines.CoroutineScope
@@ -107,5 +106,23 @@ class PlanFragmentViewModel (
             _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_incomes)
             _plansToDisplay.value = incomePlans
         }
+    }
+
+    /**
+     * Call this method when user clicks the delete button of a transaction
+     */
+    fun deletePlan(planId: Int){
+        uiScope.launch {
+            databaseDao.deletePlanSuspend(planId)
+        }
+    }
+
+    /**
+     * onCleared() is called when view model is destroyed
+     * in this case we need to cancel coroutines
+     */
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 }

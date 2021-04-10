@@ -117,7 +117,7 @@ class HistoryFragment : Fragment() {
             .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
             .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
                 viewModel.deleteTransaction(transactionId)
-                (binding.rvTransactionList.adapter as TransactionDetailViewAdapter<Transaction>).itemDeletedAtPos(position)
+                (binding.rvTransactionList.adapter as TransactionRecyclerViewAdapter).itemDeletedAtPos(position)
             }
             .show()
     }

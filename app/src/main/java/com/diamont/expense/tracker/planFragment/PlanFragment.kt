@@ -14,6 +14,7 @@ import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentPlanBinding
 import com.diamont.expense.tracker.util.database.*
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import java.text.DecimalFormat
 
@@ -77,8 +78,8 @@ class PlanFragment : Fragment() {
             { id ->
                 //viewModel.eventNavigateToEditFragment.value = id
             },
-            {id, description, typeStringId, date, position ->
-                //confirmDeleteTransaction(id, description, typeStringId, date, position)
+            {id, description, typeStringId, dateLabel, date, position ->
+                confirmDeletePlan(id, description, typeStringId, dateLabel, date, position)
             }
         )
 
@@ -98,4 +99,25 @@ class PlanFragment : Fragment() {
         /** Return the inflated layout */
         return binding.root
     }
+
+    /**
+     * This method shows the confirmation dialog and deletes a plan
+     */
+    fun confirmDeletePlan(id: Int, description: String, typeStringId: Int, dateLabel: String, date: String, position: Int){
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.confirm_delete_dialog_title))
+            .setMessage(resources.getString(R.string.confirm_delete_plan_dialog_text,
+                description,
+                resources.getString(typeStringId),
+                dateLabel,
+                date
+            ))
+            .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
+            .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
+                viewModel.deletePlan(id)
+                (binding.rvPlanList.adapter as PlanRecyclerViewAdapter).itemDeletedAtPos(position)
+            }
+            .show()
+    }
+
 }
