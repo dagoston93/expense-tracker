@@ -76,7 +76,7 @@ class PlanFragment : Fragment() {
         val adapter = PlanRecyclerViewAdapter(binding.rvPlanList,
             viewModel.decimalFormat ?: DecimalFormat(),
             { id ->
-                //viewModel.eventNavigateToEditFragment.value = id
+               viewModel.eventNavigateToEditFragment.value = id
             },
             {id, description, typeStringId, dateLabel, date, position ->
                 confirmDeletePlan(id, description, typeStringId, dateLabel, date, position)
@@ -96,6 +96,17 @@ class PlanFragment : Fragment() {
             }
         })
 
+        /**
+         * Observe the edit navigation event
+         */
+        viewModel.eventNavigateToEditFragment.observe(viewLifecycleOwner, Observer {
+            if(it != null){
+                activityViewModel.isTransactionToEdit = false
+                activityViewModel.eventNavigateToEditFragment.value = it
+                viewModel.eventNavigateToEditFragment.value = null
+            }
+        })
+
         /** Return the inflated layout */
         return binding.root
     }
@@ -103,7 +114,7 @@ class PlanFragment : Fragment() {
     /**
      * This method shows the confirmation dialog and deletes a plan
      */
-    fun confirmDeletePlan(id: Int, description: String, typeStringId: Int, dateLabel: String, date: String, position: Int){
+    private fun confirmDeletePlan(id: Int, description: String, typeStringId: Int, dateLabel: String, date: String, position: Int){
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.confirm_delete_dialog_title))
             .setMessage(resources.getString(R.string.confirm_delete_plan_dialog_text,

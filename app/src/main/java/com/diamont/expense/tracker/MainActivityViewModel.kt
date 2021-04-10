@@ -38,11 +38,16 @@ class MainActivityViewModel (appContext: Application) : AndroidViewModel(appCont
 
     /**
      * Trigger this event when user clicks on an edit icon
-     * by setting the transaction id as the value.
+     * by setting the transaction/plan id as the value.
      *
      * After navigating reset it to null.
      */
     val eventNavigateToEditFragment = MutableLiveData<Int?>(null)
+
+    /**
+     * Set this variable if editing plan before triggering eventNavigateToEditFragment
+     */
+    var isTransactionToEdit: Boolean = true
 
     /**
      * Call this method to set the title

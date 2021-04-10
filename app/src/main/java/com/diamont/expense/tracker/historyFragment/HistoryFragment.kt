@@ -94,6 +94,7 @@ class HistoryFragment : Fragment() {
          */
         viewModel.eventNavigateToEditFragment.observe(viewLifecycleOwner, Observer {
             if(it != null){
+                activityViewModel.isTransactionToEdit = true
                 activityViewModel.eventNavigateToEditFragment.value = it
                 viewModel.eventNavigateToEditFragment.value = null
             }

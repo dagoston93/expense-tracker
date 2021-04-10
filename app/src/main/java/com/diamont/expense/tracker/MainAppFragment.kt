@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.diamont.expense.tracker.databinding.FragmentMainAppBinding
+import com.diamont.expense.tracker.util.KEY_BUNDLE_IS_TRANSACTION_TO_EDIT
 import com.diamont.expense.tracker.util.KEY_BUNDLE_TRANSACTION_ID
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 import com.diamont.expense.tracker.util.interfaces.BackPressHandlerFragment
@@ -141,6 +142,7 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
             {
                 val args = Bundle()
                 args.putInt(KEY_BUNDLE_TRANSACTION_ID, it)
+                args.putBoolean(KEY_BUNDLE_IS_TRANSACTION_TO_EDIT, activityViewModel.isTransactionToEdit)
                 activityViewModel.eventNavigateToEditFragment.value = null
                 navigateWithAnimation(R.id.addOrEditTransactionFragment, R.anim.anim_add_open, R.anim.anim_fade_out, args)
             }
