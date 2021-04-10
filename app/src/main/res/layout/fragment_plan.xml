@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="$1,1538.54"
-                android:text=""
+                android:text="@{viewModel.totalMonthlyString}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView40"
                 app:layout_constraintEnd_toEndOf="@+id/tvPlanThisYear" />
 
@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text=""
+                android:text="@{viewModel.totalYearlyString}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView39"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="$130.50" />

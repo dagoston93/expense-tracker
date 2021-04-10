@@ -59,7 +59,7 @@ class HistoryFragment : Fragment() {
         activityViewModel.setDrawerLayoutEnabled(true)
 
         /**
-         * Set the currency sign
+         * Get the decimal format the currency
          */
         val currencyId = activityViewModel.sharedPreferences.getInt(KEY_PREF_CURRENCY_ID, 0)
         val decimalFormat = Currency.getDecimalFormat(currencyId) ?: DecimalFormat()
