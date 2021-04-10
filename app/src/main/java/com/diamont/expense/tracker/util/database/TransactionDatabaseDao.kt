@@ -140,10 +140,16 @@ interface TransactionDatabaseDao {
     fun getAllPlans() : List<Plan>
 
     /**
-     * Get plan by type
+     * Get plans by type
      */
     @Query("SELECT * FROM plan_data WHERE transaction_type = :type ORDER BY first_expected_date DESC")
     fun getPlansByType(type : TransactionType) : List<Plan>
+
+    /**
+     * Get Active plans by type
+     */
+    @Query("SELECT * FROM plan_data WHERE transaction_type = :type AND is_status_active=1 ORDER BY first_expected_date DESC")
+    fun getActivePlansByType(type : TransactionType) : List<Plan>
 
     /**
      * Get plan with given id
@@ -341,6 +347,26 @@ interface TransactionDatabaseDao {
     suspend fun getIncomePlansSuspend() : List<Plan>{
         return withContext(Dispatchers.IO){
             val data : List<Plan> = getPlansByType(TransactionType.PLAN_INCOME)
+            data
+        }
+    }
+
+    /**
+     * Suspend function to retrieve active expense plans
+     */
+    suspend fun getActiveExpensePlansSuspend() : List<Plan>{
+        return withContext(Dispatchers.IO){
+            val data : List<Plan> = getActivePlansByType(TransactionType.PLAN_EXPENSE)
+            data
+        }
+    }
+
+    /**
+     * Suspend function to retrieve active income plans
+     */
+    suspend fun getActiveIncomePlansSuspend() : List<Plan>{
+        return withContext(Dispatchers.IO){
+            val data : List<Plan> = getActivePlansByType(TransactionType.PLAN_INCOME)
             data
         }
     }

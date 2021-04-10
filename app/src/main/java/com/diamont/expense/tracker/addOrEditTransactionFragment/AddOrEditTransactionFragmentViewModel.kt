@@ -1,7 +1,6 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -44,14 +43,17 @@ class AddOrEditTransactionFragmentViewModel(
     private var selectedPaymentMethod: PaymentMethod = PaymentMethod.CASH
     private var selectedTransactionFrequency: TransactionFrequency = TransactionFrequency.ONE_TIME
 
+    private var originalPlan: Plan? = null
+    private var lastSelectedPlan: Plan = Plan()
+
     private var currentTransaction = Transaction()
     private var currentPlan = Plan()
 
     private var isEditMode: Boolean = false
     private var isInitialSetupDone: Boolean = false
 
-    private var incomePlans: List<Plan> = listOf()
-    private var expensePlans: List<Plan> = listOf()
+    private var incomePlans: MutableList<Plan> = mutableListOf()
+    private var expensePlans: MutableList<Plan> = mutableListOf()
     private var incomePlanStringList: MutableList<String>  = mutableListOf()
     private var expensePlanStringList: MutableList<String>  = mutableListOf()
     /**
@@ -492,34 +494,34 @@ class AddOrEditTransactionFragmentViewModel(
             _isCategorySelectEnabled.value = true
         }else{
             /** Get the correct plan */
-            val plan: Plan = if(selectedTransactionType == TransactionType.EXPENSE){
+            lastSelectedPlan = if(selectedTransactionType == TransactionType.EXPENSE){
                 expensePlans[index-1]
             }else{
                 incomePlans[index-1]
             }
 
-            selectedPlanId = plan.id
+            selectedPlanId = lastSelectedPlan.id
             currentTransaction.planned = TransactionPlanned.PLANNED
 
             /** Enable category select */
             _isCategorySelectEnabled.value = false
 
             /** If the plan is a SUM type, we don't set description and amount, otherwise we do. */
-            if(plan.frequency == TransactionFrequency.MONTHLY_SUM
-                || plan.frequency == TransactionFrequency.FORTNIGHTLY_SUM
-                || plan.frequency == TransactionFrequency.WEEKLY_SUM
-                || plan.frequency == TransactionFrequency.YEARLY_SUM){
+            if(lastSelectedPlan.frequency == TransactionFrequency.MONTHLY_SUM
+                || lastSelectedPlan.frequency == TransactionFrequency.FORTNIGHTLY_SUM
+                || lastSelectedPlan.frequency == TransactionFrequency.WEEKLY_SUM
+                || lastSelectedPlan.frequency == TransactionFrequency.YEARLY_SUM){
                 _descriptionString.value = ""
                 _amountString.value = ""
             }else{
-                _descriptionString.value = plan.description
-                _amountString.value = plan.amount.toString()
+                _descriptionString.value = lastSelectedPlan.description
+                _amountString.value = lastSelectedPlan.amount.toString()
             }
-            _recipientOrVenueString.value = plan.sourceOrRecipient
+            _recipientOrVenueString.value = lastSelectedPlan.sourceOrRecipient
 
-            _selectedCategoryIndex.value=findCategoryIndex(plan.categoryId)
+            _selectedCategoryIndex.value=findCategoryIndex(lastSelectedPlan.categoryId)
 
-            _selectedPaymentMethodIndex.value = PaymentMethod.getIndex(plan.method)
+            _selectedPaymentMethodIndex.value = PaymentMethod.getIndex(lastSelectedPlan.method)
         }
     }
 
@@ -657,13 +659,46 @@ class AddOrEditTransactionFragmentViewModel(
             if(isEditMode){
                 if(selectedTransactionType == TransactionType.PLAN_EXPENSE || selectedTransactionType == TransactionType.PLAN_INCOME){
                     updatePlan()
-                }else {
+                }else{
+                    /** Check if originally the transaction was planned */
+                    if(originalPlan != null){
+                        /** Check if new and original plan match */
+                        if(originalPlan != lastSelectedPlan){
+                            /** If different plan is selected check if original plan was one time */
+                            if(originalPlan!!.frequency == TransactionFrequency.ONE_TIME){
+                                /** If yes, we set it to active and save it */
+                                originalPlan!!.isStatusActive = true
+                                updateSelectedPlan(originalPlan!!)
+                            }
+                        }
+                    }
+
+                    /** And now regardless the original plan we check if transaction was planned and update plan if needed */
+                    if(currentTransaction.planId != -1){
+                        /** If it is planned, if plan is one time, we update plan status as not active*/
+                        if(lastSelectedPlan.frequency == TransactionFrequency.ONE_TIME){
+                            lastSelectedPlan.isStatusActive = false
+                            updateSelectedPlan(lastSelectedPlan)
+                        }
+                    }
+
+                    /** And finally update the transaction (because it navigates away) */
                     updateTransaction()
                 }
             }else{
                 if(selectedTransactionType == TransactionType.PLAN_EXPENSE || selectedTransactionType == TransactionType.PLAN_INCOME){
                     insertPlan()
                 }else {
+                    /** Check if it is planned */
+                    if(currentTransaction.planId != -1){
+                        /** If it is planned, if plan is one time, we update plan status as not active*/
+                        if(lastSelectedPlan.frequency == TransactionFrequency.ONE_TIME){
+                            lastSelectedPlan.isStatusActive = false
+                            updateSelectedPlan(lastSelectedPlan)
+                        }
+                    }
+
+                    /** And finally insert the transaction (because it navigates away) */
                     insertTransaction()
                 }
             }
@@ -764,7 +799,7 @@ class AddOrEditTransactionFragmentViewModel(
             selectedCategoryId = currentTransaction.categoryId
 
             /** Set the plan */
-            if (currentTransaction.planned == TransactionPlanned.NOT_PLANNED) {
+            if (currentTransaction.planId == -1) {
                 _selectedPlanIndex.value = 0
             } else {
                 val planList = if (currentTransaction.transactionType == TransactionType.EXPENSE) {
@@ -800,6 +835,7 @@ class AddOrEditTransactionFragmentViewModel(
             /** Set the date */
             _date.time = currentTransaction.date
             _dateString.value = dateFormat.format(_date)
+            selectedDate = currentTransaction.date
 
             /** Set initial value for venue or source list for autocomplete text view */
             _venueOrSourceList.value =
@@ -876,7 +912,7 @@ class AddOrEditTransactionFragmentViewModel(
         if(isEditMode){
             setUpEditTransaction()
         }else{
-            /** Set inital value for venue or source list for autocomplete text view */
+            /** Set initial value for venue or source list for autocomplete text view */
             _venueOrSourceList.value = venues
         }
         isInitialSetupDone = true
@@ -897,19 +933,39 @@ class AddOrEditTransactionFragmentViewModel(
             _categories.value = databaseDao.getCategoriesSuspend()
             venues = databaseDao.getVenuesSuspend()
             sources = databaseDao.getSourcesSuspend()
-            incomePlans = databaseDao.getIncomePlansSuspend()
-            expensePlans = databaseDao.getExpensePlansSuspend()
-            createPlanStringLists()
-            _currentPlanList.value = expensePlanStringList
+            incomePlans = databaseDao.getActiveIncomePlansSuspend().toMutableList()
+            expensePlans = databaseDao.getActiveExpensePlansSuspend().toMutableList()
 
             /** Check if we are in edit mode or not */
             if(isEditMode && idToEdit != null){
                 if(isTransactionToEdit) {
                     currentTransaction = databaseDao.getTransactionByIdSuspend(idToEdit)
+
+                    /** If income or expense we load the original plan if it is planned */
+                    if(currentTransaction.transactionType == TransactionType.INCOME ||
+                        currentTransaction.transactionType == TransactionType.EXPENSE) {
+
+                        if (currentTransaction.planId != -1) {
+                            originalPlan = databaseDao.getPlanByIdSuspend(currentTransaction.planId)
+                            lastSelectedPlan = originalPlan!!
+
+                            /** If plan is not active we need to add it to the correct plan list */
+                            if(!originalPlan!!.isStatusActive){
+                                if(currentTransaction.transactionType == TransactionType.EXPENSE){
+                                    expensePlans.add(originalPlan!!)
+                                }else{
+                                    incomePlans.add(originalPlan!!)
+                                }
+                            }
+                        }
+                    }
                 }else{
                     currentPlan = databaseDao.getPlanByIdSuspend(idToEdit)
                 }
             }
+
+            createPlanStringLists()
+            _currentPlanList.value = expensePlanStringList
 
             /** Now we can do the set up for which we needed the data */
             onInitialDataReceived()
@@ -935,6 +991,16 @@ class AddOrEditTransactionFragmentViewModel(
             saveSecondPartyIfNew()
             databaseDao.insertPlanSuspend(currentPlan)
             _isOperationComplete.value = true
+        }
+    }
+
+    /**
+     * Update last selected plan status
+     */
+    private fun updateSelectedPlan(plan: Plan){
+        uiScope.launch {
+            saveSecondPartyIfNew()
+            databaseDao.updatePlanSuspend(plan)
         }
     }
 
