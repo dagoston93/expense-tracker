@@ -52,7 +52,7 @@ data class Plan (
 
     @ColumnInfo(name = "is_status_active")
     var isStatusActive: Boolean = true
-) : TransactionDetailViewAdaptable(){
+) : TransactionDetailViewAdaptable(), Comparable<Plan>{
     /**
      * Call this method to get amount as string
      */
@@ -68,4 +68,47 @@ data class Plan (
         return dateFormat.format(date)
     }
 
+    /**
+     * This method is called when ordering the list
+     *
+     * Return positive if this object has priority
+     * Return negative if other object has priority
+     * Return zero if equal priority
+     */
+    override fun compareTo(other: Plan): Int {
+        var priority: Int
+
+        /** Check whether this plan is active or one time plan */
+        if(this.isStatusActive || this.frequency == TransactionFrequency.ONE_TIME){
+            if(other.isStatusActive || other.frequency == TransactionFrequency.ONE_TIME){
+                /** Both are active or one time plans -> order by next expected date */
+                if(this.nextExpectedDate > other.nextExpectedDate){
+                    priority = 1
+                }else if(this.nextExpectedDate == other.nextExpectedDate){
+                    priority = 0
+                }else{
+                    priority = -1
+                }
+            }else{
+                /** This is active or one time, the other is not -> This one has priority */
+                priority = 1
+            }
+        }else{
+            if(other.isStatusActive || other.frequency == TransactionFrequency.ONE_TIME){
+                /** This one is not active or one time -> The other one has priority */
+                priority = -1
+            }else{
+                /** Neither is active or one time -> Sort by cancellation date */
+                if(this.cancellationDate > other.cancellationDate){
+                    priority = 1
+                }else if(this.cancellationDate == other.cancellationDate){
+                    priority = 0
+                }else{
+                    priority = -1
+                }
+            }
+        }
+
+        return priority
+    }
 }

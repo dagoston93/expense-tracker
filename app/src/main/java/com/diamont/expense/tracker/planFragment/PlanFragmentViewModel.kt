@@ -128,6 +128,11 @@ class PlanFragmentViewModel (
          */
         calculateNextExpectedDates(expensePlans)
 
+        val comparator = kotlin.Comparator{ plan1: Plan, plan2: Plan ->
+            plan2.compareTo(plan1)
+        }
+
+        expensePlans.sortWith(comparator)
 
 
         /** Display expense plans */

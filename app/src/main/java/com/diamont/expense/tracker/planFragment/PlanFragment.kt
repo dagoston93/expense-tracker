@@ -135,7 +135,7 @@ class PlanFragment : Fragment() {
     }
 
     /**
-     * This method shows the confirmation dialog and deletes a plan
+     * This method shows the confirmation dialog and cancels a plan
      */
     private fun confirmCancelPlan(id: Int, description: String, typeStringId: Int, date: String, position: Int){
         MaterialAlertDialogBuilder(requireContext())

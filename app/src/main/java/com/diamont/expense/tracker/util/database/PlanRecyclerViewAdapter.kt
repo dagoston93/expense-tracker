@@ -97,7 +97,7 @@ class PlanRecyclerViewAdapter(
                     if(item.frequency == TransactionFrequency.ONE_TIME){
                         R.string.completed
                     }else{
-                        R.string.inactive
+                        R.string.cancelled
                     }
                 }
             )
