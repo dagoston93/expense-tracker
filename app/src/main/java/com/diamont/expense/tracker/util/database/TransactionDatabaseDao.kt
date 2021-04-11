@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.diamont.expense.tracker.util.enums.TransactionType
+import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -162,6 +163,18 @@ interface TransactionDatabaseDao {
      */
     @Query("UPDATE plan_data SET is_status_active=0 WHERE id=:id")
     fun cancelPlan(id: Int)
+
+    /**
+     * Save cancellation date of a plan
+     */
+    @Query("UPDATE plan_data SET cancellation_date=:date WHERE id=:id")
+    fun saveCancellationDateOfPlan(id: Int, date: Long)
+
+    /**
+     * Save last completion date of a plan
+     */
+    @Query("UPDATE plan_data SET last_completed_date=:date WHERE id=:id")
+    fun saveLastCompletionDateOfPlan(id: Int, date: Long)
 
     /**
      * Get plan with given id
@@ -390,6 +403,17 @@ interface TransactionDatabaseDao {
     suspend fun cancelPlanSuspend(id: Int){
         return withContext(Dispatchers.IO){
             cancelPlan(id)
+            saveCancellationDateOfPlan(id, MaterialDatePicker.todayInUtcMilliseconds())
+        }
+    }
+
+    /**
+     * Suspend function to save last completion date
+     */
+    suspend fun saveLastCompletionDateOfPlanSuspend(id: Int, date: Long){
+        return withContext(Dispatchers.IO){
+            cancelPlan(id)
+            saveLastCompletionDateOfPlan(id, date)
         }
     }
 

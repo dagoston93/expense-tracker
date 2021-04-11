@@ -13,6 +13,7 @@ import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
+import com.diamont.expense.tracker.util.enums.TransactionType
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -61,6 +62,8 @@ class PlanFragmentViewModel (
 
     private var incomePlans = mutableListOf<Plan>()
     private var expensePlans = mutableListOf<Plan>()
+
+    private var selectedPlanType: TransactionType = TransactionType.PLAN_EXPENSE
 
     private val calendarStart = Calendar.getInstance()
     private val calendarEnd = Calendar.getInstance()
@@ -174,9 +177,13 @@ class PlanFragmentViewModel (
         calendarEnd.set(Calendar.DAY_OF_MONTH, 19)
 
         val x = calculateNextFortnightlyPlanDate(calendarEnd, calendarStart.timeInMillis)
-        Log.d("GUS", "Plan: ${Date(calendarStart.timeInMillis)}")
-        Log.d("GUS", "Now: ${Date(calendarEnd.timeInMillis)}")
-        Log.d("GUS", "Next: ${Date(x)}")
+        //Log.d("GUS", "Plan: ${Date(calendarStart.timeInMillis)}")
+        //Log.d("GUS", "Now: ${Date(calendarEnd.timeInMillis)}")
+        //Log.d("GUS", "Next: ${Date(x)}")
+
+        for(i in expensePlans){
+            Log.d("GUS", "${i.description}  cancelled: ${Date(i.cancellationDate)}")
+        }
 
     }
 
@@ -404,10 +411,6 @@ class PlanFragmentViewModel (
             sinceLastDay += 7
         }
 
-        Log.d("GUS", "plan: $planDayOfWeek")
-        Log.d("GUS", "now: $nowDayOfWeek")
-        Log.d("GUS", "sinceLast: $sinceLastDay")
-
         calendarPlan.timeInMillis = calendarNow.timeInMillis
         calendarPlan.add(Calendar.DAY_OF_YEAR, 7 - sinceLastDay)
 
@@ -449,12 +452,14 @@ class PlanFragmentViewModel (
              */
             _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_expenses)
             _plansToDisplay.value = expensePlans
+            selectedPlanType = TransactionType.PLAN_EXPENSE
         }else{
             /**
              * Income tab selected
              */
             _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_incomes)
             _plansToDisplay.value = incomePlans
+            selectedPlanType = TransactionType.PLAN_INCOME
         }
     }
 
@@ -470,9 +475,32 @@ class PlanFragmentViewModel (
     /**
      * Call this method when user clicks the cancel button of a transaction
      */
-    fun cancelPlan(planId: Int){
+    fun cancelPlan(planId: Int, position: Int){
+        /** First cancel in database */
         uiScope.launch {
             databaseDao.cancelPlanSuspend(planId)
+        }
+
+        /** Create a comparator to sort the list with */
+        val comparator = kotlin.Comparator{ plan1: Plan, plan2: Plan ->
+            plan2.compareTo(plan1)
+        }
+
+        /** Then cancel in our list and reorganize it */
+        if(selectedPlanType == TransactionType.PLAN_EXPENSE){
+            expensePlans[position].cancellationDate = MaterialDatePicker.todayInUtcMilliseconds()
+            expensePlans[position].isStatusActive = false
+            expensePlans.sortWith(comparator)
+
+            /** Refresh the plans we are displaying */
+            _plansToDisplay.value = expensePlans
+        }else{
+            incomePlans[position].cancellationDate = MaterialDatePicker.todayInUtcMilliseconds()
+            incomePlans[position].isStatusActive = false
+            incomePlans.sortWith(comparator)
+
+            /** Refresh the plans we are displaying */
+            _plansToDisplay.value = incomePlans
         }
     }
 

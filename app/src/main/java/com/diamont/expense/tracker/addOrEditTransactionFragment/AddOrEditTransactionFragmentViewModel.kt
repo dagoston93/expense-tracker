@@ -16,6 +16,14 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.*
 import java.util.*
 
+/**
+ * TODO
+ * - When modifying, form should accept previous name
+ * - When adding transaction update last completed date of plan
+ * - Add column prev_completed_date, and update it if regular transaction
+ * - When deleting a planned transaction, change last completed date to prev one.
+ */
+
 class AddOrEditTransactionFragmentViewModel(
     private val appContext: Application,
     private val databaseDao: TransactionDatabaseDao,

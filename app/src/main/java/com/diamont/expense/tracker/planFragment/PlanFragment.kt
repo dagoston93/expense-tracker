@@ -147,8 +147,8 @@ class PlanFragment : Fragment() {
             ))
             .setNegativeButton(resources.getString(R.string.no)) { _, _ -> }
             .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
-                viewModel.cancelPlan(id)
-                (binding.rvPlanList.adapter as PlanRecyclerViewAdapter).itemCancelledAtPos(position)
+                viewModel.cancelPlan(id, position)
+                //(binding.rvPlanList.adapter as PlanRecyclerViewAdapter).itemCancelledAtPos(position)
             }
             .show()
     }

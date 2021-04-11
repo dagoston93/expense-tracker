@@ -22,6 +22,7 @@ abstract class TransactionDetailViewAdapter<T: TransactionDetailViewAdaptable>
     var items  = mutableListOf<T>()
         set(value){
             field = value
+            expandedPosition = -1
             notifyDataSetChanged()
         }
     var categories = listOf<TransactionCategory>()

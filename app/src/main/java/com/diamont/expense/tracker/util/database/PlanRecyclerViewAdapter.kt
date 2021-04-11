@@ -42,15 +42,33 @@ class PlanRecyclerViewAdapter(
 
         /** Set the date */
         if(item.frequency == TransactionFrequency.ONE_TIME){
-            holder.view.addDataField(
-                recyclerView.context.getString(R.string.expected_date),
-                item.getDateString(item.firstExpectedDate, recyclerView.context)
-            )
+            if(item.isStatusActive) {
+                /** Active one time plan -> Show expected date */
+                holder.view.addDataField(
+                    recyclerView.context.getString(R.string.expected_date),
+                    item.getDateString(item.firstExpectedDate, recyclerView.context)
+                )
+            }else{
+                /** Completed one time plan -> Show completion date */
+                holder.view.addDataField(
+                    recyclerView.context.getString(R.string.completed_on),
+                    item.getDateString(item.lastCompletedDate, recyclerView.context)
+                )
+            }
         }else{
-            holder.view.addDataField(
-                recyclerView.context.getString(R.string.next_date),
-                item.getDateString(item.nextExpectedDate, recyclerView.context)
-            )
+            if(item.isStatusActive) {
+                /** Active regular plan -> Show next expected date */
+                holder.view.addDataField(
+                    recyclerView.context.getString(R.string.next_date),
+                    item.getDateString(item.nextExpectedDate, recyclerView.context)
+                )
+            }else{
+                /** Cancelled regular plan -> Show last completed date */
+                holder.view.addDataField(
+                    recyclerView.context.getString(R.string.last_date),
+                    item.getDateString(item.lastCompletedDate, recyclerView.context)
+                )
+            }
         }
 
         /** Set the icon and color */
@@ -102,6 +120,14 @@ class PlanRecyclerViewAdapter(
                 }
             )
         )
+
+        /** If cancelled regular plan, show date of cancellation */
+        if(item.frequency != TransactionFrequency.ONE_TIME && !item.isStatusActive){
+            holder.view.addDataField(
+                recyclerView.context.getString(R.string.cancelled_on),
+                item.getDateString(item.cancellationDate, recyclerView.context)
+            )
+        }
 
         /** Show recipient/source */
         holder.view.addDataField(

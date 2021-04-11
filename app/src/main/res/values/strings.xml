@@ -85,7 +85,10 @@
     <string name="active">Active</string>
     <string name="inactive">Inactive</string>
     <string name="cancelled">Cancelled</string>
+    <string name="cancelled_on">Cancelled on:</string>
+    <string name="last_date">Last date:</string>
     <string name="completed">Completed</string>
+    <string name="completed_on">Completed on:</string>
     <string name="recipient_venue">Recipient/venue:</string>
     <string name="payment_method">Payment method:</string>
     <string name="received_by">Received by:</string>
