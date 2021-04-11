@@ -126,11 +126,9 @@ class PlanFragmentViewModel (
         /**
          * Calculate next expected dates for plans
          */
-        organizePlans(expensePlans)
+        calculateNextExpectedDates(expensePlans)
 
-        /*for(plan in expensePlans){
 
-        }*/
 
         /** Display expense plans */
         _plansToDisplay.value = expensePlans
@@ -154,12 +152,27 @@ class PlanFragmentViewModel (
         /**
          * Display monthly expenses
          */
-        val monthlyTotal = calculateTotalAmountWithinInterval(
+        val monthlyTotal = calculatePlannedAmountWithinInterval(
             expensePlans,
             calendarStart,
             calendarEnd
         )
         _totalMonthlyString.value = decimalFormat?.format(monthlyTotal)
+
+        /** TEST */
+        calendarStart.set(Calendar.YEAR, 2021)
+        calendarStart.set(Calendar.MONTH, Calendar.MARCH)
+        calendarStart.set(Calendar.DAY_OF_MONTH, 3)
+
+        calendarEnd.set(Calendar.YEAR, 2021)
+        calendarEnd.set(Calendar.MONTH, Calendar.APRIL)
+        calendarEnd.set(Calendar.DAY_OF_MONTH, 19)
+
+        val x = calculateNextFortnightlyPlanDate(calendarEnd, calendarStart.timeInMillis)
+        Log.d("GUS", "Plan: ${Date(calendarStart.timeInMillis)}")
+        Log.d("GUS", "Now: ${Date(calendarEnd.timeInMillis)}")
+        Log.d("GUS", "Next: ${Date(x)}")
+
     }
 
     /**
@@ -192,7 +205,7 @@ class PlanFragmentViewModel (
     /**
      * Call this method to calculate total expenses/incomes within an interval
      */
-    private fun calculateTotalAmountWithinInterval(planList: List<Plan>, startDate: Calendar, endDate: Calendar): Float{
+    private fun calculatePlannedAmountWithinInterval(planList: List<Plan>, startDate: Calendar, endDate: Calendar): Float{
         var total: Float = 0f
         val calendar = Calendar.getInstance()
 
@@ -210,7 +223,7 @@ class PlanFragmentViewModel (
      * This method calculates the next expected dates of a plan list
      * and organizes the list by them
      */
-    private fun organizePlans(planList: MutableList<Plan>){
+    private fun calculateNextExpectedDates(planList: MutableList<Plan>){
 
         val calendarNow = Calendar.getInstance()
         val calendarPlan = Calendar.getInstance()
@@ -225,70 +238,175 @@ class PlanFragmentViewModel (
                /**
                 * Yearly plans
                 */
-                calendarPlan.timeInMillis = plan.firstExpectedDate
-
-               if(calendarNow.get(Calendar.DAY_OF_YEAR) > calendarPlan.get(Calendar.DAY_OF_YEAR)){
-                   calendarPlan.set(Calendar.YEAR, calendarNow.get(Calendar.YEAR) + 1)
-               }else{
-                   calendarPlan.set(Calendar.YEAR, calendarNow.get(Calendar.YEAR))
-               }
-
-               plan.nextExpectedDate = calendarPlan.timeInMillis
+               plan.nextExpectedDate = calculateNextYearlyPlanDate(calendarNow, plan.firstExpectedDate)
            }else if(plan.frequency == TransactionFrequency.MONTHLY_SUM || plan.frequency == TransactionFrequency.MONTHLY_ONCE){
                /**
                 * Monthly plans
                 */
-               calendarPlan.timeInMillis = calendarNow.timeInMillis
-               val lastDayOfThisMonth = calendarNow.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-               calendarPlan.add(Calendar.MONTH, 1)
-               val lastDayOfNextMonth = calendarNow.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-               calendarPlan.timeInMillis = plan.firstExpectedDate
-               calendarPlan.set(Calendar.YEAR, calendarNow.get(Calendar.YEAR))
-               val planDay = calendarPlan.get(Calendar.DAY_OF_MONTH)
-
-               /** Check if today is past the day of month of plan */
-               if(calendarNow.get(Calendar.DAY_OF_MONTH) > calendarPlan.get(Calendar.DAY_OF_MONTH)){
-                   /**
-                    * Next expected in next month
-                    * */
-                   calendarPlan.set(Calendar.MONTH, calendarNow.get(Calendar.MONTH))
-                   calendarPlan.add(Calendar.MONTH, 1)
-
-                   /**
-                    * Check if the required day is past the last day of the month.
-                    */
-                   calendarPlan.set(
-                       Calendar.DAY_OF_MONTH,
-
-                       if(planDay > lastDayOfThisMonth){
-                           lastDayOfNextMonth
-                       }else{
-                           planDay
-                       }
-                   )
-
-               }else{
-                   calendarPlan.set(Calendar.MONTH, calendarNow.get(Calendar.MONTH))
-
-                   /**
-                    * Check if the required day is past the last day of the month.
-                    */
-                   calendarPlan.set(
-                       Calendar.DAY_OF_MONTH,
-
-                       if(planDay > lastDayOfThisMonth){
-                           lastDayOfThisMonth
-                       }else{
-                           planDay
-                       }
-                   )
-               }
-
-               plan.nextExpectedDate = calendarPlan.timeInMillis
+               plan.nextExpectedDate = calculateNextMonthlyPlanDate(calendarNow, plan.firstExpectedDate)
+           }else if(plan.frequency == TransactionFrequency.FORTNIGHTLY_SUM || plan.frequency == TransactionFrequency.FORTNIGHTLY_ONCE){
+               /**
+                * Fortnightly plans
+                */
+               plan.nextExpectedDate = calculateNextFortnightlyPlanDate(calendarNow, plan.firstExpectedDate)
+           }else if(plan.frequency == TransactionFrequency.WEEKLY_SUM || plan.frequency == TransactionFrequency.WEEKLY_ONCE){
+               /**
+                * Weekly plans
+                */
+               plan.nextExpectedDate = calculateNextWeeklyPlanDate(calendarNow, plan.firstExpectedDate)
            }
         }
+    }
+
+    /**
+     * This method returns whether a year is a leap year
+     */
+    private fun isLeapYear(year: Int): Boolean{
+        var isLeapYear: Boolean = false
+
+        /** Check if year is divisible by 4 */
+        if(year % 4 == 0){
+            /** If it is a century, only every 4th is leap year*/
+            if(year % 100 == 0){
+                isLeapYear = (year % 400 == 0)
+            }else{
+                isLeapYear = true
+            }
+        }
+
+        return isLeapYear
+    }
+
+    /**
+     * This method calculates the next date of a yearly plan
+     */
+    private fun calculateNextYearlyPlanDate(calendarNow: Calendar, firstPlanDate: Long): Long{
+        val calendarPlan = Calendar.getInstance()
+        calendarPlan.timeInMillis = firstPlanDate
+
+        /** If original plan was 29th of Feb and this is not a leap year we need to set 28th of Feb */
+        if(calendarPlan.get(Calendar.MONTH) == Calendar.FEBRUARY && calendarPlan.get(Calendar.DAY_OF_MONTH) == 29){
+            if(!isLeapYear(calendarNow.get(Calendar.YEAR))){
+                calendarPlan.set(Calendar.DAY_OF_MONTH, 28)
+            }
+        }
+
+        /** If current date passed plan date, we set next year otherwise we set this year */
+        if(calendarNow.get(Calendar.DAY_OF_YEAR) > calendarPlan.get(Calendar.DAY_OF_YEAR)){
+            calendarPlan.set(Calendar.YEAR, calendarNow.get(Calendar.YEAR) + 1)
+        }else{
+            calendarPlan.set(Calendar.YEAR, calendarNow.get(Calendar.YEAR))
+        }
+
+        return calendarPlan.timeInMillis
+    }
+
+    /**
+     * This method calculates the next date of a monthly plan
+     */
+    private fun calculateNextMonthlyPlanDate(calendarNow: Calendar, firstPlanDate: Long): Long{
+        val calendarPlan = Calendar.getInstance()
+
+        /** Save the last day of the current and next months */
+        calendarPlan.timeInMillis = calendarNow.timeInMillis
+        val lastDayOfThisMonth = calendarNow.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        calendarPlan.add(Calendar.MONTH, 1)
+        val lastDayOfNextMonth = calendarNow.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        /** Set first expected date and save the planned day */
+        calendarPlan.timeInMillis = firstPlanDate
+        val planDay = calendarPlan.get(Calendar.DAY_OF_MONTH)
+
+        calendarPlan.set(Calendar.YEAR, calendarNow.get(Calendar.YEAR))
+        calendarPlan.set(Calendar.MONTH, calendarNow.get(Calendar.MONTH))
+
+        /** Check if today is past the day of month of plan */
+        if(calendarNow.get(Calendar.DAY_OF_MONTH) > planDay){
+            /**
+             * Next expected in next month.
+             */
+            calendarPlan.add(Calendar.MONTH, 1)
+
+            /**
+             * If the required day is past the last day of the month,
+             * we use the last day of month, otherwise the planned day
+             */
+            calendarPlan.set(
+                Calendar.DAY_OF_MONTH,
+
+                if(planDay > lastDayOfThisMonth){
+                    lastDayOfNextMonth
+                }else{
+                    planDay
+                }
+            )
+        }else{
+            /**
+             * Next expected in this month.
+             *
+             * If the required day is past the last day of the month,
+             * we use the last day of month, otherwise the planned day
+             */
+            calendarPlan.set(
+                Calendar.DAY_OF_MONTH,
+
+                if(planDay > lastDayOfThisMonth){
+                    lastDayOfThisMonth
+                }else{
+                    planDay
+                }
+            )
+        }
+
+        return calendarPlan.timeInMillis
+    }
+
+    /**
+     * Calculate next expected fortnightly plan date
+     */
+    private fun calculateNextFortnightlyPlanDate(calendarNow: Calendar, firstPlanDate: Long): Long {
+        val difference = calendarNow.timeInMillis - firstPlanDate
+        val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+
+        val remainingDays = days % 14
+        var daysTillNext = 14 - remainingDays
+
+        /** If 2 weeks left we take the closest date which is today */
+        if(daysTillNext == 14){
+            daysTillNext = 0
+        }
+
+        val calendarPlan = Calendar.getInstance()
+        calendarPlan.timeInMillis = calendarNow.timeInMillis
+        calendarPlan.add(Calendar.DAY_OF_YEAR, daysTillNext)
+
+        return calendarPlan.timeInMillis
+    }
+
+    /**
+     * Calculate next weekly plan date
+     */
+    private fun calculateNextWeeklyPlanDate(calendarNow: Calendar, firstPlanDate: Long): Long {
+        val calendarPlan = Calendar.getInstance()
+        calendarPlan.timeInMillis = firstPlanDate
+
+        val planDayOfWeek = calendarPlan.get(Calendar.DAY_OF_WEEK)
+        val nowDayOfWeek = calendarNow.get(Calendar.DAY_OF_WEEK)
+        var sinceLastDay = nowDayOfWeek - planDayOfWeek
+
+        if(sinceLastDay < 0) {
+            sinceLastDay += 7
+        }
+
+        Log.d("GUS", "plan: $planDayOfWeek")
+        Log.d("GUS", "now: $nowDayOfWeek")
+        Log.d("GUS", "sinceLast: $sinceLastDay")
+
+        calendarPlan.timeInMillis = calendarNow.timeInMillis
+        calendarPlan.add(Calendar.DAY_OF_YEAR, 7 - sinceLastDay)
+
+        return calendarPlan.timeInMillis
     }
 
     /**
