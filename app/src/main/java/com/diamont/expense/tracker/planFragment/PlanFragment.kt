@@ -80,6 +80,9 @@ class PlanFragment : Fragment() {
             },
             {id, description, typeStringId, dateLabel, date, position ->
                 confirmDeletePlan(id, description, typeStringId, dateLabel, date, position)
+            },
+            { id, description, typeStringId, date, position ->
+                confirmCancelPlan(id, description, typeStringId, date, position)
             }
         )
 
@@ -127,6 +130,25 @@ class PlanFragment : Fragment() {
             .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
                 viewModel.deletePlan(id)
                 (binding.rvPlanList.adapter as PlanRecyclerViewAdapter).itemDeletedAtPos(position)
+            }
+            .show()
+    }
+
+    /**
+     * This method shows the confirmation dialog and deletes a plan
+     */
+    private fun confirmCancelPlan(id: Int, description: String, typeStringId: Int, date: String, position: Int){
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.confirm_delete_dialog_title))
+            .setMessage(resources.getString(R.string.confirm_cancel_plan_dialog_text,
+                description,
+                resources.getString(typeStringId),
+                date
+            ))
+            .setNegativeButton(resources.getString(R.string.no)) { _, _ -> }
+            .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+                viewModel.cancelPlan(id)
+                (binding.rvPlanList.adapter as PlanRecyclerViewAdapter).itemCancelledAtPos(position)
             }
             .show()
     }

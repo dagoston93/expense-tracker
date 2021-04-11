@@ -45,6 +45,7 @@
     <declare-styleable name="TransactionDetailsView">
         <attr name="transactionDetailEditIconColor" format="color"/>
         <attr name="transactionDetailDeleteIconColor" format="color"/>
+        <attr name="transactionDetailCancelIconColor" format="color"/>
         <attr name="transactionDetailTitleTextAppearance" format="reference"/>
         <attr name="transactionDetailLabelTextAppearance" format="reference"/>
         <attr name="transactionDetailViewStyle" format="reference"/>

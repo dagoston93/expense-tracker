@@ -463,6 +463,15 @@ class PlanFragmentViewModel (
     }
 
     /**
+     * Call this method when user clicks the cancel button of a transaction
+     */
+    fun cancelPlan(planId: Int){
+        uiScope.launch {
+            databaseDao.cancelPlanSuspend(planId)
+        }
+    }
+
+    /**
      * onCleared() is called when view model is destroyed
      * in this case we need to cancel coroutines
      */

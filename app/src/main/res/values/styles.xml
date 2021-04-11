@@ -117,6 +117,7 @@
         <item name="transactionDetailTitleTextAppearance">@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailTitle</item>
         <item name="transactionDetailLabelTextAppearance">@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel</item>
         <item name="transactionDetailDeleteIconColor">@color/colorGoalNotAchieved</item>
+        <item name="transactionDetailCancelIconColor">@color/circularProgressbarBackground</item>
         <item name="transactionDetailEditIconColor">?attr/colorPrimary</item>
     </style>
 

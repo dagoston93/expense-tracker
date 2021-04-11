@@ -84,6 +84,8 @@
     <string name="status">Status:</string>
     <string name="active">Active</string>
     <string name="inactive">Inactive</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="completed">Completed</string>
     <string name="recipient_venue">Recipient/venue:</string>
     <string name="payment_method">Payment method:</string>
     <string name="received_by">Received by:</string>
@@ -114,7 +116,8 @@
     <!-- Confirm delete dialog -->
     <string name="confirm_delete_dialog_title">Confirm</string>
     <string name="confirm_delete_transaction_dialog_text">Are you sure you want to delete the following transaction?\n\nDescription: %1$s\nType: %2$s\nDate: %3$s</string>
-    <string name="confirm_delete_plan_dialog_text">Are you sure you want to delete the following plan?\n\nDescription: %1$s\nType: %2$s\n%3$s: %4$s</string>
+    <string name="confirm_delete_plan_dialog_text">Are you sure you want to delete the following plan?\n\nDescription: %1$s\nType: %2$s\n%3$s %4$s</string>
+    <string name="confirm_cancel_plan_dialog_text">Are you sure you want to cancel the following plan?\n\nDescription: %1$s\nType: %2$s\nFirst date: %3$s</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
 
@@ -150,5 +153,6 @@
     <string name="total_planned_incomes">Total planned incomes</string>
     <string name="this_year">This year:</string>
     <string name="this_month">This month:</string>
+    <string name="no">No</string>
 
 </resources>

@@ -16,7 +16,8 @@ class PlanRecyclerViewAdapter(
     private val recyclerView: RecyclerView,
     private val decimalFormat: DecimalFormat,
     private val editIconCallback: (id: Int) -> Unit,
-    private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, dateLabel: String, date: String, position: Int) -> Unit
+    private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, dateLabel: String, date: String, position: Int) -> Unit,
+    private val cancelIconCallback: (id: Int, description: String, typeStringId: Int, date: String, position: Int) -> Unit
 ): TransactionDetailViewAdapter<Plan>(recyclerView) {
 
     /**
@@ -86,6 +87,22 @@ class PlanRecyclerViewAdapter(
             )
         }
 
+        /** Show status */
+        holder.view.addDataField(
+            recyclerView.context.getString(R.string.status),
+            recyclerView.context.getString(
+                if(item.isStatusActive){
+                    R.string.active
+                }else{
+                    if(item.frequency == TransactionFrequency.ONE_TIME){
+                        R.string.completed
+                    }else{
+                        R.string.inactive
+                    }
+                }
+            )
+        )
+
         /** Show recipient/source */
         holder.view.addDataField(
             recyclerView.context.getString(
@@ -117,7 +134,8 @@ class PlanRecyclerViewAdapter(
 
         holder.view.setDeleteIconOnClickListener {
             deleteIconCallback(
-                item.id, item.description,
+                item.id,
+                item.description,
                 item.transactionType.stringId,
                 recyclerView.context.getString(
                     if(item.frequency == TransactionFrequency.ONE_TIME){
@@ -132,6 +150,19 @@ class PlanRecyclerViewAdapter(
             )
         }
 
+        /** If plan is not a one time plan and it is active  we add the cancel feature */
+        if(item.frequency != TransactionFrequency.ONE_TIME && item.isStatusActive) {
+            holder.view.setCancelIconOnClickListener {
+                cancelIconCallback(
+                    item.id,
+                    item.description,
+                    item.transactionType.stringId,
+                    item.getDateString(item.firstExpectedDate, recyclerView.context),
+                    position
+                )
+            }
+        }
+
         /** Set the visibility of the content */
         val isExpanded = position == expandedPosition
         holder.view.clExpandable.visibility = if (isExpanded) {
@@ -144,5 +175,13 @@ class PlanRecyclerViewAdapter(
         holder.view.setOnClickListener {
             super.transactionOnClick(isExpanded, position)
         }
+    }
+
+    /**
+     * Call this method if user cancels an item
+     */
+    fun itemCancelledAtPos(position: Int){
+        items[position].isStatusActive = false
+        notifyItemChanged(position)
     }
 }

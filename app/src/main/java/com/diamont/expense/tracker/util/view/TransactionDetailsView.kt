@@ -21,6 +21,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
      */
     private var editIconColor : Int = 0
     private var deleteIconColor : Int = 0
+    private var cancelIconColor : Int = 0
     private var titleTextAppearance : Int = 0
     private var labelTextAppearance : Int = 0
     private var nextDataFieldIndex: Int = 0
@@ -30,6 +31,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
      */
     private var ivShowMoreIcon : ImageView
     private var ivEditIcon : ImageView
+    private var ivCancelIcon : ImageView
     private var ivDeleteIcon : ImageView
     private var ivStrip : ImageView
     private var ivTransaction : ImageView
@@ -54,6 +56,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
             try {
                 editIconColor = getColor(R.styleable.TransactionDetailsView_transactionDetailEditIconColor, Color.BLACK)
                 deleteIconColor = getColor(R.styleable.TransactionDetailsView_transactionDetailDeleteIconColor, Color.BLACK)
+                cancelIconColor = getColor(R.styleable.TransactionDetailsView_transactionDetailCancelIconColor, Color.BLACK)
 
                 titleTextAppearance = getResourceId(R.styleable.TransactionDetailsView_transactionDetailTitleTextAppearance,
                 R.style.TextAppearance_AppCompat_Title)
@@ -73,6 +76,7 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         ivShowMoreIcon = root.findViewById<ImageView>(R.id.ivTransactionDetailsShowMore) as ImageView
         ivEditIcon = root.findViewById<ImageView>(R.id.ivTransactionDetailsEdit) as ImageView
         ivDeleteIcon = root.findViewById<ImageView>(R.id.ivTransactionDetailsDelete) as ImageView
+        ivCancelIcon = root.findViewById<ImageView>(R.id.ivTransactionDetailsCancel) as ImageView
         ivStrip = root.findViewById<ImageView>(R.id.ivTransactionDetailColoredStrip) as ImageView
         ivTransaction = root.findViewById<ImageView>(R.id.ivTransactionDetailIcon) as ImageView
 
@@ -120,6 +124,10 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         /** Set the colors */
         ImageViewCompat.setImageTintList(ivEditIcon, ColorStateList.valueOf(editIconColor))
         ImageViewCompat.setImageTintList(ivDeleteIcon, ColorStateList.valueOf(deleteIconColor))
+        ImageViewCompat.setImageTintList(ivCancelIcon, ColorStateList.valueOf(cancelIconColor))
+
+        /** Hide the cancel icon */
+        ivCancelIcon.visibility = GONE
 
     }
 
@@ -130,6 +138,18 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
         ivEditIcon.setOnClickListener {
             listener()
         }
+    }
+
+    /**
+     * Call this method to set an onClickListener for the cancel icon and sets its visibility
+     */
+    fun setCancelIconOnClickListener(listener : () -> Unit){
+        ivCancelIcon.setOnClickListener {
+            listener()
+        }
+
+        /** If onClickListener added we show the icon */
+        ivCancelIcon.visibility = VISIBLE
     }
 
     /**
@@ -171,6 +191,9 @@ class TransactionDetailsView(context: Context, attrs: AttributeSet) : LinearLayo
             labelTextViews[i].visibility = GONE
             dataTextViews[i].visibility = GONE
         }
+
+        /** Hide cancel icon */
+        ivCancelIcon.visibility = GONE
 
         /** Reset the next field index */
         nextDataFieldIndex = 0

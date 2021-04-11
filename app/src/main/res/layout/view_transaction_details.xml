@@ -264,8 +264,16 @@
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_delete"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/ivTransactionDetailsEdit"
-                app:tint="@color/colorGoalNotAchieved" />
+                app:layout_constraintTop_toTopOf="@+id/ivTransactionDetailsEdit" />
+
+            <ImageView
+                android:id="@+id/ivTransactionDetailsCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/ic_cancel"
+                app:layout_constraintEnd_toStartOf="@+id/ivTransactionDetailsEdit"
+                app:layout_constraintTop_toTopOf="@+id/ivTransactionDetailsEdit" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

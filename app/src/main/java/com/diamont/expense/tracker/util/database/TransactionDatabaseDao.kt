@@ -158,6 +158,12 @@ interface TransactionDatabaseDao {
     fun getActivePlansByType(type : TransactionType) : List<Plan>
 
     /**
+     * Cancel a plan
+     */
+    @Query("UPDATE plan_data SET is_status_active=0 WHERE id=:id")
+    fun cancelPlan(id: Int)
+
+    /**
      * Get plan with given id
      */
     @Query("SELECT * FROM plan_data WHERE id = :id LIMIT 1")
@@ -375,6 +381,15 @@ interface TransactionDatabaseDao {
         return withContext(Dispatchers.IO){
             val data : List<Plan> = getActivePlansByType(TransactionType.PLAN_INCOME)
             data
+        }
+    }
+
+    /**
+     * Suspend function to cancel a plan
+     */
+    suspend fun cancelPlanSuspend(id: Int){
+        return withContext(Dispatchers.IO){
+            cancelPlan(id)
         }
     }
 
