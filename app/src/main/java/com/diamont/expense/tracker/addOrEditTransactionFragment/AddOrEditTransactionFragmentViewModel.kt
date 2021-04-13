@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,10 +19,11 @@ import java.util.*
 
 /**
  * TODO
- * - When modifying, form should accept previous name
+ * - When modifying, form should accept previous plan name
  * - When adding transaction update last completed date of plan
- * - Add column prev_completed_date, and update it if regular transaction
- * - When deleting a planned transaction, change last completed date to prev one.
+ * - When deleting a planned transaction, change last completed date to prev one
+ *   by finding the last transaction with plan id in database. If none found, set it to 0.
+ * - Implement feature to pre-select Plan-Expense/Plan-Income on form when navigating from plan page
  */
 
 class AddOrEditTransactionFragmentViewModel(
@@ -742,12 +744,21 @@ class AddOrEditTransactionFragmentViewModel(
                 incomePlans
             }
 
-            val result = plans.find { it.description == currentTransaction.description }
+            val result = plans.find { it.description == enteredDescription }
 
-//TODO need to accept original name if editing plan
+            /** If we have a plan with the given description: */
             if (result != null) {
-                _descriptionErrorMessage.value =
-                    appContext.resources.getString(R.string.description_error_message)
+                /**
+                 *  We display error message if:
+                 *  - We are in edit mode and the selected plan is not the original (then we need to accept the original name)
+                 *  - OR We are adding a new plan (not in edit mode)
+                 */
+                if((isEditMode && currentPlan.id != result.id) || !isEditMode){
+                    _descriptionErrorMessage.value =
+                        appContext.resources.getString(R.string.description_error_message)
+                }else{
+                    _descriptionErrorMessage.value = null
+                }
             } else {
                 _descriptionErrorMessage.value = null
             }

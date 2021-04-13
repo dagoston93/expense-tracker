@@ -412,7 +412,6 @@ interface TransactionDatabaseDao {
      */
     suspend fun saveLastCompletionDateOfPlanSuspend(id: Int, date: Long){
         return withContext(Dispatchers.IO){
-            cancelPlan(id)
             saveLastCompletionDateOfPlan(id, date)
         }
     }
