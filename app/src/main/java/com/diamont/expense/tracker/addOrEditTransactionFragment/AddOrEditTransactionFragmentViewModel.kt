@@ -19,10 +19,9 @@ import java.util.*
 
 /**
  * TODO
- * - When modifying, form should accept previous plan name
- * - When adding transaction update last completed date of plan
  * - When deleting a planned transaction, change last completed date to prev one
  *   by finding the last transaction with plan id in database. If none found, set it to 0.
+ * - When deleting planned one time transaction update plan to active.
  * - Implement feature to pre-select Plan-Expense/Plan-Income on form when navigating from plan page
  */
 
@@ -499,10 +498,12 @@ class AddOrEditTransactionFragmentViewModel(
         if(index == 0){
             _selectedCategoryIndex.value = 0
             selectedPlanId = -1
+            lastSelectedPlan = Plan()
 
             /** Enable category select */
             _isCategorySelectEnabled.value = true
         }else{
+
             /** Get the correct plan */
             lastSelectedPlan = if(selectedTransactionType == TransactionType.EXPENSE){
                 expensePlans[index-1]
@@ -636,40 +637,15 @@ class AddOrEditTransactionFragmentViewModel(
             selectedCategoryId = _categories.value?.get(0)!!.categoryId
         }
 
-        /** Save the user input to the plan or transaction */
-        if(selectedTransactionType == TransactionType.PLAN_EXPENSE || selectedTransactionType == TransactionType.PLAN_INCOME){
-            /**
-             * Plan
-             */
-            currentPlan.transactionType = selectedTransactionType
-            currentPlan.firstExpectedDate = selectedDate
-            currentPlan.description = enteredDescription
-            currentPlan.amount = enteredAmount
-            currentPlan.categoryId = selectedCategoryId
-            currentPlan.sourceOrRecipient = enteredRecipientOrSource
-            currentPlan.method = selectedPaymentMethod
-            currentPlan.frequency = selectedTransactionFrequency
-        }else{
-            /**
-             * Transaction
-             */
-            currentTransaction.transactionType = selectedTransactionType
-            currentTransaction.date = selectedDate
-            currentTransaction.description = enteredDescription
-            currentTransaction.planId = selectedPlanId
-            currentTransaction.amount = enteredAmount
-            currentTransaction.categoryId = selectedCategoryId
-            currentTransaction.secondParty = enteredRecipientOrSource
-            currentTransaction.method = selectedPaymentMethod
-            currentTransaction.frequency = selectedTransactionFrequency
-        }
-
         /** Update or insert category or plan */
         if(_isInputValid.value == true){
             if(isEditMode){
                 if(selectedTransactionType == TransactionType.PLAN_EXPENSE || selectedTransactionType == TransactionType.PLAN_INCOME){
                     updatePlan()
                 }else{
+                    /** We set this variable true if the last completion date of original plans needs to be updated */
+                    var updateLastCompletionDate = false
+
                     /** Check if originally the transaction was planned */
                     if(originalPlan != null){
                         /** Check if new and original plan match */
@@ -678,34 +654,46 @@ class AddOrEditTransactionFragmentViewModel(
                             if(originalPlan!!.frequency == TransactionFrequency.ONE_TIME){
                                 /** If yes, we set it to active and save it */
                                 originalPlan!!.isStatusActive = true
+                                originalPlan!!.lastCompletedDate = 0
                                 updateSelectedPlan(originalPlan!!)
+                            }else{
+                                /** Check if this transaction was tha last completed one from old plan */
+                                if(originalPlan!!.lastCompletedDate == currentTransaction.date){
+                                    updateLastCompletionDate = true
+                                }
                             }
                         }
                     }
 
-                    /** And now regardless the original plan we check if transaction was planned and update plan if needed */
-                    if(currentTransaction.planId != -1){
-                        /** If it is planned, if plan is one time, we update plan status as not active*/
+                    /** And now regardless the original plan we check if transaction was planned and update plan */
+                    if(selectedPlanId != -1){
+                        /** If it is planned and if plan is one time, we update plan status as not active*/
                         if(lastSelectedPlan.frequency == TransactionFrequency.ONE_TIME){
                             lastSelectedPlan.isStatusActive = false
-                            updateSelectedPlan(lastSelectedPlan)
                         }
+                        /** Also update the last completed date of the plan */
+                        lastSelectedPlan.lastCompletedDate = selectedDate
+
+                        updateSelectedPlan(lastSelectedPlan)
                     }
 
                     /** And finally update the transaction (because it navigates away) */
-                    updateTransaction()
+                    updateTransaction(updateLastCompletionDate)
                 }
             }else{
                 if(selectedTransactionType == TransactionType.PLAN_EXPENSE || selectedTransactionType == TransactionType.PLAN_INCOME){
                     insertPlan()
                 }else {
                     /** Check if it is planned */
-                    if(currentTransaction.planId != -1){
+                    if(selectedPlanId != -1){
                         /** If it is planned, if plan is one time, we update plan status as not active*/
                         if(lastSelectedPlan.frequency == TransactionFrequency.ONE_TIME){
                             lastSelectedPlan.isStatusActive = false
-                            updateSelectedPlan(lastSelectedPlan)
                         }
+                        /** Also update the last completed date of the plan */
+                        lastSelectedPlan.lastCompletedDate = selectedDate
+
+                        updateSelectedPlan(lastSelectedPlan)
                     }
 
                     /** And finally insert the transaction (because it navigates away) */
@@ -992,9 +980,46 @@ class AddOrEditTransactionFragmentViewModel(
     }
 
     /**
+     * This method saves the user input to the Transaction() object
+     */
+    private fun setEnteredTransactionData() {
+        /**
+         * Set transaction data
+         */
+        currentTransaction.transactionType = selectedTransactionType
+        currentTransaction.date = selectedDate
+        currentTransaction.description = enteredDescription
+        currentTransaction.planId = selectedPlanId
+        currentTransaction.amount = enteredAmount
+        currentTransaction.categoryId = selectedCategoryId
+        currentTransaction.secondParty = enteredRecipientOrSource
+        currentTransaction.method = selectedPaymentMethod
+        currentTransaction.frequency = selectedTransactionFrequency
+    }
+
+    /**
+     * This method saves the user input to the Plan() object
+     */
+    private fun setEnteredPlanData() {
+        /**
+         * Set the plan data
+         */
+        currentPlan.transactionType = selectedTransactionType
+        currentPlan.firstExpectedDate = selectedDate
+        currentPlan.description = enteredDescription
+        currentPlan.amount = enteredAmount
+        currentPlan.categoryId = selectedCategoryId
+        currentPlan.sourceOrRecipient = enteredRecipientOrSource
+        currentPlan.method = selectedPaymentMethod
+        currentPlan.frequency = selectedTransactionFrequency
+    }
+
+    /**
      * This method inserts the transaction to the database
      */
     private fun insertTransaction(){
+        setEnteredTransactionData()
+
         uiScope.launch {
             saveSecondPartyIfNew()
             databaseDao.insertTransactionSuspend(currentTransaction)
@@ -1006,6 +1031,8 @@ class AddOrEditTransactionFragmentViewModel(
      * This method inserts the plan to the database
      */
     private fun insertPlan(){
+        setEnteredPlanData()
+
         uiScope.launch {
             saveSecondPartyIfNew()
             databaseDao.insertPlanSuspend(currentPlan)
@@ -1026,10 +1053,20 @@ class AddOrEditTransactionFragmentViewModel(
     /**
      * This method updates the transaction being edited
      */
-    private fun updateTransaction(){
+    private fun updateTransaction(updateLastCompletionDate: Boolean){
+        setEnteredTransactionData()
+
         uiScope.launch {
             saveSecondPartyIfNew()
             databaseDao.updateTransactionSuspend(currentTransaction)
+
+            /** Let's update the last completion date of original plan if needed */
+            if(updateLastCompletionDate){
+                var lastDate = databaseDao.getLastTransactionDateByPlanIdSuspend(originalPlan!!.id)
+                databaseDao.saveLastCompletionDateOfPlanSuspend(originalPlan!!.id, lastDate)
+
+            }
+
             _isOperationComplete.value = true
         }
     }
@@ -1038,6 +1075,8 @@ class AddOrEditTransactionFragmentViewModel(
      * This method updates the transaction being edited
      */
     private fun updatePlan(){
+        setEnteredPlanData()
+
         uiScope.launch {
             saveSecondPartyIfNew()
             databaseDao.updatePlanSuspend(currentPlan)

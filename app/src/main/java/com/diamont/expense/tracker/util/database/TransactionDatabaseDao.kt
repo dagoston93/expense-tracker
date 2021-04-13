@@ -1,5 +1,6 @@
 package com.diamont.expense.tracker.util.database
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -67,6 +68,12 @@ interface TransactionDatabaseDao {
      */
     @Query("UPDATE transaction_data SET plan_id=-1 WHERE plan_id=:deletedId")
     fun replaceDeletedPlanIds(deletedId: Int)
+
+    /**
+     * Find the date of the last transaction with given plan id
+     */
+    @Query("SELECT date FROM transaction_data WHERE plan_id=:planId ORDER BY date DESC LIMIT 1")
+    fun getLastTransactionDateByPlanId(planId: Int) : Long
 
     /**
      * Insert a new category
@@ -227,6 +234,9 @@ interface TransactionDatabaseDao {
      */
     suspend fun deleteTransactionSuspend(id: Int){
         return withContext(Dispatchers.IO){
+            val transaction = getTransactionById(id)
+            Log.d("GUS", "$transaction")
+
             deleteTransaction(id)
         }
     }
@@ -413,6 +423,16 @@ interface TransactionDatabaseDao {
     suspend fun saveLastCompletionDateOfPlanSuspend(id: Int, date: Long){
         return withContext(Dispatchers.IO){
             saveLastCompletionDateOfPlan(id, date)
+        }
+    }
+
+    /**
+     * Suspend function to find the date of the last transaction with given plan id
+     */
+    suspend fun getLastTransactionDateByPlanIdSuspend(planId: Int) : Long{
+        return withContext(Dispatchers.IO){
+            val data: Long = getLastTransactionDateByPlanId(planId)
+            data
         }
     }
 

@@ -66,7 +66,11 @@ class PlanRecyclerViewAdapter(
                 /** Cancelled regular plan -> Show last completed date */
                 holder.view.addDataField(
                     recyclerView.context.getString(R.string.last_date),
-                    item.getDateString(item.lastCompletedDate, recyclerView.context)
+                    if(item.lastCompletedDate == 0L){
+                        recyclerView.context.getString(R.string.never)
+                    }else{
+                        item.getDateString(item.lastCompletedDate, recyclerView.context)
+                    }
                 )
             }
         }
@@ -102,6 +106,18 @@ class PlanRecyclerViewAdapter(
             holder.view.addDataField(
                 recyclerView.context.getString(R.string.first_date),
                 item.getDateString(item.firstExpectedDate, recyclerView.context)
+            )
+        }
+
+        /** Show last date if it is an active regular plan */
+        if(item.frequency != TransactionFrequency.ONE_TIME && item.isStatusActive){
+            holder.view.addDataField(
+                recyclerView.context.getString(R.string.last_date),
+                if(item.lastCompletedDate == 0L){
+                    recyclerView.context.getString(R.string.never)
+                }else{
+                    item.getDateString(item.lastCompletedDate, recyclerView.context)
+                }
             )
         }
 
