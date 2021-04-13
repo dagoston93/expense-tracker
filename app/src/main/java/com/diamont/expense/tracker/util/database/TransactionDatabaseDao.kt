@@ -1,7 +1,7 @@
 package com.diamont.expense.tracker.util.database
 
-import android.util.Log
 import androidx.room.Dao
+import android.util.Log
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update

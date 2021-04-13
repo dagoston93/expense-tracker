@@ -16,6 +16,7 @@ import com.diamont.expense.tracker.databinding.FragmentHistoryBinding
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
 import com.diamont.expense.tracker.util.database.*
+import com.diamont.expense.tracker.util.enums.TransactionType
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.DecimalFormat
 
@@ -57,6 +58,7 @@ class HistoryFragment : Fragment() {
         activityViewModel.setBottomNavBarVisibility(true)
         activityViewModel.setUpButtonVisibility(false)
         activityViewModel.setDrawerLayoutEnabled(true)
+        activityViewModel.defaultTransactionType = TransactionType.EXPENSE
 
         /**
          * Get the decimal format the currency

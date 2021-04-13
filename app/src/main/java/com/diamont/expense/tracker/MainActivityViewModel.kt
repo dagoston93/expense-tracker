@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
+import com.diamont.expense.tracker.util.enums.TransactionType
 
 /**
  * This view model is responsible for handling actions
@@ -35,6 +36,10 @@ class MainActivityViewModel (appContext: Application) : AndroidViewModel(appCont
     private var _sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
     val sharedPreferences: SharedPreferences
         get() = _sharedPreferences
+
+    /** Default transaction type when user clicks the add FAB */
+    var defaultTransactionType: TransactionType = TransactionType.EXPENSE
+
 
     /**
      * Trigger this event when user clicks on an edit icon

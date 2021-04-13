@@ -11,6 +11,7 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentStatisticBinding
+import com.diamont.expense.tracker.util.enums.TransactionType
 
 
 class StatisticFragment : Fragment() {
@@ -40,6 +41,7 @@ class StatisticFragment : Fragment() {
         activityViewModel.setBottomNavBarVisibility(true)
         activityViewModel.setUpButtonVisibility(false)
         activityViewModel.setDrawerLayoutEnabled(true)
+        activityViewModel.defaultTransactionType = TransactionType.EXPENSE
 
         /** Return the inflated layout */
         return binding.root

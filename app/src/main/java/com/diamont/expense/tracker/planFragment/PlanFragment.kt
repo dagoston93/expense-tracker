@@ -14,6 +14,7 @@ import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentPlanBinding
 import com.diamont.expense.tracker.util.database.*
+import com.diamont.expense.tracker.util.enums.TransactionType
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import java.text.DecimalFormat
@@ -46,6 +47,7 @@ class PlanFragment : Fragment() {
         activityViewModel.setBottomNavBarVisibility(true)
         activityViewModel.setUpButtonVisibility(false)
         activityViewModel.setDrawerLayoutEnabled(true)
+        activityViewModel.defaultTransactionType = TransactionType.PLAN_EXPENSE
 
         /**
          *  Create the view model using a view model factory
@@ -97,6 +99,13 @@ class PlanFragment : Fragment() {
                 adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
                 adapter.items = it.toMutableList()
             }
+        })
+
+        /**
+         * Observe the selected plan type
+         */
+        viewModel.selectedPlanType.observe(viewLifecycleOwner, Observer {
+            activityViewModel.defaultTransactionType = it
         })
 
         /**

@@ -17,20 +17,12 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.*
 import java.util.*
 
-/**
- * TODO
- * - When deleting a planned transaction, change last completed date to prev one
- *   by finding the last transaction with plan id in database. If none found, set it to 0.
- * - When deleting planned one time transaction update plan to active.
- * - Implement feature to pre-select Plan-Expense/Plan-Income on form when navigating from plan page
- */
-
 class AddOrEditTransactionFragmentViewModel(
     private val appContext: Application,
     private val databaseDao: TransactionDatabaseDao,
     private val idToEdit: Int?,
     private val isTransactionToEdit: Boolean,
-    private val setPlanAsDefaultType: Boolean
+    private val defaultTransactionType: TransactionType
 ) : AndroidViewModel(appContext) {
 
     /**
@@ -919,6 +911,12 @@ class AddOrEditTransactionFragmentViewModel(
         if(isEditMode){
             setUpEditTransaction()
         }else{
+            /** If default transaction type is not expense, set up the form */
+            if(defaultTransactionType != TransactionType.EXPENSE) {
+                _selectedTransactionTypeIndex.value =
+                    TransactionType.getIndex(defaultTransactionType)
+            }
+
             /** Set initial value for venue or source list for autocomplete text view */
             _venueOrSourceList.value = venues
         }

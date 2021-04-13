@@ -13,6 +13,7 @@ import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentHomeBinding
 import com.diamont.expense.tracker.util.database.TransactionDatabase
+import com.diamont.expense.tracker.util.enums.TransactionType
 
 
 class HomeFragment : Fragment() {
@@ -55,6 +56,7 @@ class HomeFragment : Fragment() {
         activityViewModel.setBottomNavBarVisibility(true)
         activityViewModel.setUpButtonVisibility(false)
         activityViewModel.setDrawerLayoutEnabled(true)
+        activityViewModel.defaultTransactionType = TransactionType.EXPENSE
 
         /** Return the inflated layout */
         return binding.root

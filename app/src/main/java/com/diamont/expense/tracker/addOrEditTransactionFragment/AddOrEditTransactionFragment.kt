@@ -84,16 +84,15 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
             true
         }
 
-        val setPlanAsDefault : Boolean = if(arguments != null){
-            this.arguments?.getBoolean(KEY_BUNDLE_SET_PLAN_AS_DEFAULT, false) ?: false
-        }else{
-            false
-        }
-
         /**
          * Create the view model
          */
-        val viewModelFactory = AddOrEditTransactionFragmentViewModelFactory(application, databaseDao, id, isTransactionToEdit, setPlanAsDefault)
+        val viewModelFactory = AddOrEditTransactionFragmentViewModelFactory(
+            application,
+            databaseDao,
+            id,
+            isTransactionToEdit,
+            activityViewModel.defaultTransactionType)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddOrEditTransactionFragmentViewModel::class.java)
         binding.viewModel = viewModel

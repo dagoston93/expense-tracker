@@ -52,6 +52,9 @@ class PlanFragmentViewModel (
         get() = _totalYearlyString
 
 
+    private var _selectedPlanType = MutableLiveData<TransactionType>(TransactionType.PLAN_EXPENSE)
+    val selectedPlanType: LiveData<TransactionType>
+        get() = _selectedPlanType
     /**
      * Set up some variables
      */
@@ -63,7 +66,7 @@ class PlanFragmentViewModel (
     private var incomePlans = mutableListOf<Plan>()
     private var expensePlans = mutableListOf<Plan>()
 
-    private var selectedPlanType: TransactionType = TransactionType.PLAN_EXPENSE
+
 
     private val calendarStart = Calendar.getInstance()
     private val calendarEnd = Calendar.getInstance()
@@ -452,14 +455,14 @@ class PlanFragmentViewModel (
              */
             _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_expenses)
             _plansToDisplay.value = expensePlans
-            selectedPlanType = TransactionType.PLAN_EXPENSE
+            _selectedPlanType.value = TransactionType.PLAN_EXPENSE
         }else{
             /**
              * Income tab selected
              */
             _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_incomes)
             _plansToDisplay.value = incomePlans
-            selectedPlanType = TransactionType.PLAN_INCOME
+            _selectedPlanType.value = TransactionType.PLAN_INCOME
         }
     }
 
@@ -487,7 +490,7 @@ class PlanFragmentViewModel (
         }
 
         /** Then cancel in our list and reorganize it */
-        if(selectedPlanType == TransactionType.PLAN_EXPENSE){
+        if(_selectedPlanType.value == TransactionType.PLAN_EXPENSE){
             expensePlans[position].cancellationDate = MaterialDatePicker.todayInUtcMilliseconds()
             expensePlans[position].isStatusActive = false
             expensePlans.sortWith(comparator)
