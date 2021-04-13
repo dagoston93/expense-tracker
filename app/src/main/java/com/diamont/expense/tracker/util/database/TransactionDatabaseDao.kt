@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.Dispatchers
@@ -234,10 +235,30 @@ interface TransactionDatabaseDao {
      */
     suspend fun deleteTransactionSuspend(id: Int){
         return withContext(Dispatchers.IO){
+            /** Get the transaction before deleting it */
             val transaction = getTransactionById(id)
-            Log.d("GUS", "$transaction")
-
             deleteTransaction(id)
+
+            /** If it is a planned one we need to update the plan */
+            if(transaction.planId != -1){
+                val plan = getPlanById(transaction.planId)
+
+                /**
+                 * If it is a regular plan, we find the last date it was completed
+                 * and save it if the last completion is being deleted.
+                 */
+                if(plan.frequency != TransactionFrequency.ONE_TIME){
+                    if(plan.lastCompletedDate == transaction.date){
+                        val lastDate = getLastTransactionDateByPlanId(plan.id)
+                        saveLastCompletionDateOfPlan(plan.id, lastDate)
+                    }
+                }else{
+                    /** If it is a one time plan, we re-activate it. */
+                    plan.isStatusActive = true
+                    plan.lastCompletedDate = 0
+                    updatePlan(plan)
+                }
+            }
         }
     }
 
