@@ -2,7 +2,6 @@ package com.diamont.expense.tracker.planFragment
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -163,7 +162,7 @@ class PlanFragmentViewModel (
         /**
          * Display monthly expenses
          */
-        val monthlyTotal = calculatePlannedAmountWithinInterval(
+        val monthlyTotal = calculateTotalPlannedAmountWithinPeriod(
             expensePlans,
             calendarStart,
             calendarEnd
@@ -185,7 +184,7 @@ class PlanFragmentViewModel (
         //Log.d("GUS", "Next: ${Date(x)}")
 
         for(i in expensePlans){
-            Log.d("GUS", "${i.description}  cancelled: ${Date(i.cancellationDate)}")
+            //Log.d("GUS", "${i.description}  cancelled: ${Date(i.cancellationDate)}")
         }
 
     }
@@ -219,19 +218,129 @@ class PlanFragmentViewModel (
 
     /**
      * Call this method to calculate total expenses/incomes within an interval
+     *
+     * @param planList A list of plans (expense/income) to iterate.
+     * @param startDate A calendar containing the start date of the period.
+     * @param endDate A calendar containing the end date of the period.
      */
-    private fun calculatePlannedAmountWithinInterval(planList: List<Plan>, startDate: Calendar, endDate: Calendar): Float{
+    private fun calculateTotalPlannedAmountWithinPeriod(planList: List<Plan>, startDate: Calendar, endDate: Calendar): Float{
         var total: Float = 0f
-        val calendar = Calendar.getInstance()
+        var currentPlan = Plan()
 
         /**
          * Iterate through the list
          */
         for(plan in planList){
+            currentPlan = plan.copy()
 
+            when(currentPlan.frequency){
+                /**
+                 * One time
+                 */
+                TransactionFrequency.ONE_TIME -> {
+                    if(currentPlan.nextExpectedDate in startDate.timeInMillis..endDate.timeInMillis){
+                        total += plan.amount
+                    }
+                }
+
+                /** Weekly once */
+                TransactionFrequency.WEEKLY_ONCE -> {
+                    total += calculatePlanAmountForPeriod(
+                        currentPlan,
+                        startDate,
+                        endDate
+                    ){ calendarNow: Calendar, firstPlanDate: Long ->
+                        calculateNextWeeklyPlanDate(calendarNow, firstPlanDate)
+                    }
+                }
+
+                /**
+                 * Fortnightly once
+                 */
+                TransactionFrequency.FORTNIGHTLY_ONCE -> {
+                    total += calculatePlanAmountForPeriod(
+                        currentPlan,
+                        startDate,
+                        endDate
+                    ){ calendarNow: Calendar, firstPlanDate: Long ->
+                        calculateNextFortnightlyPlanDate(calendarNow, firstPlanDate)
+                    }
+                }
+
+                /**
+                 * Monthly once
+                 */
+                TransactionFrequency.MONTHLY_ONCE -> {
+                    total += calculatePlanAmountForPeriod(
+                        currentPlan,
+                        startDate,
+                        endDate
+                    ){ calendarNow: Calendar, firstPlanDate: Long ->
+                        calculateNextMonthlyPlanDate(calendarNow, firstPlanDate)
+                    }
+                }
+
+                /**
+                 * Yearly once
+                 */
+                TransactionFrequency.YEARLY_ONCE ->{
+                    total += calculatePlanAmountForPeriod(
+                        currentPlan,
+                        startDate,
+                        endDate
+                    ){ calendarNow: Calendar, firstPlanDate: Long ->
+                        calculateNextYearlyPlanDate(calendarNow, firstPlanDate)
+                    }
+                }
+            }
         }
 
         return total
+    }
+
+    /**
+     * This helper method calculates the planned amount of a single plan
+     * within the given period.
+     * We need this helper method because while calculating different periodic
+     * plans, we would repeat a lot of code otherwise.
+     *
+     * @param currentPlan The plan to calculate the amount.*
+     * @param startDate The calendar containing the starting date of the period.
+     * @param endDate The calendar containing the end date of the period.
+     * @param nextDateCalculatorMethod A lambda that gives the next expected date of the plan.
+     *
+     */
+    private fun calculatePlanAmountForPeriod(
+        currentPlan: Plan,
+        startDate: Calendar,
+        endDate: Calendar,
+        nextDateCalculatorMethod: (calendarNow: Calendar, firstPlanDate: Long) -> Long
+    ): Float {
+        val calendar = Calendar.getInstance()
+        /** Get the first expected date within the period */
+        var amount = 0f
+        calendar.timeInMillis = startDate.timeInMillis - DAY_IN_MILLIS
+        currentPlan.nextExpectedDate = nextDateCalculatorMethod(calendar, currentPlan.firstExpectedDate)
+
+        /** While next date is within the given period we keep going */
+        while (currentPlan.nextExpectedDate <= endDate.timeInMillis) {
+
+            if (currentPlan.nextExpectedDate in startDate.timeInMillis..endDate.timeInMillis) {
+                /** Check if plan is cancelled at the time of next expected date */
+                if (!currentPlan.isStatusActive && currentPlan.nextExpectedDate > currentPlan.cancellationDate) {
+                    /** Plan is cancelled, exit loop */
+                    break
+                } else {
+                    /** Plan is active, add amount */
+                    amount += currentPlan.amount
+                }
+            }
+
+            /** Get the next expected date */
+            calendar.timeInMillis = currentPlan.nextExpectedDate + DAY_IN_MILLIS
+            currentPlan.nextExpectedDate = nextDateCalculatorMethod(calendar, currentPlan.firstExpectedDate)
+        }
+        return amount
     }
 
     /**
@@ -241,7 +350,6 @@ class PlanFragmentViewModel (
     private fun calculateNextExpectedDates(planList: MutableList<Plan>){
 
         val calendarNow = Calendar.getInstance()
-        val calendarPlan = Calendar.getInstance()
 
         for(plan in planList){
            if(plan.frequency == TransactionFrequency.ONE_TIME){
@@ -514,5 +622,9 @@ class PlanFragmentViewModel (
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    companion object{
+        const val DAY_IN_MILLIS = 1000*24*60*60
     }
 }
