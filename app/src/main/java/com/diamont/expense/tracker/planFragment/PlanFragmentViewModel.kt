@@ -2,12 +2,14 @@ package com.diamont.expense.tracker.planFragment
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
+import com.diamont.expense.tracker.util.calendarToString
 import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
@@ -146,15 +148,15 @@ class PlanFragmentViewModel (
         /**
          * Find first and last day of month
          */
-        calendarStart.set(Calendar.DAY_OF_MONTH, 1)
         calendarStart.set(Calendar.HOUR, 0)
         calendarStart.set(Calendar.MINUTE, 0)
         calendarStart.set(Calendar.SECOND, 0)
+        calendarStart.set(Calendar.DAY_OF_MONTH, 1)
 
-        calendarEnd.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH))
         calendarEnd.set(Calendar.HOUR, 23)
         calendarEnd.set(Calendar.MINUTE, 59)
         calendarEnd.set(Calendar.SECOND, 59)
+        calendarEnd.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH))
 
         //Log.d("GUS", "$calendarStart")
         //Log.d("GUS", "$calendarEnd")
@@ -169,14 +171,49 @@ class PlanFragmentViewModel (
         )
         _totalMonthlyString.value = decimalFormat?.format(monthlyTotal)
 
+        /**
+         * Find first and last day of year
+         */
+        calendarStart.set(Calendar.HOUR, 0)
+        calendarStart.set(Calendar.MINUTE, 0)
+        calendarStart.set(Calendar.SECOND, 0)
+        calendarStart.set(Calendar.DAY_OF_MONTH, 1)
+        calendarStart.set(Calendar.MONTH, Calendar.JANUARY)
+
+        //Log.d("GUS", "start of year: ${calendarToString(calendarStart)}")
+        //Log.d("GUS", "dof y: ${calendarEnd.get(Calendar.DAY_OF_YEAR)}")
+        //Log.d("GUS", "max dof y: ${calendarEnd.getActualMaximum(Calendar.DAY_OF_YEAR)}")
+
+        calendarEnd.set(Calendar.DAY_OF_YEAR, calendarEnd.getActualMaximum(Calendar.DAY_OF_YEAR))
+        //Log.d("GUS", "dof y after set: ${calendarEnd.get(Calendar.DAY_OF_YEAR)}")
+
+
+        //calendarEnd.set(Calendar.HOUR, 23)
+        //calendarEnd.set(Calendar.MINUTE, 59)
+        //calendarEnd.set(Calendar.SECOND, 59)
+
+        //Log.d("GUS", "eof year: ${calendarToString(calendarEnd)}")
+
+        /**
+         * Display yearly expenses
+         */
+        val yearlyTotal = calculateTotalPlannedAmountWithinPeriod(
+            expensePlans,
+            calendarStart,
+            calendarEnd
+        )
+        _totalYearlyString.value = decimalFormat?.format(yearlyTotal)
+
         /** TEST */
-        calendarStart.set(Calendar.YEAR, 2021)
-        calendarStart.set(Calendar.MONTH, Calendar.MARCH)
+        calendarStart.set(Calendar.YEAR, 2020)
+        calendarStart.set(Calendar.MONTH, Calendar.FEBRUARY)
         calendarStart.set(Calendar.DAY_OF_MONTH, 3)
 
         calendarEnd.set(Calendar.YEAR, 2021)
-        calendarEnd.set(Calendar.MONTH, Calendar.APRIL)
+        calendarEnd.set(Calendar.MONTH, Calendar.MARCH)
         calendarEnd.set(Calendar.DAY_OF_MONTH, 19)
+
+        //calculateTotalPlannedAmountWithinPeriod(expensePlans, calendarStart, calendarEnd)
 
         val x = calculateNextFortnightlyPlanDate(calendarEnd, calendarStart.timeInMillis)
         //Log.d("GUS", "Plan: ${Date(calendarStart.timeInMillis)}")
@@ -292,11 +329,151 @@ class PlanFragmentViewModel (
                         calculateNextYearlyPlanDate(calendarNow, firstPlanDate)
                     }
                 }
+
+                /**
+                 * Monthly sum
+                 */
+                TransactionFrequency.MONTHLY_SUM -> {
+
+
+                    //Log.d("GUS", "${plan.description} is monthly sum type")
+                    //Log.d("GUS", "")
+
+                    //Log.d("GUS", "Checking period between:")
+                    //Log.d("GUS", "${calendarToString(startDate)} and ${calendarToString(endDate)}")
+
+                    if(!(!plan.isStatusActive && plan.cancellationDate < startDate.timeInMillis)){
+                        //Log.d("GUS", "Not cancelled before start of period.")
+
+                        val calendar = Calendar.getInstance()
+                        val cancellationDate = Calendar.getInstance()
+
+                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
+                        if(startDate.timeInMillis >= plan.firstExpectedDate) {
+                            //Log.d("GUS", "Period start date is later than first date of plan.")
+                            calendar.timeInMillis = startDate.timeInMillis
+                        }else{
+                            //Log.d("GUS", "First date of plan is later than period start date.")
+                            calendar.timeInMillis = plan.firstExpectedDate
+                        }
+
+                        cancellationDate.timeInMillis = plan.cancellationDate
+
+                        while(calendar.timeInMillis <= endDate.timeInMillis){
+                            //Log.d("GUS", "Start of examined sub-period: ${calendarToString(calendar)}")
+                            /** Check if plan is cancelled before the end of month */
+                            if(!plan.isStatusActive
+                                && calendar.get(Calendar.MONTH) == cancellationDate.get(Calendar.MONTH)
+                                && calendar.get(Calendar.YEAR) == cancellationDate.get(Calendar.YEAR)){
+
+                                //Log.d("GUS", "Plan is cancelled in this month.")
+                                //Log.d("GUS", "Calculating...")
+
+                                val x = calculateSubPeriodAmount(
+                                    calendar.timeInMillis,
+                                    plan.cancellationDate,
+                                    plan.amount,
+                                    calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+                                )
+
+                                total += x
+
+                                //Log.d("GUS", "Added: $x")
+
+                                break
+                            }else{
+                                //Log.d("GUS", "Plan is NOT cancelled in this month.")
+
+                                if(calendar.get(Calendar.MONTH) == endDate.get(Calendar.MONTH)
+                                    && calendar.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)){
+
+                                    //Log.d("GUS", "Period is over this month.")
+                                    //Log.d("GUS", "Calculating...")
+
+                                    val x = calculateSubPeriodAmount(
+                                        calendar.timeInMillis,
+                                        endDate.timeInMillis,
+                                        plan.amount,
+                                        calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+                                    )
+
+                                    total += x
+
+                                    //Log.d("GUS", "Added: $x")
+
+                                }else{
+                                    //Log.d("GUS", "Period is NOT over this month.")
+
+                                    if(calendar.get(Calendar.DAY_OF_MONTH) == 1){
+                                        //Log.d("GUS", "Sub-period begins on 1st month.")
+                                        //Log.d("GUS", "Adding full month: ${plan.amount}")
+
+                                        total += plan.amount
+                                    }else{
+                                        //Log.d("GUS", "Sub-period DOES NOT begin on 1st.")
+                                        //Log.d("GUS", "Calculating...")
+
+                                        val endOfMonth = Calendar.getInstance()
+                                        endOfMonth.timeInMillis = calendar.timeInMillis
+
+                                        endOfMonth.set(Calendar.HOUR, 23)
+                                        endOfMonth.set(Calendar.MINUTE, 59)
+                                        endOfMonth.set(Calendar.SECOND, 59)
+                                        endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH))
+
+                                        val x = calculateSubPeriodAmount(
+                                            calendar.timeInMillis,
+                                            endOfMonth.timeInMillis,
+                                            plan.amount,
+                                            calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+                                        )
+
+                                        total += x
+
+                                        //Log.d("GUS", "Added: $x")
+
+                                        calendar.set(Calendar.DAY_OF_MONTH, 1)
+                                    }
+                                }
+                            }
+
+                            calendar.add(Calendar.MONTH, 1)
+                        }
+                        /** */
+                        //Log.d("GUS", "All sub-periods examined. While loop done.")
+                    }else{
+                        //Log.d("GUS", "Cancelled before start of period.")
+                    }
+
+                }
+
+                else -> {}
+
+
+
             }
         }
 
+        //Log.d("GUS", "Total added: $total")
         return total
     }
+
+
+    /**
+     * Calculate sub-period amount
+     */
+    private fun calculateSubPeriodAmount(startOfSubPeriod: Long, endOfSubPeriod: Long, amountForFullPeriod: Float, daysInFullPeriod: Int): Float{
+        /** Calculate the amount for the shorter period */
+        val difference = endOfSubPeriod - startOfSubPeriod
+        val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+        val dailyAmount = amountForFullPeriod / daysInFullPeriod
+
+        //Log.d("GUS", "days: $days")
+        //Log.d("GUS", "daily amount: $dailyAmount")
+
+        return days.toFloat() * dailyAmount
+    }
+
 
     /**
      * This helper method calculates the planned amount of a single plan
@@ -628,3 +805,84 @@ class PlanFragmentViewModel (
         const val DAY_IN_MILLIS = 1000*24*60*60
     }
 }
+/*
+/** Only execute if plan wasn't cancelled before the given period */
+if(!(!plan.isStatusActive && plan.cancellationDate <= startDate.timeInMillis)){
+    Log.d("GUS", "Sum...")
+    val calendar = Calendar.getInstance()
+    val cancellationDate = Calendar.getInstance()
+
+    /** Set initial plan date to the later of the first date of the plan or the first date of period */
+    calendar.timeInMillis =
+        if(startDate.timeInMillis >= plan.firstExpectedDate) {
+            startDate.timeInMillis
+        }else{
+            plan.firstExpectedDate
+        }
+
+    //if(!plan.isStatusActive){
+    cancellationDate.timeInMillis = plan.cancellationDate
+    //}
+
+    Log.d("GUS", "plan: ${plan.description}")
+    Log.d("GUS", "period: ${Date(startDate.timeInMillis)} - ${Date(endDate.timeInMillis)}")
+    Log.d("GUS", "initial cal. date: ${Date(calendar.timeInMillis)}")
+    Log.d("GUS", "cancellation date: ${Date(cancellationDate.timeInMillis)}")
+
+
+    while(calendar.timeInMillis < endDate.timeInMillis) {
+        /**
+         * If next period is not a full month either because the date of cancellation
+         * or because of the given period we calculate the amount for the shorter period
+         * otherwise we add a full month
+         */
+        if (!plan.isStatusActive
+            && calendar.get(Calendar.MONTH) == cancellationDate.get(Calendar.MONTH)
+            && calendar.get(Calendar.YEAR) == cancellationDate.get(Calendar.YEAR)) {
+
+            /** Calculate the amount for the shorter period */
+            val difference = cancellationDate.timeInMillis - calendar.timeInMillis
+            val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+            val dailyAmount = plan.amount / calendar.getActualMaximum(Calendar.MONTH)
+
+            total += days.toFloat() * dailyAmount
+        } else {
+            if (calendar.get(Calendar.MONTH) == endDate.get(Calendar.MONTH)
+                && calendar.get(Calendar.YEAR) == endDate.get(Calendar.MONTH)
+            ) {
+                /** Check if the last sub-period begins on the first day of the month*/
+                if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
+                    /** Add the amount for the full month */
+                    total += plan.amount
+                } else {
+                    /** Otherwise calculate amount for the shorter period. */
+                    val lastDayOfMonth = Calendar.getInstance()
+                    lastDayOfMonth.set(
+                        Calendar.DAY_OF_MONTH,
+                        calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+                    )
+
+                    val difference =
+                        lastDayOfMonth.timeInMillis - calendar.timeInMillis
+                    val days =
+                        TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
+                            .toInt()
+                    val dailyAmount =
+                        plan.amount / calendar.getActualMaximum(Calendar.MONTH)
+
+                    total += days.toFloat() * dailyAmount
+
+                    /** Now set the day of month to 1st */
+                    calendar.set(Calendar.DAY_OF_MONTH, 1)
+                }
+            }else{
+                /** Calculate the amount for the shorter period */
+                val difference = endDate.timeInMillis - calendar.timeInMillis
+                val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+                val dailyAmount = plan.amount / calendar.getActualMaximum(Calendar.MONTH)
+            }
+
+            calendar.add(Calendar.MONTH, 1)
+        }
+    }
+}*/
