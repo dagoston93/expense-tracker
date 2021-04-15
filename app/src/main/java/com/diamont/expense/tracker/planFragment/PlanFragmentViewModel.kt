@@ -164,12 +164,12 @@ class PlanFragmentViewModel (
         /**
          * Display monthly expenses
          */
-        val monthlyTotal = calculateTotalPlannedAmountWithinPeriod(
-            expensePlans,
-            calendarStart,
-            calendarEnd
-        )
-        _totalMonthlyString.value = decimalFormat?.format(monthlyTotal)
+//        val monthlyTotal = calculateTotalPlannedAmountWithinPeriod(
+//            expensePlans,
+//            calendarStart,
+//            calendarEnd
+//        )
+//        _totalMonthlyString.value = decimalFormat?.format(monthlyTotal)
 
         /**
          * Find first and last day of year
@@ -197,21 +197,21 @@ class PlanFragmentViewModel (
         /**
          * Display yearly expenses
          */
-        val yearlyTotal = calculateTotalPlannedAmountWithinPeriod(
-            expensePlans,
-            calendarStart,
-            calendarEnd
-        )
-        _totalYearlyString.value = decimalFormat?.format(yearlyTotal)
+//        val yearlyTotal = calculateTotalPlannedAmountWithinPeriod(
+//            expensePlans,
+//            calendarStart,
+//            calendarEnd
+//        )
+//        _totalYearlyString.value = decimalFormat?.format(yearlyTotal)
 
         /** TEST */
         calendarStart.set(Calendar.YEAR, 2020)
-        calendarStart.set(Calendar.MONTH, Calendar.FEBRUARY)
-        calendarStart.set(Calendar.DAY_OF_MONTH, 3)
+        calendarStart.set(Calendar.MONTH, Calendar.APRIL)
+        calendarStart.set(Calendar.DAY_OF_MONTH, 13)
 
         calendarEnd.set(Calendar.YEAR, 2021)
-        calendarEnd.set(Calendar.MONTH, Calendar.MARCH)
-        calendarEnd.set(Calendar.DAY_OF_MONTH, 19)
+        calendarEnd.set(Calendar.MONTH, Calendar.APRIL)
+        calendarEnd.set(Calendar.DAY_OF_MONTH, 10)
 
         //calculateTotalPlannedAmountWithinPeriod(expensePlans, calendarStart, calendarEnd)
 
@@ -275,175 +275,284 @@ class PlanFragmentViewModel (
                  * One time
                  */
                 TransactionFrequency.ONE_TIME -> {
-                    if(currentPlan.nextExpectedDate in startDate.timeInMillis..endDate.timeInMillis){
-                        total += plan.amount
-                    }
+//                    if(currentPlan.nextExpectedDate in startDate.timeInMillis..endDate.timeInMillis){
+//                        total += plan.amount
+//                    }
                 }
 
                 /** Weekly once */
                 TransactionFrequency.WEEKLY_ONCE -> {
-                    total += calculatePlanAmountForPeriod(
-                        currentPlan,
-                        startDate,
-                        endDate
-                    ){ calendarNow: Calendar, firstPlanDate: Long ->
-                        calculateNextWeeklyPlanDate(calendarNow, firstPlanDate)
-                    }
+//                    total += calculatePlanAmountForPeriod(
+//                        currentPlan,
+//                        startDate,
+//                        endDate
+//                    ){ calendarNow: Calendar, firstPlanDate: Long ->
+//                        calculateNextWeeklyPlanDate(calendarNow, firstPlanDate)
+//                    }
                 }
 
                 /**
                  * Fortnightly once
                  */
                 TransactionFrequency.FORTNIGHTLY_ONCE -> {
-                    total += calculatePlanAmountForPeriod(
-                        currentPlan,
-                        startDate,
-                        endDate
-                    ){ calendarNow: Calendar, firstPlanDate: Long ->
-                        calculateNextFortnightlyPlanDate(calendarNow, firstPlanDate)
-                    }
+//                    total += calculatePlanAmountForPeriod(
+//                        currentPlan,
+//                        startDate,
+//                        endDate
+//                    ){ calendarNow: Calendar, firstPlanDate: Long ->
+//                        calculateNextFortnightlyPlanDate(calendarNow, firstPlanDate)
+//                    }
                 }
 
                 /**
                  * Monthly once
                  */
                 TransactionFrequency.MONTHLY_ONCE -> {
-                    total += calculatePlanAmountForPeriod(
-                        currentPlan,
-                        startDate,
-                        endDate
-                    ){ calendarNow: Calendar, firstPlanDate: Long ->
-                        calculateNextMonthlyPlanDate(calendarNow, firstPlanDate)
-                    }
+//                    total += calculatePlanAmountForPeriod(
+//                        currentPlan,
+//                        startDate,
+//                        endDate
+//                    ){ calendarNow: Calendar, firstPlanDate: Long ->
+//                        calculateNextMonthlyPlanDate(calendarNow, firstPlanDate)
+//                    }
                 }
 
                 /**
                  * Yearly once
                  */
                 TransactionFrequency.YEARLY_ONCE ->{
-                    total += calculatePlanAmountForPeriod(
-                        currentPlan,
-                        startDate,
-                        endDate
-                    ){ calendarNow: Calendar, firstPlanDate: Long ->
-                        calculateNextYearlyPlanDate(calendarNow, firstPlanDate)
-                    }
+//                    total += calculatePlanAmountForPeriod(
+//                        currentPlan,
+//                        startDate,
+//                        endDate
+//                    ){ calendarNow: Calendar, firstPlanDate: Long ->
+//                        calculateNextYearlyPlanDate(calendarNow, firstPlanDate)
+//                    }
+                }
+
+                /**
+                 * Weekly sum
+                 */
+                TransactionFrequency.WEEKLY_SUM -> {
+//                    Log.d("GUS", "Weekly(sum) plan: ${plan.description}")
+//                    Log.d("GUS", "Period examined: ${calendarToString(startDate)} to ${calendarToString(endDate)}")
+//                    if(!(!plan.isStatusActive && plan.cancellationDate < startDate.timeInMillis)) {
+//
+//                        Log.d("GUS", "Not cancelled before start of period.")
+//
+//                        val calendar = Calendar.getInstance()
+//                        val cancellationDate = Calendar.getInstance()
+//
+//                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
+//                        if (startDate.timeInMillis >= plan.firstExpectedDate) {
+//                            Log.d("GUS", "Period start date is later than first date of plan.")
+//                            calendar.timeInMillis = startDate.timeInMillis
+//                        } else {
+//                            Log.d("GUS", "First date of plan is later than period start date.")
+//                            calendar.timeInMillis = plan.firstExpectedDate
+//                        }
+//
+//                        Log.d("GUS", "Date set in calendar: ${calendarToString(calendar)}")
+//
+//                        cancellationDate.timeInMillis = plan.cancellationDate
+//
+//                        /** Calculate the last day of the required period */
+//                        val lastDate = Calendar.getInstance()
+//                        if(!plan.isStatusActive
+//                            && plan.cancellationDate <= endDate.timeInMillis){
+//                            Log.d("GUS", "plan cancelled before end of period")
+//                            lastDate.timeInMillis = plan.cancellationDate
+//                        }else{
+//                            Log.d("GUS", "plan is NOT cancelled before end of period")
+//                            lastDate.timeInMillis = endDate.timeInMillis
+//                        }
+//
+//                        Log.d("GUS", "Last date to check: ${calendarToString(lastDate)}")
+//
+//                        /**
+//                         * Calculate the amount between the first date to examine and the
+//                         * first expected day of the plan within the period
+//                         * */
+//                        val nextDate = calculateNextWeeklyPlanDate(calendar, plan.firstExpectedDate)
+//                        val c = Calendar.getInstance()
+//                        c.timeInMillis=nextDate
+//                        Log.d("GUS", "nextDate: ${calendarToString(c)}")
+//
+//
+//                        /** Check if period is over before next date */
+//                        if(nextDate >= lastDate.timeInMillis){
+//                            val difference =  lastDate.timeInMillis - calendar.timeInMillis
+//                            val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+//
+//                            Log.d("GUS", "This is a short period. Only $days days long.")
+//
+//                            val x = calculateSubPeriodAmount(
+//                                calendar.timeInMillis,
+//                                lastDate.timeInMillis,
+//                                plan.amount,
+//                                7)
+//
+//                            Log.d("GUS", "Added: $x")
+//                            total += x
+//
+//                        }else{
+//                            var difference =  nextDate - calendar.timeInMillis
+//                            var days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+//
+//                            Log.d("GUS", "$days left till first full week starts.")
+//
+//                            var x = calculateSubPeriodAmount(
+//                                calendar.timeInMillis,
+//                                nextDate,
+//                                plan.amount,
+//                                7)
+//
+//                            Log.d("GUS", "Added: $x")
+//                            total += x
+//
+//                            calendar.add(Calendar.DAY_OF_YEAR, days)
+//                            Log.d("GUS", "start full week calc from: ${calendarToString(calendar)}")
+//
+//                            difference = lastDate.timeInMillis - calendar.timeInMillis
+//
+//                            Log.d("GUS", "Diff: $difference")
+//                            days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+//
+//                            Log.d("GUS", "Days to calculate full weeks: $days")
+//                            val fullWeeks = days / 7
+//
+//                            Log.d("GUS", "Full weeks: $fullWeeks")
+//
+//                            total += fullWeeks * plan.amount
+//                            Log.d("GUS", "Added: ${fullWeeks * plan.amount}")
+//
+//                            val remainingDays = days - ( fullWeeks * 7)
+//
+//                            Log.d("GUS", "Remaining days: $remainingDays")
+//
+//                            x = (plan.amount / 7) * remainingDays
+//
+//                            total += x
+//                            Log.d("GUS", "Added: $x")
+//                        }
+//
+//                    }
                 }
 
                 /**
                  * Monthly sum
                  */
                 TransactionFrequency.MONTHLY_SUM -> {
-
-
-                    //Log.d("GUS", "${plan.description} is monthly sum type")
-                    //Log.d("GUS", "")
-
-                    //Log.d("GUS", "Checking period between:")
-                    //Log.d("GUS", "${calendarToString(startDate)} and ${calendarToString(endDate)}")
-
-                    if(!(!plan.isStatusActive && plan.cancellationDate < startDate.timeInMillis)){
-                        //Log.d("GUS", "Not cancelled before start of period.")
-
-                        val calendar = Calendar.getInstance()
-                        val cancellationDate = Calendar.getInstance()
-
-                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
-                        if(startDate.timeInMillis >= plan.firstExpectedDate) {
-                            //Log.d("GUS", "Period start date is later than first date of plan.")
-                            calendar.timeInMillis = startDate.timeInMillis
-                        }else{
-                            //Log.d("GUS", "First date of plan is later than period start date.")
-                            calendar.timeInMillis = plan.firstExpectedDate
-                        }
-
-                        cancellationDate.timeInMillis = plan.cancellationDate
-
-                        while(calendar.timeInMillis <= endDate.timeInMillis){
-                            //Log.d("GUS", "Start of examined sub-period: ${calendarToString(calendar)}")
-                            /** Check if plan is cancelled before the end of month */
-                            if(!plan.isStatusActive
-                                && calendar.get(Calendar.MONTH) == cancellationDate.get(Calendar.MONTH)
-                                && calendar.get(Calendar.YEAR) == cancellationDate.get(Calendar.YEAR)){
-
-                                //Log.d("GUS", "Plan is cancelled in this month.")
-                                //Log.d("GUS", "Calculating...")
-
-                                val x = calculateSubPeriodAmount(
-                                    calendar.timeInMillis,
-                                    plan.cancellationDate,
-                                    plan.amount,
-                                    calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-                                )
-
-                                total += x
-
-                                //Log.d("GUS", "Added: $x")
-
-                                break
-                            }else{
-                                //Log.d("GUS", "Plan is NOT cancelled in this month.")
-
-                                if(calendar.get(Calendar.MONTH) == endDate.get(Calendar.MONTH)
-                                    && calendar.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)){
-
-                                    //Log.d("GUS", "Period is over this month.")
-                                    //Log.d("GUS", "Calculating...")
-
-                                    val x = calculateSubPeriodAmount(
-                                        calendar.timeInMillis,
-                                        endDate.timeInMillis,
-                                        plan.amount,
-                                        calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-                                    )
-
-                                    total += x
-
-                                    //Log.d("GUS", "Added: $x")
-
-                                }else{
-                                    //Log.d("GUS", "Period is NOT over this month.")
-
-                                    if(calendar.get(Calendar.DAY_OF_MONTH) == 1){
-                                        //Log.d("GUS", "Sub-period begins on 1st month.")
-                                        //Log.d("GUS", "Adding full month: ${plan.amount}")
-
-                                        total += plan.amount
-                                    }else{
-                                        //Log.d("GUS", "Sub-period DOES NOT begin on 1st.")
-                                        //Log.d("GUS", "Calculating...")
-
-                                        val endOfMonth = Calendar.getInstance()
-                                        endOfMonth.timeInMillis = calendar.timeInMillis
-
-                                        endOfMonth.set(Calendar.HOUR, 23)
-                                        endOfMonth.set(Calendar.MINUTE, 59)
-                                        endOfMonth.set(Calendar.SECOND, 59)
-                                        endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH))
-
-                                        val x = calculateSubPeriodAmount(
-                                            calendar.timeInMillis,
-                                            endOfMonth.timeInMillis,
-                                            plan.amount,
-                                            calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-                                        )
-
-                                        total += x
-
-                                        //Log.d("GUS", "Added: $x")
-
-                                        calendar.set(Calendar.DAY_OF_MONTH, 1)
-                                    }
-                                }
-                            }
-
-                            calendar.add(Calendar.MONTH, 1)
-                        }
-                        /** */
-                        //Log.d("GUS", "All sub-periods examined. While loop done.")
-                    }else{
-                        //Log.d("GUS", "Cancelled before start of period.")
-                    }
+//
+//
+//                    //Log.d("GUS", "${plan.description} is monthly sum type")
+//                    //Log.d("GUS", "")
+//
+//                    //Log.d("GUS", "Checking period between:")
+//                    //Log.d("GUS", "${calendarToString(startDate)} and ${calendarToString(endDate)}")
+//
+//                    if(!(!plan.isStatusActive && plan.cancellationDate < startDate.timeInMillis)){
+//                        //Log.d("GUS", "Not cancelled before start of period.")
+//
+//                        val calendar = Calendar.getInstance()
+//                        val cancellationDate = Calendar.getInstance()
+//
+//                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
+//                        if(startDate.timeInMillis >= plan.firstExpectedDate) {
+//                            //Log.d("GUS", "Period start date is later than first date of plan.")
+//                            calendar.timeInMillis = startDate.timeInMillis
+//                        }else{
+//                            //Log.d("GUS", "First date of plan is later than period start date.")
+//                            calendar.timeInMillis = plan.firstExpectedDate
+//                        }
+//
+//                        cancellationDate.timeInMillis = plan.cancellationDate
+//
+//                        while(calendar.timeInMillis <= endDate.timeInMillis){
+//                            //Log.d("GUS", "Start of examined sub-period: ${calendarToString(calendar)}")
+//                            /** Check if plan is cancelled before the end of month */
+//                            if(!plan.isStatusActive
+//                                && calendar.get(Calendar.MONTH) == cancellationDate.get(Calendar.MONTH)
+//                                && calendar.get(Calendar.YEAR) == cancellationDate.get(Calendar.YEAR)){
+//
+//                                //Log.d("GUS", "Plan is cancelled in this month.")
+//                                //Log.d("GUS", "Calculating...")
+//
+//                                val x = calculateSubPeriodAmount(
+//                                    calendar.timeInMillis,
+//                                    plan.cancellationDate,
+//                                    plan.amount,
+//                                    calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+//                                )
+//
+//                                total += x
+//
+//                                //Log.d("GUS", "Added: $x")
+//
+//                                break
+//                            }else{
+//                                //Log.d("GUS", "Plan is NOT cancelled in this month.")
+//
+//                                if(calendar.get(Calendar.MONTH) == endDate.get(Calendar.MONTH)
+//                                    && calendar.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)){
+//
+//                                    //Log.d("GUS", "Period is over this month.")
+//                                    //Log.d("GUS", "Calculating...")
+//
+//                                    val x = calculateSubPeriodAmount(
+//                                        calendar.timeInMillis,
+//                                        endDate.timeInMillis,
+//                                        plan.amount,
+//                                        calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+//                                    )
+//
+//                                    total += x
+//
+//                                    //Log.d("GUS", "Added: $x")
+//
+//                                }else{
+//                                    //Log.d("GUS", "Period is NOT over this month.")
+//
+//                                    if(calendar.get(Calendar.DAY_OF_MONTH) == 1){
+//                                        //Log.d("GUS", "Sub-period begins on 1st month.")
+//                                        //Log.d("GUS", "Adding full month: ${plan.amount}")
+//
+//                                        total += plan.amount
+//                                    }else{
+//                                        //Log.d("GUS", "Sub-period DOES NOT begin on 1st.")
+//                                        //Log.d("GUS", "Calculating...")
+//
+//                                        val endOfMonth = Calendar.getInstance()
+//                                        endOfMonth.timeInMillis = calendar.timeInMillis
+//
+//                                        endOfMonth.set(Calendar.HOUR, 23)
+//                                        endOfMonth.set(Calendar.MINUTE, 59)
+//                                        endOfMonth.set(Calendar.SECOND, 59)
+//                                        endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH))
+//
+//                                        val x = calculateSubPeriodAmount(
+//                                            calendar.timeInMillis,
+//                                            endOfMonth.timeInMillis,
+//                                            plan.amount,
+//                                            calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+//                                        )
+//
+//                                        total += x
+//
+//                                        //Log.d("GUS", "Added: $x")
+//
+//                                        calendar.set(Calendar.DAY_OF_MONTH, 1)
+//                                    }
+//                                }
+//                            }
+//
+//                            calendar.add(Calendar.MONTH, 1)
+//                        }
+//                        /** */
+//                        //Log.d("GUS", "All sub-periods examined. While loop done.")
+//                    }else{
+//                        //Log.d("GUS", "Cancelled before start of period.")
+//                    }
 
                 }
 
@@ -454,7 +563,7 @@ class PlanFragmentViewModel (
             }
         }
 
-        //Log.d("GUS", "Total added: $total")
+        Log.d("GUS", "Total added: $total")
         return total
     }
 
@@ -468,8 +577,8 @@ class PlanFragmentViewModel (
         val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
         val dailyAmount = amountForFullPeriod / daysInFullPeriod
 
-        //Log.d("GUS", "days: $days")
-        //Log.d("GUS", "daily amount: $dailyAmount")
+        Log.d("GUS", "days: $days")
+        Log.d("GUS", "daily amount: $dailyAmount")
 
         return days.toFloat() * dailyAmount
     }
