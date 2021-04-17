@@ -66,7 +66,7 @@ class PlanFragment : Fragment() {
         binding.tlPlanTabs.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if(tab != null){
-                    viewModel.selectedTabChanged(tab.position)
+                    viewModel.onSelectedTabChanged(tab.position)
                 }
             }
 

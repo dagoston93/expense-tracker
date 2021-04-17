@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
-import com.diamont.expense.tracker.util.calendarToString
 import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
@@ -67,9 +66,6 @@ class PlanFragmentViewModel (
     private var incomePlans = mutableListOf<Plan>()
     private var expensePlans = mutableListOf<Plan>()
 
-    private val calendarStart = Calendar.getInstance()
-    private val calendarEnd = Calendar.getInstance()
-
     /**
      * Trigger this event when user clicks on an edit icon
      * by setting the plan id as the value.
@@ -100,17 +96,34 @@ class PlanFragmentViewModel (
          * Calculate next expected dates for plans
          */
         calculateNextExpectedDates(expensePlans)
+        calculateNextExpectedDates(incomePlans)
 
         val comparator = kotlin.Comparator{ plan1: Plan, plan2: Plan ->
             plan2.compareTo(plan1)
         }
 
         expensePlans.sortWith(comparator)
-
+        incomePlans.sortWith(comparator)
 
         /** Display expense plans */
         _plansToDisplay.value = expensePlans
+        displayMonthlyAndYearlyPlannedAmount(expensePlans)
 
+        /** TEST */
+//        calendarStart.set(Calendar.YEAR, 2008)
+//        calendarStart.set(Calendar.MONTH, Calendar.MARCH)
+//        calendarStart.set(Calendar.DAY_OF_MONTH, 6)
+//
+//        calendarEnd.set(Calendar.YEAR, 2038)
+//        calendarEnd.set(Calendar.MONTH, Calendar.APRIL)
+//        calendarEnd.set(Calendar.DAY_OF_MONTH, 30)
+//
+//        calculateTotalPlannedAmountWithinPeriod(expensePlans, calendarStart, calendarEnd)
+    }
+
+    private fun displayMonthlyAndYearlyPlannedAmount(planList: MutableList<Plan>) {
+        val calendarStart = Calendar.getInstance()
+        val calendarEnd = Calendar.getInstance()
         /**
          * Find first and last day of month
          */
@@ -128,7 +141,7 @@ class PlanFragmentViewModel (
          * Display monthly expenses
          */
         val monthlyTotal = calculateTotalPlannedAmountWithinPeriod(
-            expensePlans,
+            planList,
             calendarStart,
             calendarEnd
         )
@@ -149,22 +162,11 @@ class PlanFragmentViewModel (
          * Display yearly expenses
          */
         val yearlyTotal = calculateTotalPlannedAmountWithinPeriod(
-            expensePlans,
+            planList,
             calendarStart,
             calendarEnd
         )
         _totalYearlyString.value = decimalFormat?.format(yearlyTotal)
-
-        /** TEST */
-//        calendarStart.set(Calendar.YEAR, 2008)
-//        calendarStart.set(Calendar.MONTH, Calendar.MARCH)
-//        calendarStart.set(Calendar.DAY_OF_MONTH, 6)
-//
-//        calendarEnd.set(Calendar.YEAR, 2038)
-//        calendarEnd.set(Calendar.MONTH, Calendar.APRIL)
-//        calendarEnd.set(Calendar.DAY_OF_MONTH, 30)
-//
-//        calculateTotalPlannedAmountWithinPeriod(expensePlans, calendarStart, calendarEnd)
     }
 
     /**
@@ -218,12 +220,15 @@ class PlanFragmentViewModel (
                 TransactionFrequency.ONE_TIME -> {
                     if(currentPlan.nextExpectedDate in startDate.timeInMillis..endDate.timeInMillis){
                         total += plan.amount
+                        Log.d("GUS", "STA ${plan.amount}")
                     }
+                    Log.d("GUS", "STHHH ${plan.description}")
+
                 }
 
                 /** Weekly once */
                 TransactionFrequency.WEEKLY_ONCE -> {
-                    total += calculatePlanAmountForPeriod(
+                    total += calculateOneTimePlanAmountForPeriod(
                         currentPlan,
                         startDate,
                         endDate
@@ -236,7 +241,7 @@ class PlanFragmentViewModel (
                  * Fortnightly once
                  */
                 TransactionFrequency.FORTNIGHTLY_ONCE -> {
-                    total += calculatePlanAmountForPeriod(
+                    total += calculateOneTimePlanAmountForPeriod(
                         currentPlan,
                         startDate,
                         endDate
@@ -249,7 +254,7 @@ class PlanFragmentViewModel (
                  * Monthly once
                  */
                 TransactionFrequency.MONTHLY_ONCE -> {
-                    total += calculatePlanAmountForPeriod(
+                    total += calculateOneTimePlanAmountForPeriod(
                         currentPlan,
                         startDate,
                         endDate
@@ -262,7 +267,7 @@ class PlanFragmentViewModel (
                  * Yearly once
                  */
                 TransactionFrequency.YEARLY_ONCE ->{
-                    total += calculatePlanAmountForPeriod(
+                    total += calculateOneTimePlanAmountForPeriod(
                         currentPlan,
                         startDate,
                         endDate
@@ -307,7 +312,7 @@ class PlanFragmentViewModel (
                         /** Check if period is over before next date */
                         if(nextDate >= lastDate.timeInMillis){
                             /** If so calculate the amount for those few days*/
-                            total += calculateSubPeriodAmount(
+                            total += calculateSumTypePlanSubPeriodAmount(
                                 calendar.timeInMillis,
                                 lastDate.timeInMillis,
                                 plan.amount,
@@ -316,7 +321,7 @@ class PlanFragmentViewModel (
                             /** Calculate the amount and days between start date of period and the start of the first full week*/
                             var difference =  nextDate - calendar.timeInMillis
                             var days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
-                            total += calculateSubPeriodAmount(
+                            total += calculateSumTypePlanSubPeriodAmount(
                                 calendar.timeInMillis,
                                 nextDate,
                                 plan.amount,
@@ -372,12 +377,12 @@ class PlanFragmentViewModel (
 
                         /** Check if period is over before next date */
                         if(nextDate >= lastDate.timeInMillis){
-                            total += calculateSubPeriodAmount(calendar.timeInMillis, lastDate.timeInMillis, plan.amount, 14)
+                            total += calculateSumTypePlanSubPeriodAmount(calendar.timeInMillis, lastDate.timeInMillis, plan.amount, 14)
                         }else{
                             /** Calculate the amount and days between start date of period and the start of the first full fortnight*/
                             var difference =  nextDate - calendar.timeInMillis
                             var days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
-                            total += calculateSubPeriodAmount(calendar.timeInMillis, nextDate, plan.amount, 14)
+                            total += calculateSumTypePlanSubPeriodAmount(calendar.timeInMillis, nextDate, plan.amount, 14)
 
                             /** Calculate how many days left till end of period */
                             calendar.add(Calendar.DAY_OF_YEAR, days)
@@ -423,7 +428,7 @@ class PlanFragmentViewModel (
                                 && calendar.get(Calendar.YEAR) == cancellationDate.get(Calendar.YEAR)){
 
                                 /** If cancelled we add the correct amount than break the loop*/
-                                total += calculateSubPeriodAmount(
+                                total += calculateSumTypePlanSubPeriodAmount(
                                     calendar.timeInMillis,
                                     plan.cancellationDate,
                                     plan.amount,
@@ -437,7 +442,7 @@ class PlanFragmentViewModel (
                                     && calendar.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)){
 
                                     /** If over we add the correct amount than break the loop*/
-                                    total += calculateSubPeriodAmount(
+                                    total += calculateSumTypePlanSubPeriodAmount(
                                         calendar.timeInMillis,
                                         endDate.timeInMillis,
                                         plan.amount,
@@ -457,7 +462,7 @@ class PlanFragmentViewModel (
                                         endOfMonth.set(Calendar.SECOND, 59)
                                         endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH))
 
-                                        total += calculateSubPeriodAmount(
+                                        total += calculateSumTypePlanSubPeriodAmount(
                                             calendar.timeInMillis,
                                             endOfMonth.timeInMillis,
                                             plan.amount,
@@ -509,7 +514,7 @@ class PlanFragmentViewModel (
 
                         if(nextDate >= lastDate.timeInMillis){
                             /** If period is over before next full year starts we calculate amount for the shorter period */
-                            total += calculateSubPeriodAmount(
+                            total += calculateSumTypePlanSubPeriodAmount(
                                 calendar.timeInMillis,
                                 lastDate.timeInMillis,
                                 plan.amount,
@@ -517,7 +522,7 @@ class PlanFragmentViewModel (
                             )
                         }else{
                             /** Now calculate the amount for the days before the first full year */
-                            total += calculateSubPeriodAmount(
+                            total += calculateSumTypePlanSubPeriodAmount(
                                 calendar.timeInMillis,
                                 nextDate,
                                 plan.amount,
@@ -540,7 +545,7 @@ class PlanFragmentViewModel (
                             }
 
                             /** Now we add the amount for the remaining days till the end of period */
-                            total += calculateSubPeriodAmount(
+                            total += calculateSumTypePlanSubPeriodAmount(
                                 calendar.timeInMillis,
                                 lastDate.timeInMillis,
                                 plan.amount,
@@ -557,10 +562,14 @@ class PlanFragmentViewModel (
 
 
     /**
-     * Calculate sub-period amount
+     * Calculate sub-period amount for sum type plans
      */
-    /** TODO RENAME */
-    private fun calculateSubPeriodAmount(startOfSubPeriod: Long, endOfSubPeriod: Long, amountForFullPeriod: Float, daysInFullPeriod: Int): Float{
+    private fun calculateSumTypePlanSubPeriodAmount(
+        startOfSubPeriod: Long,
+        endOfSubPeriod: Long,
+        amountForFullPeriod: Float,
+        daysInFullPeriod: Int
+    ): Float{
         /** Calculate the amount for the shorter period */
         val difference = endOfSubPeriod - startOfSubPeriod
         val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
@@ -569,10 +578,9 @@ class PlanFragmentViewModel (
         return days.toFloat() * dailyAmount
     }
 
-    /** TODO rename to ONE TIME... */
     /**
      * This helper method calculates the planned amount of a single plan
-     * within the given period.
+     * within the given period for regular one time type plans.
      * We need this helper method because while calculating different periodic
      * plans, we would repeat a lot of code otherwise.
      *
@@ -582,7 +590,7 @@ class PlanFragmentViewModel (
      * @param nextDateCalculatorMethod A lambda that gives the next expected date of the plan.
      *
      */
-    private fun calculatePlanAmountForPeriod(
+    private fun calculateOneTimePlanAmountForPeriod(
         currentPlan: Plan,
         startDate: Calendar,
         endDate: Calendar,
@@ -846,7 +854,7 @@ class PlanFragmentViewModel (
      * @param tabPosition 0 if Expense tab selected,
      *                    1 if Income tab selected
      */
-    fun selectedTabChanged(tabPosition: Int){
+    fun onSelectedTabChanged(tabPosition: Int){
         if(tabPosition == 0){
             /**
              * Expense tab selected
@@ -854,6 +862,7 @@ class PlanFragmentViewModel (
             _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_expenses)
             _plansToDisplay.value = expensePlans
             _selectedPlanType.value = TransactionType.PLAN_EXPENSE
+            displayMonthlyAndYearlyPlannedAmount(expensePlans)
         }else{
             /**
              * Income tab selected
@@ -861,6 +870,7 @@ class PlanFragmentViewModel (
             _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_incomes)
             _plansToDisplay.value = incomePlans
             _selectedPlanType.value = TransactionType.PLAN_INCOME
+            displayMonthlyAndYearlyPlannedAmount(incomePlans)
         }
     }
 
@@ -918,84 +928,3 @@ class PlanFragmentViewModel (
         const val DAY_IN_MILLIS = 1000*24*60*60
     }
 }
-/*
-/** Only execute if plan wasn't cancelled before the given period */
-if(!(!plan.isStatusActive && plan.cancellationDate <= startDate.timeInMillis)){
-    Log.d("GUS", "Sum...")
-    val calendar = Calendar.getInstance()
-    val cancellationDate = Calendar.getInstance()
-
-    /** Set initial plan date to the later of the first date of the plan or the first date of period */
-    calendar.timeInMillis =
-        if(startDate.timeInMillis >= plan.firstExpectedDate) {
-            startDate.timeInMillis
-        }else{
-            plan.firstExpectedDate
-        }
-
-    //if(!plan.isStatusActive){
-    cancellationDate.timeInMillis = plan.cancellationDate
-    //}
-
-    Log.d("GUS", "plan: ${plan.description}")
-    Log.d("GUS", "period: ${Date(startDate.timeInMillis)} - ${Date(endDate.timeInMillis)}")
-    Log.d("GUS", "initial cal. date: ${Date(calendar.timeInMillis)}")
-    Log.d("GUS", "cancellation date: ${Date(cancellationDate.timeInMillis)}")
-
-
-    while(calendar.timeInMillis < endDate.timeInMillis) {
-        /**
-         * If next period is not a full month either because the date of cancellation
-         * or because of the given period we calculate the amount for the shorter period
-         * otherwise we add a full month
-         */
-        if (!plan.isStatusActive
-            && calendar.get(Calendar.MONTH) == cancellationDate.get(Calendar.MONTH)
-            && calendar.get(Calendar.YEAR) == cancellationDate.get(Calendar.YEAR)) {
-
-            /** Calculate the amount for the shorter period */
-            val difference = cancellationDate.timeInMillis - calendar.timeInMillis
-            val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
-            val dailyAmount = plan.amount / calendar.getActualMaximum(Calendar.MONTH)
-
-            total += days.toFloat() * dailyAmount
-        } else {
-            if (calendar.get(Calendar.MONTH) == endDate.get(Calendar.MONTH)
-                && calendar.get(Calendar.YEAR) == endDate.get(Calendar.MONTH)
-            ) {
-                /** Check if the last sub-period begins on the first day of the month*/
-                if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
-                    /** Add the amount for the full month */
-                    total += plan.amount
-                } else {
-                    /** Otherwise calculate amount for the shorter period. */
-                    val lastDayOfMonth = Calendar.getInstance()
-                    lastDayOfMonth.set(
-                        Calendar.DAY_OF_MONTH,
-                        calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-                    )
-
-                    val difference =
-                        lastDayOfMonth.timeInMillis - calendar.timeInMillis
-                    val days =
-                        TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
-                            .toInt()
-                    val dailyAmount =
-                        plan.amount / calendar.getActualMaximum(Calendar.MONTH)
-
-                    total += days.toFloat() * dailyAmount
-
-                    /** Now set the day of month to 1st */
-                    calendar.set(Calendar.DAY_OF_MONTH, 1)
-                }
-            }else{
-                /** Calculate the amount for the shorter period */
-                val difference = endDate.timeInMillis - calendar.timeInMillis
-                val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
-                val dailyAmount = plan.amount / calendar.getActualMaximum(Calendar.MONTH)
-            }
-
-            calendar.add(Calendar.MONTH, 1)
-        }
-    }
-}*/
