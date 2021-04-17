@@ -67,8 +67,6 @@ class PlanFragmentViewModel (
     private var incomePlans = mutableListOf<Plan>()
     private var expensePlans = mutableListOf<Plan>()
 
-
-
     private val calendarStart = Calendar.getInstance()
     private val calendarEnd = Calendar.getInstance()
 
@@ -205,15 +203,15 @@ class PlanFragmentViewModel (
 //        _totalYearlyString.value = decimalFormat?.format(yearlyTotal)
 
         /** TEST */
-        calendarStart.set(Calendar.YEAR, 2020)
+        calendarStart.set(Calendar.YEAR, 2022)
         calendarStart.set(Calendar.MONTH, Calendar.APRIL)
         calendarStart.set(Calendar.DAY_OF_MONTH, 13)
 
-        calendarEnd.set(Calendar.YEAR, 2021)
-        calendarEnd.set(Calendar.MONTH, Calendar.APRIL)
+        calendarEnd.set(Calendar.YEAR, 2030)
+        calendarEnd.set(Calendar.MONTH, Calendar.JULY)
         calendarEnd.set(Calendar.DAY_OF_MONTH, 10)
 
-        //calculateTotalPlannedAmountWithinPeriod(expensePlans, calendarStart, calendarEnd)
+        calculateTotalPlannedAmountWithinPeriod(expensePlans, calendarStart, calendarEnd)
 
         val x = calculateNextFortnightlyPlanDate(calendarEnd, calendarStart.timeInMillis)
         //Log.d("GUS", "Plan: ${Date(calendarStart.timeInMillis)}")
@@ -554,6 +552,117 @@ class PlanFragmentViewModel (
 //                        //Log.d("GUS", "Cancelled before start of period.")
 //                    }
 
+                }
+
+                /**
+                 * Yearly sum
+                 */
+                TransactionFrequency.YEARLY_SUM -> {
+//                    Log.d("GUS", "${plan.description} is yearly sum type")
+//                    Log.d("GUS", "")
+//
+//                    Log.d("GUS", "Checking period between:")
+//                    Log.d("GUS", "${calendarToString(startDate)} and ${calendarToString(endDate)}")
+//
+//                    if(!(!plan.isStatusActive && plan.cancellationDate < startDate.timeInMillis)){
+//                        Log.d("GUS", "Not cancelled before start of period.")
+//
+//                        val calendar = Calendar.getInstance()
+//                        val cancellationDate = Calendar.getInstance()
+//
+//                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
+//                        if(startDate.timeInMillis >= plan.firstExpectedDate) {
+//                            Log.d("GUS", "Period start date is later than first date of plan.")
+//                            calendar.timeInMillis = startDate.timeInMillis
+//                        }else{
+//                            Log.d("GUS", "First date of plan is later than period start date.")
+//                            calendar.timeInMillis = plan.firstExpectedDate
+//                        }
+//
+//                        cancellationDate.timeInMillis = plan.cancellationDate
+//
+//                        /** Calculate the last day of the required period */
+//                        val lastDate = Calendar.getInstance()
+//                        if(!plan.isStatusActive
+//                            && plan.cancellationDate <= endDate.timeInMillis){
+//                            Log.d("GUS", "plan cancelled before end of period")
+//                            lastDate.timeInMillis = plan.cancellationDate
+//                        }else{
+//                            Log.d("GUS", "plan is NOT cancelled before end of period")
+//                            lastDate.timeInMillis = endDate.timeInMillis
+//                        }
+//
+//                        Log.d("GUS", "Last date to check: ${calendarToString(lastDate)}")
+//
+//                        var nextDate = calculateNextYearlyPlanDate(calendar, plan.firstExpectedDate)
+//                        val c = Calendar.getInstance()
+//                        c.timeInMillis=nextDate
+//                        Log.d("GUS", "NextDate: ${calendarToString(c)}")
+//
+//                        if(nextDate >= lastDate.timeInMillis){
+//                            val difference =  lastDate.timeInMillis - calendar.timeInMillis
+//                            val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+//
+//                            Log.d("GUS", "This is a short period. Only $days days long.")
+//
+//                            val x = calculateSubPeriodAmount(
+//                                calendar.timeInMillis,
+//                                lastDate.timeInMillis,
+//                                plan.amount,
+//                                365)
+//
+//                            Log.d("GUS", "Added: $x")
+//                            total += x
+//
+//                        }else{
+//                            Log.d("GUS", "Period not over before next exp. date.")
+//
+//                            val difference =  nextDate - calendar.timeInMillis
+//                            val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+//
+//                            Log.d("GUS", "$days days left till beginning of first full year.")
+//
+//                            var x = calculateSubPeriodAmount(
+//                                calendar.timeInMillis,
+//                                nextDate,
+//                                plan.amount,
+//                                365)
+//
+//                            Log.d("GUS", "Added for this period: $x")
+//                            total += x
+//
+//                            calendar.timeInMillis = nextDate
+//                            calendar.add(Calendar.DAY_OF_YEAR, 1)
+//                            nextDate = calculateNextYearlyPlanDate(calendar, plan.firstExpectedDate)
+//
+//                            c.timeInMillis = nextDate
+//                            Log.d("GUS", "End of first full year: ${calendarToString(c)}")
+//
+//                            while(nextDate <= lastDate.timeInMillis){
+//                                Log.d("GUS", "next date is before last date -> Add full amount: ${plan.amount}")
+//
+//                                total += plan.amount
+//
+//                                calendar.timeInMillis = nextDate
+//                                calendar.add(Calendar.DAY_OF_YEAR, 1)
+//                                nextDate = calculateNextYearlyPlanDate(calendar, plan.firstExpectedDate)
+//                                calendar.add(Calendar.DAY_OF_YEAR, -1)
+//                                c.timeInMillis = nextDate
+//                                Log.d("GUS", "Next date(increased in while loop): ${calendarToString(c)}")
+//                            }
+//
+//                            Log.d("GUS", "While loop done. Now calculate the remaining days if any.")
+//
+//                            x = calculateSubPeriodAmount(
+//                                calendar.timeInMillis,
+//                                lastDate.timeInMillis,
+//                                plan.amount,
+//                                365)
+//
+//                            Log.d("GUS", "Added for this period: $x")
+//                            total += x
+//                        }
+//                    }
                 }
 
                 else -> {}
