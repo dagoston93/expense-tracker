@@ -24,6 +24,8 @@ import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+/** TODO add checks if period starts AFTER camcellation of plan! */
+
 class PlanFragmentViewModel (
     private val appContext: Application,
     private val databaseDao: TransactionDatabaseDao,
@@ -203,13 +205,13 @@ class PlanFragmentViewModel (
 //        _totalYearlyString.value = decimalFormat?.format(yearlyTotal)
 
         /** TEST */
-        calendarStart.set(Calendar.YEAR, 2022)
-        calendarStart.set(Calendar.MONTH, Calendar.APRIL)
-        calendarStart.set(Calendar.DAY_OF_MONTH, 13)
+        calendarStart.set(Calendar.YEAR, 2021)
+        calendarStart.set(Calendar.MONTH, Calendar.MARCH)
+        calendarStart.set(Calendar.DAY_OF_MONTH, 6)
 
-        calendarEnd.set(Calendar.YEAR, 2030)
-        calendarEnd.set(Calendar.MONTH, Calendar.JULY)
-        calendarEnd.set(Calendar.DAY_OF_MONTH, 10)
+        calendarEnd.set(Calendar.YEAR, 2021)
+        calendarEnd.set(Calendar.MONTH, Calendar.APRIL)
+        calendarEnd.set(Calendar.DAY_OF_MONTH, 30)
 
         calculateTotalPlannedAmountWithinPeriod(expensePlans, calendarStart, calendarEnd)
 
@@ -435,6 +437,111 @@ class PlanFragmentViewModel (
 //                        }
 //
 //                    }
+                }
+
+                /**
+                 * Fortnightly sum
+                 */
+                TransactionFrequency.FORTNIGHTLY_SUM -> {
+                    Log.d("GUS", "${plan.description} is forthnightly sum type")
+                    Log.d("GUS", "")
+
+                    Log.d("GUS", "Checking period between:")
+                    Log.d("GUS", "${calendarToString(startDate)} and ${calendarToString(endDate)}")
+
+                    if(!(!plan.isStatusActive && plan.cancellationDate < startDate.timeInMillis)) {
+                        Log.d("GUS", "Not cancelled before start of period.")
+
+                        val calendar = Calendar.getInstance()
+                        val cancellationDate = Calendar.getInstance()
+
+                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
+                        if (startDate.timeInMillis >= plan.firstExpectedDate) {
+                            Log.d("GUS", "Period start date is later than first date of plan.")
+                            calendar.timeInMillis = startDate.timeInMillis
+                        } else {
+                            Log.d("GUS", "First date of plan is later than period start date.")
+                            calendar.timeInMillis = plan.firstExpectedDate
+                        }
+
+                        cancellationDate.timeInMillis = plan.cancellationDate
+
+                        /** Calculate the last day of the required period */
+                        val lastDate = Calendar.getInstance()
+                        if (!plan.isStatusActive
+                            && plan.cancellationDate <= endDate.timeInMillis
+                        ) {
+                            Log.d("GUS", "plan cancelled before end of period")
+                            lastDate.timeInMillis = plan.cancellationDate
+                        } else {
+                            Log.d("GUS", "plan is NOT cancelled before end of period")
+                            lastDate.timeInMillis = endDate.timeInMillis
+                        }
+
+                        Log.d("GUS", "Last date to check: ${calendarToString(lastDate)}")
+
+                        var nextDate = calculateNextFortnightlyPlanDate(calendar, plan.firstExpectedDate)
+                        val c = Calendar.getInstance()
+                        c.timeInMillis = nextDate
+                        Log.d("GUS", "NextDate: ${calendarToString(c)}")
+
+                        /** Check if period is over before next date */
+                        if(nextDate >= lastDate.timeInMillis){
+                            val difference =  lastDate.timeInMillis - calendar.timeInMillis
+                            val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+
+                            Log.d("GUS", "This is a short period. Only $days days long.")
+
+                            val x = calculateSubPeriodAmount(
+                                calendar.timeInMillis,
+                                lastDate.timeInMillis,
+                                plan.amount,
+                                14)
+
+                            Log.d("GUS", "Added: $x")
+                            total += x
+
+                        }else{
+                            var difference =  nextDate - calendar.timeInMillis
+                            var days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+
+                            Log.d("GUS", "$days left till first full fortnight starts.")
+
+                            var x = calculateSubPeriodAmount(
+                                calendar.timeInMillis,
+                                nextDate,
+                                plan.amount,
+                                14)
+
+                            Log.d("GUS", "Added: $x")
+                            total += x
+
+                            calendar.add(Calendar.DAY_OF_YEAR, days)
+                            Log.d("GUS", "start full week calc from: ${calendarToString(calendar)}")
+
+                            difference = lastDate.timeInMillis - calendar.timeInMillis
+
+                            Log.d("GUS", "Diff: $difference")
+                            days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+
+                            Log.d("GUS", "Days to calculate full fortnights: $days")
+                            val fullFortnights = days / 14
+
+                            Log.d("GUS", "Full fortnights: $fullFortnights")
+
+                            total += fullFortnights * plan.amount
+                            Log.d("GUS", "Added: ${fullFortnights * plan.amount}")
+
+                            val remainingDays = days - ( fullFortnights * 14)
+
+                            Log.d("GUS", "Remaining days: $remainingDays")
+
+                            x = (plan.amount / 14) * remainingDays
+
+                            total += x
+                            Log.d("GUS", "Added: $x")
+                        }
+                    }
                 }
 
                 /**
@@ -664,8 +771,6 @@ class PlanFragmentViewModel (
 //                        }
 //                    }
                 }
-
-                else -> {}
 
 
 
