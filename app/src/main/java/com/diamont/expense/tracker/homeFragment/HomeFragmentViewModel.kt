@@ -6,10 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.diamont.expense.tracker.util.Currency
-import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
-import com.diamont.expense.tracker.util.KEY_PREF_INITIAL_CARD
-import com.diamont.expense.tracker.util.KEY_PREF_INITIAL_CASH
+import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import com.diamont.expense.tracker.util.enums.PaymentMethod
@@ -60,6 +57,9 @@ class HomeFragmentViewModel(
      * Set up some variables
      */
     private var transactionData = listOf<Transaction>()
+    private var calendars = CurrentCalendars()
+    private var transactionCalculator = TransactionCalculator(calendars)
+    private var planCalculator = PlanCalculator(calendars)
     private var currencyInUse: Currency? = null
     private var decimalFormat: DecimalFormat? = null
     private var initialCash: Float = 0f
@@ -86,7 +86,7 @@ class HomeFragmentViewModel(
     private fun getTransactionData(){
         uiScope.launch {
             transactionData = databaseDao.getAllTransactionsSuspend()
-            calculateBalance()
+            onTransactionDataReceived()
         }
     }
 
@@ -103,72 +103,19 @@ class HomeFragmentViewModel(
      * Call this method to get the initial balance
      */
     private fun getInitialBalance() {
-        initialCard = sharedPreferences.getFloat(KEY_PREF_INITIAL_CARD, 0f)
         initialCash = sharedPreferences.getFloat(KEY_PREF_INITIAL_CASH, 0f)
+        initialCard = sharedPreferences.getFloat(KEY_PREF_INITIAL_CARD, 0f)
+
+        transactionCalculator.setInitialBalance(initialCash, initialCard)
     }
 
     /**
-     * Call this method to calculate the balance
+     * Call this method after transaction data received
      */
-    private fun calculateBalance() {
-        /**
-         * If no transactions added yet, we simply set every value to 0
-         */
-        if(transactionData.isEmpty()){
-            _totalBalance.value = 0f
-            _totalCash.value = 0f
-            _totalCard.value = 0f
-        }else{
-            /** The required variables */
-            var total: Float = initialCard + initialCash
-            var cash: Float = initialCash
-            var card: Float = initialCard
-
-            /** Iterate through all transactions */
-            for(transaction in transactionData){
-                if(transaction.transactionType == TransactionType.EXPENSE){
-                    /**
-                     * Expense
-                     */
-                    total -= transaction.amount
-
-                    /** Check if it is cash or card */
-                    if(transaction.method == PaymentMethod.CARD){
-                        card -= transaction.amount
-                    }else{
-                        cash -= transaction.amount
-                    }
-                }else if(transaction.transactionType == TransactionType.INCOME){
-                    /**
-                     * Income
-                     */
-                    total += transaction.amount
-
-                    /** Check if it is cash or card */
-                    if(transaction.method == PaymentMethod.CARD){
-                        card += transaction.amount
-                    }else{
-                        cash += transaction.amount
-                    }
-                }else if(transaction.transactionType == TransactionType.DEPOSIT){
-                    /**
-                     * Deposit
-                     */
-                    cash -= transaction.amount
-                    card += transaction.amount
-                }else if(transaction.transactionType == TransactionType.WITHDRAW){
-                    /**
-                     * Withdrawal
-                     */
-                    cash += transaction.amount
-                    card -= transaction.amount
-                }
-            }
-
-            /** Update the live data */
-            _totalBalance.value = total
-            _totalCard.value = card
-            _totalCash.value = cash
-        }
+    private fun onTransactionDataReceived(){
+        transactionCalculator.setCurrentTransactionList(transactionData)
+        _totalCard.value = transactionCalculator.totalCard
+        _totalCash.value = transactionCalculator.totalCash
+        _totalBalance.value = transactionCalculator.totalBalance
     }
 }

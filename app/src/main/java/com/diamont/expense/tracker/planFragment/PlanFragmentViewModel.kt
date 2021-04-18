@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.Currency
+import com.diamont.expense.tracker.util.CurrentCalendars
 import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
 import com.diamont.expense.tracker.util.PlanCalculator
 import com.diamont.expense.tracker.util.database.Plan
@@ -67,7 +68,7 @@ class PlanFragmentViewModel (
 
     private var incomePlans = mutableListOf<Plan>()
     private var expensePlans = mutableListOf<Plan>()
-    private val planCalculator = PlanCalculator()
+    private val planCalculator = PlanCalculator(CurrentCalendars())
 
     /**
      * Trigger this event when user clicks on an edit icon

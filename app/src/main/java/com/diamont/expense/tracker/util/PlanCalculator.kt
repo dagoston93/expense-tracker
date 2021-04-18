@@ -7,50 +7,12 @@ import java.util.concurrent.TimeUnit
 import android.util.Log
 import com.diamont.expense.tracker.util.database.Transaction
 
-class PlanCalculator {
+class PlanCalculator(private val calendars: CurrentCalendars) {
 
     /**
      * The list of the plans we use for our calculations
      */
     private var planList = mutableListOf<Plan>()
-    private var transactionList = mutableListOf<Transaction>()
-
-    /**
-     * Get some calendar instances
-     */
-    private val calendarStartOfMonth = Calendar.getInstance()
-    private val calendarEndOfMonth = Calendar.getInstance()
-    private val calendarStartOfYear = Calendar.getInstance()
-    private val calendarEndOfYear = Calendar.getInstance()
-
-    init{
-        /**
-         * Find first and last day of month
-         */
-        calendarStartOfMonth.set(Calendar.HOUR, 0)
-        calendarStartOfMonth.set(Calendar.MINUTE, 0)
-        calendarStartOfMonth.set(Calendar.SECOND, 0)
-        calendarStartOfMonth.set(Calendar.DAY_OF_MONTH, 1)
-
-        calendarEndOfMonth.set(Calendar.HOUR, 23)
-        calendarEndOfMonth.set(Calendar.MINUTE, 59)
-        calendarEndOfMonth.set(Calendar.SECOND, 59)
-        calendarEndOfMonth.set(Calendar.DAY_OF_MONTH, calendarEndOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH))
-
-        /**
-         * Find first and last day of year
-         */
-        calendarStartOfYear.set(Calendar.HOUR, 0)
-        calendarStartOfYear.set(Calendar.MINUTE, 0)
-        calendarStartOfYear.set(Calendar.SECOND, 0)
-        calendarStartOfYear.set(Calendar.DAY_OF_MONTH, 1)
-        calendarStartOfYear.set(Calendar.MONTH, Calendar.JANUARY)
-
-        calendarEndOfYear.set(Calendar.HOUR, 23)
-        calendarEndOfYear.set(Calendar.MINUTE, 59)
-        calendarEndOfYear.set(Calendar.SECOND, 59)
-        calendarEndOfYear.set(Calendar.DAY_OF_YEAR, calendarEndOfYear.getActualMaximum(Calendar.DAY_OF_YEAR))
-    }
 
     /**
      * This method sets the list of plans we use
@@ -60,38 +22,7 @@ class PlanCalculator {
         calculateNextExpectedDates()
     }
 
-    /**
-     * This method sets the list of transactions we use
-     */
-    fun setCurrentTransactionList(list: MutableList<Transaction>){
-        transactionList = list
-        calculateNextExpectedDates()
-    }
 
-    /**
-     * Call this method to get total amount of transactions during a period
-     */
-    fun calculateTotalActualAmountWithinPeriod(startDate: Calendar, endDate: Calendar): Float{
-        var total: Float = 0f
-
-        /**
-         * Iterate through the list and add amount to total if within period
-         */
-        for(transaction in transactionList){
-            if(transaction.date in startDate.timeInMillis..endDate.timeInMillis){
-                total += transaction.amount
-            }
-        }
-
-        return total
-    }
-
-    /**
-     * Call this method to calculate the total actual amount this month
-     */
-    fun calculateTotalActualAmountCurrentMonth(): Float{
-        return calculateTotalActualAmountWithinPeriod(calendarStartOfMonth, calendarEndOfMonth)
-    }
 
     /**
      * Call this method to calculate total expenses/incomes within an interval
@@ -728,8 +659,8 @@ class PlanCalculator {
          * Return monthly expenses
          */
         return calculateTotalPlannedAmountWithinPeriod(
-            calendarStartOfMonth,
-            calendarEndOfMonth
+            calendars.calendarStartOfMonth,
+            calendars.calendarEndOfMonth
         )
     }
 
@@ -741,8 +672,8 @@ class PlanCalculator {
          * Return yearly expenses
          */
         return calculateTotalPlannedAmountWithinPeriod(
-            calendarStartOfYear,
-            calendarEndOfYear
+            calendars.calendarStartOfYear,
+            calendars.calendarEndOfYear
         )
     }
 
