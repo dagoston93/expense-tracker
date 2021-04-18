@@ -46,7 +46,12 @@ class TransactionCalculator(private val calendars: CurrentCalendars) {
     /**
      * Call this method to get total amount of transactions during a period
      */
-    fun calculateTotalActualAmountWithinPeriod(startDate: Calendar, endDate: Calendar): Float{
+    fun calculateTotalActualAmountWithinPeriod(
+        startDate: Calendar,
+        endDate: Calendar,
+        transactionType:TransactionType
+    ): Float{
+
         var total: Float = 0f
 
         /**
@@ -54,7 +59,9 @@ class TransactionCalculator(private val calendars: CurrentCalendars) {
          */
         for(transaction in transactionList){
             if(transaction.date in startDate.timeInMillis..endDate.timeInMillis){
-                total += transaction.amount
+                if(transaction.transactionType == transactionType) {
+                    total += transaction.amount
+                }
             }
         }
 
@@ -64,8 +71,12 @@ class TransactionCalculator(private val calendars: CurrentCalendars) {
     /**
      * Call this method to calculate the total actual amount this month
      */
-    fun calculateTotalActualAmountCurrentMonth(): Float{
-        return calculateTotalActualAmountWithinPeriod(calendars.calendarStartOfMonth, calendars.calendarEndOfMonth)
+    fun getCurrentMonthTotalActualAmount(transactionType:TransactionType): Float{
+        return calculateTotalActualAmountWithinPeriod(
+            calendars.calendarStartOfMonth,
+            calendars.calendarEndOfMonth,
+            transactionType
+        )
     }
 
     /**

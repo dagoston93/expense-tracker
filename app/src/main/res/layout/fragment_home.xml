@@ -155,7 +155,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:text="$1,000"
+                tools:text="$1,000"
+                android:text="@{viewModel.plannedMonthlyIncome}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView24"
                 app:layout_constraintStart_toEndOf="@+id/textView24" />
 
@@ -163,7 +164,8 @@
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$800"
+                tools:text="$800"
+                android:text="@{viewModel.totalMonthlyIncome}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView26"
                 app:layout_constraintEnd_toEndOf="@+id/textView25" />
 
@@ -174,7 +176,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 app:circularProgressBarForegroundColor="@color/colorGoalNotAchieved"
-                app:circularProgressBarProgress="80"
+                app:circularProgressBarProgress="@{viewModel.monthlyIncomeProgress}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -223,7 +225,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:text="$1,000"
+                tools:text="$1,000"
+                android:text="@{viewModel.plannedMonthlyExpense}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView27"
                 app:layout_constraintStart_toEndOf="@+id/textView27" />
 
@@ -231,7 +234,8 @@
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$800"
+                tools:text="$800"
+                android:text="@{viewModel.totalMonthlyExpense}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView28"
                 app:layout_constraintEnd_toEndOf="@+id/textView30" />
 
@@ -242,7 +246,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 app:circularProgressBarForegroundColor="@color/colorGoalAchieved"
-                app:circularProgressBarProgress="80"
+                app:circularProgressBarProgress="@{viewModel.monthlyExpenseProgress}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

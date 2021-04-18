@@ -8,7 +8,6 @@ import android.util.Log
 import com.diamont.expense.tracker.util.database.Transaction
 
 class PlanCalculator(private val calendars: CurrentCalendars) {
-
     /**
      * The list of the plans we use for our calculations
      */
@@ -21,8 +20,6 @@ class PlanCalculator(private val calendars: CurrentCalendars) {
         planList = list
         calculateNextExpectedDates()
     }
-
-
 
     /**
      * Call this method to calculate total expenses/incomes within an interval
