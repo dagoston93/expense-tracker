@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.diamont.expense.tracker.databinding.FragmentMainAppBinding
 import com.diamont.expense.tracker.util.KEY_BUNDLE_IS_TRANSACTION_TO_EDIT
 import com.diamont.expense.tracker.util.KEY_BUNDLE_TRANSACTION_ID
+import com.diamont.expense.tracker.util.hideSoftKeyboard
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 import com.diamont.expense.tracker.util.interfaces.BackPressHandlerFragment
 
@@ -118,8 +119,11 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
                     binding.coordLoBottomNav.animate()
                         .setDuration(duration)
                         .alpha(1f)
-                        .setListener(null)
-
+                        .setListener(object : AnimatorListenerAdapter(){
+                            override fun onAnimationEnd(animation: Animator?) {
+                                binding.fabAdd.show()
+                            }
+                        })
                 }else{
                     binding.coordLoBottomNav.isClickable = false
                     binding.coordLoBottomNav.animate()
@@ -128,10 +132,13 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
                         .setListener(object : AnimatorListenerAdapter(){
                             override fun onAnimationEnd(animation: Animator?) {
                                 binding.coordLoBottomNav.visibility = View.GONE
+                                binding.fabAdd.hide()
                             }
                         })
                 }
             }
+
+
         })
 
         /**
@@ -244,6 +251,11 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
     private fun navigateBack(){
         if(navController.previousBackStackEntry != null && navController.previousBackStackEntry?.destination != null)
         {
+            hideSoftKeyboard(requireActivity())
+            binding.bottomAppBar.fabCradleMargin = resources.getDimension(R.dimen.fab_cradle)
+            binding.bottomAppBar.fabCradleRoundedCornerRadius = resources.getDimension(R.dimen.fab_cradle)
+            binding.bottomAppBar.cradleVerticalOffset = resources.getDimension(R.dimen.fab_cradle)
+
             navigateWithAnimation(
                 navController.previousBackStackEntry?.destination?.id!!,
                 R.anim.anim_fade_in,

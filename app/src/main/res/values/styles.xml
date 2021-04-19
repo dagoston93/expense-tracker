@@ -68,9 +68,9 @@
 
     <!-- Style for the BottomAppBar -->
     <style name="Theme.ExpenseTracker.Widget.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
-        <item name="fabCradleMargin">10dp</item>
-        <item name="fabCradleRoundedCornerRadius">10dp</item>
-        <item name="fabCradleVerticalOffset">10dp</item>
+        <item name="fabCradleMargin">@dimen/fab_cradle</item>
+        <item name="fabCradleRoundedCornerRadius">@dimen/fab_cradle</item>
+        <item name="fabCradleVerticalOffset">@dimen/fab_cradle</item>
     </style>
 
     <!-- Text appearance for drawer layout title -->

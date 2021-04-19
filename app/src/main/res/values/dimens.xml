@@ -7,4 +7,5 @@
     <dimen name="cardCornerRadius">10dp</dimen>
     <dimen name="color_picker_color_size">40dp</dimen>
     <dimen name="color_picker_margin">4dp</dimen>
+    <dimen name="fab_cradle">10dp</dimen>
 </resources>
