@@ -159,4 +159,9 @@
     <string name="this_month">This month:</string>
     <string name="no">No</string>
 
+    <!-- Strings for AboutFragment -->
+    <string name="about_string">This app is an expense tracker application for Android devices.\n\nUsing this app enables you to keep track where all your money goes. You can set up a plan of your incomes and expenses, monitor and categorize your planned and unplanned expenses and incomes.\n\n This app is an open source project to practise my Android developing skills.\n\n Source code and license available at:</string>
+    <string name="github_link">https://github.com/dagoston93/expense-tracker</string>
+    <string name="created_by_string">\nCreated by: Agoston Diamont, 2021</string>
+
 </resources>

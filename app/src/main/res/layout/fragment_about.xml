@@ -43,8 +43,7 @@
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="This app is an expense tracker application for Android devices.\n\nUsing this app enables you to keep track where all your money goes. You can set up a plan of your incomes and expenses, monitor and categorize your planned and unplanned expenses and incomes.\n\n
-This app is an open source project to practise my Android developing skills.\n\n Source code and license available at:"
+                android:text="@string/about_string"
                 android:textAlignment="center" />
 
             <TextView
@@ -53,14 +52,14 @@ This app is an open source project to practise my Android developing skills.\n\n
                 android:autoLink="web"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="https://github.com/dagoston93/expense-tracker"
+                android:text="@string/github_link"
                 android:textAlignment="center" />
 
             <TextView
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\nCreated by: Agoston Diamont, 2021"
+                android:text="@string/created_by_string"
                 android:textAlignment="center" />
 
         </LinearLayout>

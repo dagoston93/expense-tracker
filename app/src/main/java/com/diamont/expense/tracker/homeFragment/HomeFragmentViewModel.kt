@@ -226,7 +226,6 @@ class HomeFragmentViewModel(
          * Calculate total savings before this month
          */
         _totalSavings.value = initialCard + initialCash + actualIncomesSoFar - actualExpensesSoFar
-
     }
 
     /**
