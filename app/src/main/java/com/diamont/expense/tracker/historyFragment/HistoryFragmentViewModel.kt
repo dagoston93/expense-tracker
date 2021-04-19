@@ -53,7 +53,6 @@ class HistoryFragmentViewModel(
      * Constructor
      */
     init{
-
         getTransactionData()
     }
 

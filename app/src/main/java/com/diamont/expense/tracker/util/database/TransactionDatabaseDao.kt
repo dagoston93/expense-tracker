@@ -38,7 +38,7 @@ interface TransactionDatabaseDao {
     /**
      * Get all transactions
      */
-    @Query("SELECT * FROM transaction_data ORDER BY date DESC")
+    @Query("SELECT * FROM transaction_data ORDER BY date, transaction_id DESC")
     fun getAllTransactions() : List<Transaction>
 
     /**
