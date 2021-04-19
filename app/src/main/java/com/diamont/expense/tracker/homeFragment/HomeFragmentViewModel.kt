@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.diamont.expense.tracker.util.*
+import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
@@ -17,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
+import java.util.*
 
 class HomeFragmentViewModel(
     private val appContext: Application,
@@ -68,6 +70,16 @@ class HomeFragmentViewModel(
     private val _monthlyExpenseProgress = MutableLiveData<Int>(0)
     val monthlyExpenseProgress: LiveData<Int>
         get() = _monthlyExpenseProgress
+
+    private val _plannedMonthlySavings = MutableLiveData<Float?>(null)
+    val plannedMonthlySavings: LiveData<String> = Transformations.map(_plannedMonthlySavings){
+        displayAmount(_plannedMonthlySavings.value)
+    }
+
+    private val _totalSavings = MutableLiveData<Float?>(null)
+    val totalSavings: LiveData<String> = Transformations.map(_totalSavings){
+        displayAmount(_totalSavings.value)
+    }
 
     /**
      * Set up some variables
@@ -136,23 +148,85 @@ class HomeFragmentViewModel(
      */
     private fun onTransactionDataReceived(){
         transactionCalculator.setCurrentTransactionList(transactionData)
+
+        /**
+         * Get the current balance
+         */
         _totalCard.value = transactionCalculator.totalCard
         _totalCash.value = transactionCalculator.totalCash
         _totalBalance.value = transactionCalculator.totalBalance
 
+        /**
+         * Get the planned and total expenses
+         */
         planCalculator.setCurrentPlanList(expensePlans)
         _plannedMonthlyExpense.value = planCalculator.getCurrentMonthTotalPlanAmount()
         _totalMonthlyExpense.value = transactionCalculator.getCurrentMonthTotalActualAmount(TransactionType.EXPENSE)
 
+        /**
+         * Get the planned and total incomes
+         */
         planCalculator.setCurrentPlanList(incomePlans)
         _plannedMonthlyIncome.value = planCalculator.getCurrentMonthTotalPlanAmount()
         _totalMonthlyIncome.value = transactionCalculator.getCurrentMonthTotalActualAmount(TransactionType.INCOME)
 
-        val incomePercentage = _totalMonthlyIncome.value!! /_plannedMonthlyIncome.value!!
-        val expensePercentage = _totalMonthlyExpense.value!! /_plannedMonthlyExpense.value!!
+        /**
+         * Calculate plan/total percentages
+         */
+        val incomePercentage = if(_plannedMonthlyIncome.value!! != 0f){
+            _totalMonthlyIncome.value!! /_plannedMonthlyIncome.value!!
+        }else{
+            0f
+        }
+
+        val expensePercentage = if(_plannedMonthlyExpense.value!! != 0f ){
+            _totalMonthlyExpense.value!! /_plannedMonthlyExpense.value!!
+        }else{
+            0f
+        }
 
         _monthlyIncomeProgress.value = (incomePercentage * 100).toInt()
         _monthlyExpenseProgress.value = (expensePercentage * 100).toInt()
+
+        /**
+         * Calculate planned monthly savings
+         */
+        _plannedMonthlySavings.value = _plannedMonthlyIncome.value!! - _plannedMonthlyExpense.value!!
+
+        /**
+         * Of first transaction and the date of the date of the day before the first day of this month
+         */
+        val startDate = Calendar.getInstance()
+        startDate.timeInMillis = transactionCalculator.getFirstTransactionDate()
+
+        val endDate = Calendar.getInstance()
+        endDate.timeInMillis = calendars.calendarStartOfMonth.timeInMillis
+
+        endDate.add(Calendar.DAY_OF_YEAR, -1)
+        endDate.set(Calendar.SECOND, 59)
+        endDate.set(Calendar.MINUTE, 59)
+        endDate.set(Calendar.HOUR, 23)
+
+        /**
+         * Get total incomes and expenses before this month
+         */
+        val actualIncomesSoFar = transactionCalculator.calculateTotalActualAmountWithinPeriod(
+            startDate,
+            endDate,
+            TransactionType.INCOME
+        )
+
+        val actualExpensesSoFar = transactionCalculator.calculateTotalActualAmountWithinPeriod(
+            startDate,
+            endDate,
+            TransactionType.EXPENSE
+        )
+
+        /**
+         * Calculate total savings before this month
+         */
+        _totalSavings.value = actualIncomesSoFar - actualExpensesSoFar
+
     }
 
     /**

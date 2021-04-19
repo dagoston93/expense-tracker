@@ -271,8 +271,8 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:id="@+id/textView32"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Planned this month:"
@@ -280,31 +280,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView31" />
 
             <TextView
-                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
-                android:id="@+id/textView33"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Possible this month:"
-                app:layout_constraintStart_toStartOf="@+id/textView32"
-                app:layout_constraintTop_toBottomOf="@+id/textView32" />
-
-            <TextView
                 android:id="@+id/textView34"
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="$1,000"
+                tools:text="$1,000"
+                android:text="@{viewModel.plannedMonthlySavings}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView32"
                 app:layout_constraintEnd_toEndOf="parent" />
-
-            <TextView
-                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$800"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView33"
-                app:layout_constraintEnd_toEndOf="@+id/textView34" />
 
             <TextView
                 android:id="@+id/textView35"
@@ -315,13 +299,14 @@
                 android:text="Savings so far:"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView32"
-                app:layout_constraintTop_toBottomOf="@+id/textView33" />
+                app:layout_constraintTop_toBottomOf="@+id/textView32" />
 
             <TextView
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$800"
+                tools:text="$800"
+                android:text="@{viewModel.totalSavings}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView35"
                 app:layout_constraintEnd_toEndOf="@+id/textView34" />
 

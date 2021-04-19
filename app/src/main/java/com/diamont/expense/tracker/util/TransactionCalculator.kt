@@ -144,4 +144,23 @@ class TransactionCalculator(private val calendars: CurrentCalendars) {
         }
     }
 
+    /**
+     * Call this method to get the first transaction date
+     */
+    fun getFirstTransactionDate(): Long{
+        var firstDate: Long = 0L
+
+        if(transactionList.isNotEmpty()){
+            firstDate = transactionList[0].date
+
+            for(transaction in transactionList)
+            {
+                if(transaction.date < firstDate){
+                    firstDate = transaction.date
+                }
+            }
+        }
+        return firstDate
+    }
+
 }
