@@ -46,5 +46,11 @@
         android:id="@+id/mainAppFragment"
         android:name="com.diamont.expense.tracker.MainAppFragment"
         android:label="fragment_main_app"
-        tools:layout="@layout/fragment_main_app" />
+        tools:layout="@layout/fragment_main_app" >
+        <action
+            android:id="@+id/action_mainAppFragment_to_initialSetupFragment"
+            app:destination="@id/initialSetupFragment"
+            app:enterAnim="@anim/anim_fade_in"
+            app:exitAnim="@anim/anim_fade_out" />
+    </fragment>
 </navigation>

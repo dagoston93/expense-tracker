@@ -9,9 +9,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
+import com.diamont.expense.tracker.MainActivityViewModel
+import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentAskFingerprintBinding
 import com.diamont.expense.tracker.databinding.FragmentCreatePinBinding
+import com.diamont.expense.tracker.util.database.TransactionDatabase
 
 
 class AskFingerprintFragment : Fragment() {
@@ -19,10 +22,19 @@ class AskFingerprintFragment : Fragment() {
     /** Data binding */
     private lateinit var binding: FragmentAskFingerprintBinding
 
-    /** Get our View Model */
-    private val viewModel: InitialSetupFragmentViewModel by activityViewModels {
-        InitialSetupFragmentViewModelFactory(
+    /** Get the Activity View Model */
+    private val activityViewModel : MainActivityViewModel by activityViewModels {
+        MainActivityViewModelFactory(
             requireNotNull(this.activity).application
+        )
+    }
+
+    /** Get our View Model */
+    private val viewModel : InitialSetupFragmentViewModel by activityViewModels {
+        InitialSetupFragmentViewModelFactory(
+            requireNotNull(this.activity).application,
+            activityViewModel.sharedPreferences,
+            TransactionDatabase.getInstance(requireNotNull(this.activity).application).transactionDatabaseDao
         )
     }
 

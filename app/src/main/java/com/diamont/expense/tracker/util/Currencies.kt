@@ -63,7 +63,7 @@ data class Currency(
         val availableCurrencies : List<Currency> = listOf(
             Currency(0,"USD", "$", "$#,###.00", ',', '.'),
             Currency(1,"GBP", "£", "£#,###.00", ',', '.'),
-            Currency(2,"HUF", "Ft", "# ### Ft", ' ', ','),
+            Currency(2,"HUF", "Ft", "#,### Ft", ' ', ','),
             Currency(3,"EUR", "€", "€#,###.00", ',', '.')
         )
     }

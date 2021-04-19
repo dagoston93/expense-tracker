@@ -9,8 +9,17 @@ import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.*
+import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-class InitialSetupFragmentViewModel(private val appContext: Application) : AndroidViewModel(appContext) {
+class InitialSetupFragmentViewModel(
+    private val appContext: Application,
+    private val sharedPreferences: SharedPreferences,
+    private val databaseDao: TransactionDatabaseDao
+) : AndroidViewModel(appContext) {
 
     /** Declare the required variables */
     private var isAuthenticationRequired : Boolean = false
@@ -27,8 +36,6 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     private var _isFingerprintSensorAvailable : Boolean = false
     val isFingerprintSensorAvailable : Boolean
         get() = _isFingerprintSensorAvailable
-
-    private var sharedPreferences : SharedPreferences
 
     /** Create some live data for ui to observe */
     private var _setOrConfirmPinStr = MutableLiveData<String>(appContext.getString(R.string.set_pin_code))
@@ -57,6 +64,12 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
     }
 
     /**
+     * Set up coroutine job and the scope
+     */
+    private var viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    /**
      * Constructor
      */
     init{
@@ -67,9 +80,6 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
          == BiometricManager.BIOMETRIC_SUCCESS){
             _isFingerprintSensorAvailable = true
         }
-
-        /** Get the shared prefs */
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
     }
 
     /**
@@ -136,7 +146,18 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
 
             apply()
         }
-        _isSetupProcessComplete = true
+
+        addDefaultCategories()
+    }
+
+    /**
+     * Call this method to add the default categories to the database
+     */
+    private fun addDefaultCategories(){
+        uiScope.launch {
+            databaseDao.addDefaultCategoriesSuspend(appContext)
+            _isSetupProcessComplete = true
+        }
     }
 
     /**
@@ -164,5 +185,14 @@ class InitialSetupFragmentViewModel(private val appContext: Application) : Andro
             _setOrConfirmPinStr.value = appContext.getString(R.string.confirm_pin_code)
             _isPinEntryErrorMessageVisible.value = false
         }
+    }
+
+    /**
+     * onCleared() is called when view model is destroyed
+     * in this case we need to cancel coroutines
+     */
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 }

@@ -1,10 +1,11 @@
 package com.diamont.expense.tracker.util.database
 
+import android.content.Context
 import androidx.room.Dao
-import android.util.Log
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -131,6 +132,12 @@ interface TransactionDatabaseDao {
     fun getAllSources() : List<String>
 
     /**
+     * Clear all second parties
+     */
+    @Query("DELETE FROM second_party_data")
+    fun clearSecondPartyData()
+
+    /**
      * Insert plan
      */
     @Insert(entity = Plan::class)
@@ -189,6 +196,12 @@ interface TransactionDatabaseDao {
      */
     @Query("SELECT * FROM plan_data WHERE id = :id LIMIT 1")
     fun getPlanById(id: Int) : Plan
+
+    /**
+     * Clear all plans
+     */
+    @Query("DELETE FROM plan_data")
+    fun clearPlanData()
 
     /**
      * * * * * * * * * SUSPEND FUNCTIONS * * * * * * * * * *
@@ -454,6 +467,37 @@ interface TransactionDatabaseDao {
         return withContext(Dispatchers.IO){
             val data: Long = getLastTransactionDateByPlanId(planId)
             data
+        }
+    }
+
+    /**
+     * Suspend function to clear all database
+     */
+    suspend fun clearDatabaseSuspend(){
+        return withContext(Dispatchers.IO){
+            clearTransactionDatabase()
+            clearCategoryDatabase()
+            clearPlanData()
+            clearSecondPartyData()
+        }
+    }
+
+    /**
+     * Suspend function to add default categories
+     */
+    suspend fun addDefaultCategoriesSuspend(context: Context){
+
+        val defaultCategories = listOf<TransactionCategory>(
+            TransactionCategory(0, context.getString(R.string.unspecified), R.color.category_color7),
+            TransactionCategory(0, context.getString(R.string.food), R.color.category_color1),
+            TransactionCategory(0, context.getString(R.string.rent), R.color.category_color2),
+            TransactionCategory(0, context.getString(R.string.car_costs), R.color.category_color3)
+        )
+
+        return withContext(Dispatchers.IO){
+            for(category in defaultCategories){
+                insertCategory(category)
+            }
         }
     }
 

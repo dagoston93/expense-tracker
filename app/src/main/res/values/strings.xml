@@ -149,6 +149,8 @@
     <string name="confirm_new_pin">Confirm new pin code</string>
     <string name="enter_pin_code">Enter pin code</string>
     <string name="create_pin_code">Create pin code</string>
+    <string name="reset_app">Reset application</string>
+    <string name="settings_reset_app_description">Clear all transactions, plans and categories, restore default categories and take you to the initial setup page.</string>
 
     <!-- Strings for Plan Fragment -->
     <string name="expenses">Expenses</string>
@@ -163,5 +165,13 @@
     <string name="about_string">This app is an expense tracker application for Android devices.\n\nUsing this app enables you to keep track where all your money goes. You can set up a plan of your incomes and expenses, monitor and categorize your planned and unplanned expenses and incomes.\n\n This app is an open source project to practise my Android developing skills.\n\n Source code and license available at:</string>
     <string name="github_link">https://github.com/dagoston93/expense-tracker</string>
     <string name="created_by_string">\nCreated by: Agoston Diamont, 2021</string>
+
+    <!-- Strings for the default categories -->
+    <string name="unspecified">Unspecified</string>
+    <string name="food">Food</string>
+    <string name="rent">Rent</string>
+    <string name="car_costs">Car costs</string>
+    <string name="confirm_clear_all_data">Are you sure you want to clear all the data from the application?\n\nAfter deleting, you will not be able to recover the data.</string>
+    <string name="clear_data_successful">All of your data has been deleted successfully.</string>
 
 </resources>
