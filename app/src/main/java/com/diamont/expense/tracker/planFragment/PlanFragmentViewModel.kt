@@ -184,9 +184,16 @@ class PlanFragmentViewModel (
     /**
      * Call this method when user clicks the delete button of a transaction
      */
-    fun deletePlan(planId: Int){
+    fun deletePlan(planId: Int, position: Int){
         uiScope.launch {
             databaseDao.deletePlanSuspend(planId)
+        }
+
+        /** Remove plan from our list as well */
+        if(_selectedPlanType.value == TransactionType.PLAN_EXPENSE){
+            expensePlans.removeAt(position)
+        }else{
+            incomePlans.removeAt(position)
         }
     }
 

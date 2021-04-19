@@ -93,7 +93,7 @@ abstract class TransactionDetailViewAdapter<T: TransactionDetailViewAdaptable>(
     }
 
     /** Show or hide the No Items... TextView */
-    fun setNoItemsTextViewVisibility(){
+    private fun setNoItemsTextViewVisibility(){
         if(items.isEmpty()){
             tvNoItems.visibility = View.VISIBLE
         }else{

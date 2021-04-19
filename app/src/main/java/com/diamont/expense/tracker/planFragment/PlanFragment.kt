@@ -138,7 +138,7 @@ class PlanFragment : Fragment() {
             ))
             .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
             .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
-                viewModel.deletePlan(id)
+                viewModel.deletePlan(id, position)
                 (binding.rvPlanList.adapter as PlanRecyclerViewAdapter).itemDeletedAtPos(position)
             }
             .show()
