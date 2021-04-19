@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.util.database
 
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.enums.PaymentMethod
@@ -15,9 +16,10 @@ import java.text.DecimalFormat
 class TransactionRecyclerViewAdapter(
     private val recyclerView: RecyclerView,
     private val decimalFormat: DecimalFormat,
+    tvNoItems: TextView,
     private val editIconCallback: (id: Int) -> Unit,
     private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, date: String, position: Int) -> Unit
-): TransactionDetailViewAdapter<Transaction>(recyclerView) {
+): TransactionDetailViewAdapter<Transaction>(recyclerView, tvNoItems) {
     /** We need a list of plans */
     var plans = listOf<Plan>()
 

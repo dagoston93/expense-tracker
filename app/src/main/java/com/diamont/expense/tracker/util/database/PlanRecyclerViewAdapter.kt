@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.util.database
 
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.enums.TransactionFrequency
@@ -15,10 +16,11 @@ import java.text.DecimalFormat
 class PlanRecyclerViewAdapter(
     private val recyclerView: RecyclerView,
     private val decimalFormat: DecimalFormat,
+    tvNoItems: TextView,
     private val editIconCallback: (id: Int) -> Unit,
     private val deleteIconCallback: (id: Int, description: String, typeStringId: Int, dateLabel: String, date: String, position: Int) -> Unit,
     private val cancelIconCallback: (id: Int, description: String, typeStringId: Int, date: String, position: Int) -> Unit
-): TransactionDetailViewAdapter<Plan>(recyclerView) {
+): TransactionDetailViewAdapter<Plan>(recyclerView, tvNoItems) {
 
     /**
      * This method is called by parent when view and item needs to be bound together

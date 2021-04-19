@@ -77,6 +77,7 @@ class PlanFragment : Fragment() {
         /** Set up the recycler view with the adapter */
         val adapter = PlanRecyclerViewAdapter(binding.rvPlanList,
             viewModel.decimalFormat ?: DecimalFormat(),
+            binding.tvPlansNoTransactions,
             { id ->
                viewModel.eventNavigateToEditFragment.value = id
             },

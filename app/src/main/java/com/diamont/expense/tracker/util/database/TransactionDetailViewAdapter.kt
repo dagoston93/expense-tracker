@@ -3,6 +3,7 @@ package com.diamont.expense.tracker.util.database
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
 import com.diamont.expense.tracker.R
@@ -15,14 +16,16 @@ import java.text.DecimalFormat
  * This abstract class helps to create recycler view adapters
  * for Transaction and Plan objects
  */
-abstract class TransactionDetailViewAdapter<T: TransactionDetailViewAdaptable>
-    (private val recyclerView: RecyclerView
+abstract class TransactionDetailViewAdapter<T: TransactionDetailViewAdaptable>(
+    private val recyclerView: RecyclerView,
+    private val tvNoItems: TextView
 ) : RecyclerView.Adapter<TransactionDetailViewAdapter.ViewHolder>() {
 
     var items  = mutableListOf<T>()
         set(value){
             field = value
             expandedPosition = -1
+            setNoItemsTextViewVisibility()
             notifyDataSetChanged()
         }
     var categories = listOf<TransactionCategory>()
@@ -85,7 +88,17 @@ abstract class TransactionDetailViewAdapter<T: TransactionDetailViewAdaptable>
         /** If item was deleted close the open view */
         expandedPosition = -1
         items.removeAt(position)
+        setNoItemsTextViewVisibility()
         notifyDataSetChanged()
+    }
+
+    /** Show or hide the No Items... TextView */
+    fun setNoItemsTextViewVisibility(){
+        if(items.isEmpty()){
+            tvNoItems.visibility = View.VISIBLE
+        }else{
+            tvNoItems.visibility = View.GONE
+        }
     }
 
     /**

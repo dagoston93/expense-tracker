@@ -69,6 +69,7 @@ class HistoryFragment : Fragment() {
         /** Set up the recycler view with the adapter */
         val adapter = TransactionRecyclerViewAdapter(binding.rvTransactionList,
             decimalFormat,
+            binding.tvHistoryNoTransactions,
             { id ->
                 viewModel.eventNavigateToEditFragment.value = id
             },

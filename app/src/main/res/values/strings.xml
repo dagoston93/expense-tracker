@@ -151,6 +151,9 @@
     <string name="create_pin_code">Create pin code</string>
     <string name="reset_app">Reset application</string>
     <string name="settings_reset_app_description">Clear all transactions, plans and categories, restore default categories and take you to the initial setup page.</string>
+    <string name="confirm_reset_app">Are you sure you want to reset the application?\n\nThis will delete all the data you have entered so far. After deleting, you will not be able to recover the data.</string>
+    <string name="clear_data_successful">All of your data has been deleted successfully.</string>
+    <string name="reset">Reset</string>
 
     <!-- Strings for Plan Fragment -->
     <string name="expenses">Expenses</string>
@@ -171,7 +174,8 @@
     <string name="food">Food</string>
     <string name="rent">Rent</string>
     <string name="car_costs">Car costs</string>
-    <string name="confirm_clear_all_data">Are you sure you want to clear all the data from the application?\n\nAfter deleting, you will not be able to recover the data.</string>
-    <string name="clear_data_successful">All of your data has been deleted successfully.</string>
 
+    <!-- Strings for the history fragment -->
+    <string name="no_transactions">No transactions have been added yet.</string>
+    <string name="no_plans">No plans have been added yet.</string>
 </resources>

@@ -139,9 +139,9 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
         binding.clSettingsResetApp.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.confirm_delete_dialog_title))
-                .setMessage(resources.getString(R.string.confirm_clear_all_data))
+                .setMessage(resources.getString(R.string.confirm_reset_app))
                 .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
-                .setPositiveButton(resources.getString(R.string.delete)) { _, _ ->
+                .setPositiveButton(resources.getString(R.string.reset)) { _, _ ->
                     resetApp()
                 }
                 .show()
