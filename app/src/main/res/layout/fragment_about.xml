@@ -1,17 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".aboutFragment.AboutFragment">
+        android:background="@color/background">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="About" />
+            android:orientation="vertical"
+            tools:context=".aboutFragment.AboutFragment"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/img_cash_card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.InitialSetupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textAlignment="center"
+                android:textColor="@color/primaryColor"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This app is an expense tracker application for Android devices.\n\nUsing this app enables you to keep track where all your money goes. You can set up a plan of your incomes and expenses, monitor and categorize your planned and unplanned expenses and incomes.\n\n
+This app is an open source project to practise my Android developing skills.\n\n Source code and license available at:"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/tvGitHubLink"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:autoLink="web"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="https://github.com/dagoston93/expense-tracker"
+                android:textAlignment="center" />
+
+            <TextView
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\nCreated by: Agoston Diamont, 2021"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </layout>
