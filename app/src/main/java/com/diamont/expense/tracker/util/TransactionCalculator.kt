@@ -87,9 +87,9 @@ class TransactionCalculator(private val calendars: CurrentCalendars) {
          * If no transactions added yet, we simply set every value to 0
          */
         if(transactionList.isEmpty()){
-            _totalBalance = 0f
-            _totalCash = 0f
-            _totalCard = 0f
+            _totalBalance = initialCard + initialCash
+            _totalCash = initialCash
+            _totalCard = initialCard
         }else{
             /** The required variables */
             var total: Float = initialCard + initialCash
