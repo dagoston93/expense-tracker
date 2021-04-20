@@ -17,6 +17,7 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentHistoryBinding
+import com.diamont.expense.tracker.historyFragment.filterDialogFragment.FilterDialogFragment
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
 import com.diamont.expense.tracker.util.database.*
@@ -74,7 +75,7 @@ class HistoryFragment : Fragment() {
         activityViewModel.defaultTransactionType = TransactionType.EXPENSE
 
         /**
-         * Get the decimal format the currency
+         * Get the decimal format of the currency
          */
         val currencyId = activityViewModel.sharedPreferences.getInt(KEY_PREF_CURRENCY_ID, 0)
         val decimalFormat = Currency.getDecimalFormat(currencyId) ?: DecimalFormat()
@@ -185,6 +186,29 @@ class HistoryFragment : Fragment() {
             binding.actvHistoryInterval.setAdapter(periodAdapter)
             binding.actvHistoryInterval.setText(periodAdapter.getItem(0).toString(), false)
         })
+
+        /**
+         * Add onClickListener to filter icon
+         */
+        binding.ivHistoryFilter.setOnClickListener {
+            FilterDialogFragment(
+                viewModel.categories.value!!,
+                viewModel.filterTransactionTypes,
+                viewModel.filterCategoryIds
+            ){filteredTransactionTypes, filteredCategoryIds, isFilterApplied ->
+                /** Pass filters to view model */
+                viewModel.onFiltersSelected(filteredTransactionTypes, filteredCategoryIds)
+
+                /** Change image view resource */
+                binding.ivHistoryFilter.setImageResource(
+                    if(isFilterApplied){
+                        R.drawable.ic_filter_filled
+                    }else{
+                        R.drawable.ic_filter_outline
+                    }
+                )
+            }.show(childFragmentManager, FilterDialogFragment.TAG)
+        }
 
         /** Return the inflated layout */
         return binding.root

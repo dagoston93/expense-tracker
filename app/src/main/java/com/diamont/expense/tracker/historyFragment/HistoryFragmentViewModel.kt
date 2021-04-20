@@ -6,11 +6,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.util.CurrentCalendars
+import com.diamont.expense.tracker.util.calendarToString
 import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import com.diamont.expense.tracker.util.enums.TransactionType
+import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -45,10 +48,23 @@ class HistoryFragmentViewModel(
     private var selectedIndex: Int? = 0
     private var calendarStartDate = Calendar.getInstance()
     private var calendarEndDate = Calendar.getInstance()
+    private var currentCalendars = CurrentCalendars()
 
-    private var filterTransactionTypes: MutableList<TransactionType> = mutableListOf()
-    private var filterCategoryIds: MutableList<Int> = mutableListOf()
+    /**
+     * The items in the filter list are going to be shown.
+     */
+    private var _filterTransactionTypes: MutableList<TransactionType> = mutableListOf(
+        TransactionType.EXPENSE,
+        TransactionType.INCOME,
+        TransactionType.WITHDRAW,
+        TransactionType.DEPOSIT
+    )
+    val  filterTransactionTypes: MutableList<TransactionType>
+        get() = _filterTransactionTypes
 
+    private var _filterCategoryIds: MutableList<Int> = mutableListOf()
+    val filterCategoryIds: MutableList<Int>
+        get() = _filterCategoryIds
     /**
      * Trigger this event when user clicks on an edit icon
      * by setting the transaction id as the value.
@@ -97,6 +113,68 @@ class HistoryFragmentViewModel(
 
         if(index != null){
             selectedIndex = index
+
+            when(selectedIndex){
+                /**
+                 * Current month selected
+                 */
+                IDX_CURRENT_MONTH -> {
+                    calendarStartDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
+                    calendarEndDate.timeInMillis = currentCalendars.calendarEndOfMonth.timeInMillis
+
+//                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+//                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                }
+
+                /**
+                 * This year selected
+                 */
+                IDX_THIS_YEAR -> {
+                    calendarStartDate.timeInMillis = currentCalendars.calendarStartOfYear.timeInMillis
+                    calendarEndDate.timeInMillis = currentCalendars.calendarEndOfYear.timeInMillis
+
+//                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+//                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                }
+
+                /**
+                 * Previous month selected
+                 */
+                IDX_PREVIOUS_MONTH -> {
+                    calendarStartDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
+                    calendarStartDate.add(Calendar.MONTH, -1)
+
+                    calendarEndDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
+                    calendarEndDate.add(Calendar.DAY_OF_YEAR, - 1)
+                    calendarEndDate.set(Calendar.SECOND, 59)
+                    calendarEndDate.set(Calendar.MINUTE, 59)
+                    calendarEndDate.set(Calendar.HOUR, 23)
+
+//                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+//                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                }
+
+                /**
+                 * Last 7 days selected
+                 */
+                IDX_LAST_SEVEN_DAYS -> {
+                    calendarEndDate.timeInMillis = MaterialDatePicker.todayInUtcMilliseconds()
+                    calendarEndDate.set(Calendar.SECOND, 59)
+                    calendarEndDate.set(Calendar.MINUTE, 59)
+                    calendarEndDate.set(Calendar.HOUR, 23)
+
+                    calendarStartDate.timeInMillis = calendarEndDate.timeInMillis
+                    calendarStartDate.add(Calendar.DAY_OF_YEAR, -7)
+                    calendarStartDate.set(Calendar.SECOND, 0)
+                    calendarStartDate.set(Calendar.MINUTE, 0)
+                    calendarStartDate.set(Calendar.HOUR, 0)
+
+//                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+//                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                }
+            }
+
+
             filterTransactionList()
         }else{
             selectedIndex = IDX_DATE_RANGE
@@ -119,6 +197,19 @@ class HistoryFragmentViewModel(
     }
 
     /**
+     * Call this method if user selects filter
+     */
+    fun onFiltersSelected(
+        transactionTypes: MutableList<TransactionType>,
+        categoryIds: MutableList<Int>
+    ){
+        _filterTransactionTypes = transactionTypes
+        _filterCategoryIds = categoryIds
+
+        filterTransactionList()
+    }
+
+    /**
      * Call this method to filter the list
      */
     private fun filterTransactionList(){
@@ -134,23 +225,30 @@ class HistoryFragmentViewModel(
             }
 
             /** Check the category filters */
-            if(filterCategoryIds.isNotEmpty()){
-                if(!filterCategoryIds.contains(it.categoryId)){
-                    isItemDisplayed = false
-                }
+            if(!_filterCategoryIds.contains(it.categoryId)){
+                isItemDisplayed = false
             }
 
             /** Check transaction type filters */
-            if(filterTransactionTypes.isNotEmpty()){
-                if(!filterTransactionTypes.contains(it.transactionType)){
-                    isItemDisplayed = false
-                }
+            if(!_filterTransactionTypes.contains(it.transactionType)){
+                isItemDisplayed = false
             }
 
             isItemDisplayed
         }
 
         _transactionDataToDisplay.value = filteredTransactionData
+    }
+
+    /**
+     * Call this method when data from database received
+     */
+    private fun onDataReceived(){
+        _transactionDataToDisplay.value = transactionData
+
+        for(category in _categories.value!!){
+            _filterCategoryIds.add(category.categoryId)
+        }
     }
 
     /**
@@ -161,7 +259,7 @@ class HistoryFragmentViewModel(
             _categories.value = databaseDao.getCategoriesSuspend()
             _plans.value = databaseDao.getAllPlansSuspend()
             transactionData = databaseDao.getAllTransactionsSuspend()
-            _transactionDataToDisplay.value = transactionData
+            onDataReceived()
         }
     }
 

@@ -184,5 +184,10 @@
     <string name="previous_month">Previous month</string>
     <string name="this_year">This year</string>
     <string name="select_period">Select period</string>
+    <string name="categories">Categories:</string>
+    <string name="all">All</string>
+    <string name="transaction_types">Transaction types:</string>
+    <string name="filters">Filters</string>
+    <string name="filter">Filter</string>
 
 </resources>
