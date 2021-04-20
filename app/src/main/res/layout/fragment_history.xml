@@ -19,19 +19,19 @@
             android:paddingBottom="8dp">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilHistoryInterval"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/bg_card"
+                android:hint="@string/period"
+                android:visibility="visible"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusBottomStart="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
-                app:boxCornerRadiusTopStart="15dp"
-                android:id="@+id/tilHistoryInterval"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:hint="Interval"
-                android:visibility="visible">
+                app:boxCornerRadiusTopStart="15dp">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvHistoryInterval"
@@ -44,11 +44,11 @@
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:src="@drawable/ic_filter_outline"
-                app:tint="@color/white"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"/>
+                android:src="@drawable/ic_filter_outline"
+                app:tint="@color/white" />
 
         </LinearLayout>
 

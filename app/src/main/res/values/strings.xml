@@ -160,9 +160,10 @@
     <string name="incomes">Incomes</string>
     <string name="total_planned_expenses">Total planned expenses</string>
     <string name="total_planned_incomes">Total planned incomes</string>
-    <string name="this_year">This year:</string>
+    <string name="this_year_colon">This year:</string>
     <string name="this_month">This month:</string>
     <string name="no">No</string>
+    <string name="no_plans">No plans have been added yet.</string>
 
     <!-- Strings for AboutFragment -->
     <string name="about_string">This app is an expense tracker application for Android devices.\n\nUsing this app enables you to keep track where all your money goes. You can set up a plan of your incomes and expenses, monitor and categorize your planned and unplanned expenses and incomes.\n\n This app is an open source project to practise my Android developing skills.\n\n Source code and license available at:</string>
@@ -177,5 +178,11 @@
 
     <!-- Strings for the history fragment -->
     <string name="no_transactions">No transactions have been added yet.</string>
-    <string name="no_plans">No plans have been added yet.</string>
+    <string name="all_transactions">All transactions</string>
+    <string name="current_month">Current month</string>
+    <string name="last_seven_days">Last 7 days</string>
+    <string name="previous_month">Previous month</string>
+    <string name="this_year">This year</string>
+    <string name="select_period">Select period</string>
+
 </resources>
