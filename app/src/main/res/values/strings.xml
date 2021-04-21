@@ -190,5 +190,8 @@
     <string name="filters">Filters</string>
     <string name="filter">Filter</string>
     <string name="statistic_type">Statistic type:</string>
+    <string name="incomes_and_expenses">Incomes and expenses</string>
+    <string name="by_categories">By categories</string>
+    <string name="plans">Plans</string>
 
 </resources>

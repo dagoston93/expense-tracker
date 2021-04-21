@@ -2,7 +2,6 @@ package com.diamont.expense.tracker.historyFragment
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,20 +24,11 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.DecimalFormat
 
-class HistoryFragment : Fragment(), DateRangeSelectorFragment {
+class HistoryFragment : DateRangeSelectorFragment() {
     /** Data binding and view model */
     private lateinit var binding : FragmentHistoryBinding
-    override lateinit var interfaceViewModel: DateRangeSelectorFragmentViewModel
+    override lateinit var baseClassViewModel: DateRangeSelectorFragmentViewModel
     private lateinit var viewModel: HistoryFragmentViewModel
-
-    /** Array adapter for period list */
-    private lateinit var periodAdapter : ArrayAdapter<String>
-
-    /** Variables for the selected date range */
-    private var previousSelectedIndex: Int? = 0
-    private var previousSelectedStartDate: Long = 0
-    private var previousSelectedEndDate: Long = 0
-
 
     /** Get the Activity View Model */
     private val activityViewModel : MainActivityViewModel by activityViewModels {
@@ -65,9 +55,10 @@ class HistoryFragment : Fragment(), DateRangeSelectorFragment {
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
         val viewModelFactory = HistoryFragmentViewModelFactory(application, databaseDao)
 
-        interfaceViewModel = ViewModelProvider(this, viewModelFactory)
+        baseClassViewModel = ViewModelProvider(this, viewModelFactory)
             .get(HistoryFragmentViewModel::class.java)
-        viewModel = interfaceViewModel as HistoryFragmentViewModel
+
+        viewModel = baseClassViewModel as HistoryFragmentViewModel
 
         /** Set up values for activity view model */
         activityViewModel.setTitle(getString(R.string.history))
@@ -102,61 +93,10 @@ class HistoryFragment : Fragment(), DateRangeSelectorFragment {
         /**
          * Add text changed listener for the period dropdown
          */
-        binding.actvHistoryInterval.addTextChangedListener {
-            val idx = binding.actvHistoryInterval.getStringListIndexFromText(viewModel.periodStringList.value ?: listOf<String>())
+        binding.actvHistoryPeriod.addTextChangedListener {
+            val idx = binding.actvHistoryPeriod.getStringListIndexFromText(viewModel.periodStringList.value ?: listOf<String>())
 
-            if(idx != previousSelectedIndex) {
-
-                if (idx == viewModel.periodStringList.value?.size!! - 1) {
-                    /**
-                     * Create the date picker
-                     */
-                    val datePickerBuilder =
-                        MaterialDatePicker.Builder.dateRangePicker()
-                            .setTitleText(resources.getString(R.string.select_period))
-
-                    /**
-                     * If user has selected a date range before, we remember the selection
-                     */
-                    if(previousSelectedStartDate != 0L && previousSelectedEndDate != 0L){
-                        datePickerBuilder.setSelection(
-                            Pair(
-                                previousSelectedStartDate,
-                                previousSelectedEndDate
-                            )
-                        )
-                    }
-
-                    val datePicker = datePickerBuilder.build()
-
-                    /**
-                     * OnClickListener for the date picker OK button
-                     */
-                    datePicker.addOnPositiveButtonClickListener {
-                        viewModel.onDateRangeSelected(it.first, it.second)
-                        previousSelectedStartDate = it.first ?: 0
-                        previousSelectedEndDate = it.second ?: 0
-
-                        val rangeString = "${formatDate(previousSelectedStartDate)} - ${formatDate(previousSelectedEndDate)}"
-                        binding.actvHistoryInterval.setText(rangeString, false)
-                    }
-
-                    datePicker.addOnCancelListener {
-                        resetSelection()
-                    }
-
-                    datePicker.addOnNegativeButtonClickListener {
-                        resetSelection()
-                    }
-
-                    datePicker.show(childFragmentManager, "")
-
-                    Log.d("GUS", "Show date range picker...")
-                } else {
-                    previousSelectedIndex = idx
-                    viewModel.onPeriodDropdownItemSelected(idx)
-                }
-            }
+            onDateRangeSelected(idx, binding.actvHistoryPeriod)
         }
 
         /** Observe the data and refresh recycler view if it changes */
@@ -185,8 +125,8 @@ class HistoryFragment : Fragment(), DateRangeSelectorFragment {
          */
         viewModel.periodStringList.observe(viewLifecycleOwner, Observer {
             periodAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, it)
-            binding.actvHistoryInterval.setAdapter(periodAdapter)
-            binding.actvHistoryInterval.setText(periodAdapter.getItem(0).toString(), false)
+            binding.actvHistoryPeriod.setAdapter(periodAdapter)
+            binding.actvHistoryPeriod.setText(periodAdapter.getItem(0).toString(), false)
         })
 
         /**
@@ -236,34 +176,12 @@ class HistoryFragment : Fragment(), DateRangeSelectorFragment {
     }
 
     /**
-     * Call this method if material date picker was cancelled
-     */
-    private fun resetSelection(){
-        /** If previous index is not null we need to select that item*/
-        if(previousSelectedIndex!= null) {
-            binding.actvHistoryInterval.setText(periodAdapter.getItem(previousSelectedIndex!!).toString(), false)
-        }else{
-            /** If it is null, we need to set the text to the prev. date range */
-            val rangeString = "${formatDate(previousSelectedStartDate)} - ${formatDate(previousSelectedEndDate)}"
-            binding.actvHistoryInterval.setText(rangeString, false)
-        }
-    }
-
-    /**
-     * Call this method to format a date
-     */
-    private fun formatDate(date: Long): String{
-        val dateFormat = android.text.format.DateFormat.getDateFormat(context)
-        return dateFormat.format(date)
-    }
-
-    /**
      * We fill the dropdown menus in onResume() so that
      * if device configuration is changed we don't loose the
      * items from the menu
      */
     override fun onResume() {
-        binding.actvHistoryInterval.setAdapter(periodAdapter)
+        binding.actvHistoryPeriod.setAdapter(periodAdapter)
 
         super.onResume()
     }

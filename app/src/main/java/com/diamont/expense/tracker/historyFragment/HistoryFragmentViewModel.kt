@@ -2,26 +2,20 @@ package com.diamont.expense.tracker.historyFragment
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.diamont.expense.tracker.R
-import com.diamont.expense.tracker.util.CurrentCalendars
 import com.diamont.expense.tracker.util.DateRangeSelectorFragmentViewModel
-import com.diamont.expense.tracker.util.calendarToString
 import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import com.diamont.expense.tracker.util.enums.TransactionType
-import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.*
-import java.util.*
 
 class HistoryFragmentViewModel(
     private val appContext: Application,
     private val databaseDao: TransactionDatabaseDao
-) : AndroidViewModel(appContext), DateRangeSelectorFragmentViewModel {
+) : DateRangeSelectorFragmentViewModel(appContext) {
 
     /**
      * Set up some live data
@@ -38,19 +32,11 @@ class HistoryFragmentViewModel(
     val plans : LiveData<List<Plan>>
         get() = _plans
 
-    private val _periodStringList = MutableLiveData<List<String>>(listOf<String>())
-    val periodStringList : LiveData<List<String>>
-        get() = _periodStringList
-
     /**
      * Declare some variables
      */
     private var transactionData : List<Transaction> = listOf<Transaction>()
     private var filteredTransactionData : List<Transaction> = mutableListOf<Transaction>()
-    private var selectedIndex: Int? = 0
-    private var calendarStartDate = Calendar.getInstance()
-    private var calendarEndDate = Calendar.getInstance()
-    private var currentCalendars = CurrentCalendars()
 
     /**
      * The items in the filter list are going to be shown.
@@ -87,114 +73,7 @@ class HistoryFragmentViewModel(
     init{
         getTransactionData()
 
-        /** Set up the array adapter */
-        _periodStringList.value = listOf(
-            appContext.resources.getString(R.string.whole_period),
-            appContext.resources.getString(R.string.current_month),
-            appContext.resources.getString(R.string.last_seven_days),
-            appContext.resources.getString(R.string.previous_month),
-            appContext.resources.getString(R.string.this_year),
-            appContext.resources.getString(R.string.select_period)
-        )
-    }
 
-    companion object{
-        const val IDX_WHOLE_PERIOD: Int = 0
-        const val IDX_CURRENT_MONTH: Int = 1
-        const val IDX_LAST_SEVEN_DAYS: Int = 2
-        const val IDX_PREVIOUS_MONTH: Int = 3
-        const val IDX_THIS_YEAR: Int = 4
-        const val IDX_DATE_RANGE: Int = 5
-    }
-
-    /**
-     * Call this method if user selects an option from the dropdown menu
-     */
-    fun onPeriodDropdownItemSelected(index: Int?){
-        Log.d("GUS", "item: $index")
-
-        if(index != null){
-            selectedIndex = index
-
-            when(selectedIndex){
-                /**
-                 * Current month selected
-                 */
-                IDX_CURRENT_MONTH -> {
-                    calendarStartDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
-                    calendarEndDate.timeInMillis = currentCalendars.calendarEndOfMonth.timeInMillis
-
-                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
-                }
-
-                /**
-                 * This year selected
-                 */
-                IDX_THIS_YEAR -> {
-                    calendarStartDate.timeInMillis = currentCalendars.calendarStartOfYear.timeInMillis
-                    calendarEndDate.timeInMillis = currentCalendars.calendarEndOfYear.timeInMillis
-
-                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
-                }
-
-                /**
-                 * Previous month selected
-                 */
-                IDX_PREVIOUS_MONTH -> {
-                    calendarStartDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
-                    calendarStartDate.add(Calendar.MONTH, -1)
-
-                    calendarEndDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
-                    calendarEndDate.add(Calendar.DAY_OF_YEAR, - 1)
-                    calendarEndDate.set(Calendar.SECOND, 59)
-                    calendarEndDate.set(Calendar.MINUTE, 59)
-                    calendarEndDate.set(Calendar.HOUR, 23)
-
-                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
-                }
-
-                /**
-                 * Last 7 days selected
-                 */
-                IDX_LAST_SEVEN_DAYS -> {
-                    calendarEndDate.timeInMillis = MaterialDatePicker.todayInUtcMilliseconds()
-                    calendarEndDate.set(Calendar.SECOND, 59)
-                    calendarEndDate.set(Calendar.MINUTE, 59)
-                    calendarEndDate.set(Calendar.HOUR, 23)
-
-                    calendarStartDate.timeInMillis = calendarEndDate.timeInMillis
-                    calendarStartDate.add(Calendar.DAY_OF_YEAR, -7)
-                    calendarStartDate.set(Calendar.SECOND, 0)
-                    calendarStartDate.set(Calendar.MINUTE, 0)
-                    calendarStartDate.set(Calendar.HOUR, 0)
-
-                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
-                }
-            }
-
-            filterTransactionList()
-        }else{
-            selectedIndex = IDX_DATE_RANGE
-        }
-    }
-
-    /**
-     * Call this method if user selects a date range
-     */
-    fun onDateRangeSelected(startDate: Long?, endDate: Long?){
-        Log.d("GUS", "date range picked: $startDate, $endDate")
-
-        if(startDate != null && endDate != null) {
-            calendarStartDate.timeInMillis = startDate
-            calendarEndDate.timeInMillis = endDate
-        }
-
-        selectedIndex = IDX_DATE_RANGE
-        filterTransactionList()
     }
 
     /**
@@ -207,19 +86,19 @@ class HistoryFragmentViewModel(
         _filterTransactionTypes = transactionTypes
         _filterCategoryIds = categoryIds
 
-        filterTransactionList()
+        filterItems()
     }
 
     /**
      * Call this method to filter the list
      */
-    private fun filterTransactionList(){
+    override fun filterItems(){
         Log.d("GUS", "filtering...")
         filteredTransactionData = transactionData.filter{
             var isItemDisplayed = true
 
             /** Check if item is within date range */
-            if(selectedIndex != IDX_WHOLE_PERIOD) {
+            if(selectedPeriodIndex != IDX_WHOLE_PERIOD) {
                 if (it.date !in calendarStartDate.timeInMillis..calendarEndDate.timeInMillis) {
                     isItemDisplayed = false
                 }
