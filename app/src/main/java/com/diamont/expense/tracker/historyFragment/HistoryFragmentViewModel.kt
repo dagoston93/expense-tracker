@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.CurrentCalendars
-import com.diamont.expense.tracker.util.calendarToString
 import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
@@ -87,7 +86,7 @@ class HistoryFragmentViewModel(
 
         /** Set up the array adapter */
         _periodStringList.value = listOf(
-            appContext.resources.getString(R.string.all_transactions),
+            appContext.resources.getString(R.string.whole_period),
             appContext.resources.getString(R.string.current_month),
             appContext.resources.getString(R.string.last_seven_days),
             appContext.resources.getString(R.string.previous_month),
@@ -97,7 +96,7 @@ class HistoryFragmentViewModel(
     }
 
     companion object{
-        const val IDX_ALL_TRANSACTIONS: Int = 0
+        const val IDX_WHOLE_PERIOD: Int = 0
         const val IDX_CURRENT_MONTH: Int = 1
         const val IDX_LAST_SEVEN_DAYS: Int = 2
         const val IDX_PREVIOUS_MONTH: Int = 3
@@ -218,7 +217,7 @@ class HistoryFragmentViewModel(
             var isItemDisplayed = true
 
             /** Check if item is within date range */
-            if(selectedIndex != IDX_ALL_TRANSACTIONS) {
+            if(selectedIndex != IDX_WHOLE_PERIOD) {
                 if (it.date !in calendarStartDate.timeInMillis..calendarEndDate.timeInMillis) {
                     isItemDisplayed = false
                 }

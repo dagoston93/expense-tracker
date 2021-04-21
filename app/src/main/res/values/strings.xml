@@ -177,8 +177,8 @@
     <string name="car_costs">Car costs</string>
 
     <!-- Strings for the history fragment -->
-    <string name="no_transactions">No transactions have been added yet.</string>
-    <string name="all_transactions">All transactions</string>
+    <string name="no_transactions">No transactions have been found.</string>
+    <string name="whole_period">Whole period</string>
     <string name="current_month">Current month</string>
     <string name="last_seven_days">Last 7 days</string>
     <string name="previous_month">Previous month</string>
