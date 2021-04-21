@@ -189,5 +189,6 @@
     <string name="transaction_types">Transaction types:</string>
     <string name="filters">Filters</string>
     <string name="filter">Filter</string>
+    <string name="statistic_type">Statistic type:</string>
 
 </resources>

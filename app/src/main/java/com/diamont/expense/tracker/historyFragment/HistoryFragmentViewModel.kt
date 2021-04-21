@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.CurrentCalendars
+import com.diamont.expense.tracker.util.DateRangeSelectorFragmentViewModel
+import com.diamont.expense.tracker.util.calendarToString
 import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.Transaction
 import com.diamont.expense.tracker.util.database.TransactionCategory
@@ -18,7 +20,8 @@ import java.util.*
 
 class HistoryFragmentViewModel(
     private val appContext: Application,
-    private val databaseDao: TransactionDatabaseDao) : AndroidViewModel(appContext) {
+    private val databaseDao: TransactionDatabaseDao
+) : AndroidViewModel(appContext), DateRangeSelectorFragmentViewModel {
 
     /**
      * Set up some live data
@@ -121,8 +124,8 @@ class HistoryFragmentViewModel(
                     calendarStartDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
                     calendarEndDate.timeInMillis = currentCalendars.calendarEndOfMonth.timeInMillis
 
-//                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-//                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
                 }
 
                 /**
@@ -132,8 +135,8 @@ class HistoryFragmentViewModel(
                     calendarStartDate.timeInMillis = currentCalendars.calendarStartOfYear.timeInMillis
                     calendarEndDate.timeInMillis = currentCalendars.calendarEndOfYear.timeInMillis
 
-//                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-//                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
                 }
 
                 /**
@@ -149,8 +152,8 @@ class HistoryFragmentViewModel(
                     calendarEndDate.set(Calendar.MINUTE, 59)
                     calendarEndDate.set(Calendar.HOUR, 23)
 
-//                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-//                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
                 }
 
                 /**
@@ -168,11 +171,10 @@ class HistoryFragmentViewModel(
                     calendarStartDate.set(Calendar.MINUTE, 0)
                     calendarStartDate.set(Calendar.HOUR, 0)
 
-//                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-//                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
                 }
             }
-
 
             filterTransactionList()
         }else{

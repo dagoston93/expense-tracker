@@ -18,22 +18,23 @@ import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentHistoryBinding
 import com.diamont.expense.tracker.historyFragment.filterDialogFragment.FilterDialogFragment
-import com.diamont.expense.tracker.util.Currency
-import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
+import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.*
 import com.diamont.expense.tracker.util.enums.TransactionType
-import com.diamont.expense.tracker.util.getStringListIndexFromText
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.DecimalFormat
 
-class HistoryFragment : Fragment() {
-    /** Data binding */
+class HistoryFragment : Fragment(), DateRangeSelectorFragment {
+    /** Data binding and view model */
     private lateinit var binding : FragmentHistoryBinding
+    override lateinit var interfaceViewModel: DateRangeSelectorFragmentViewModel
     private lateinit var viewModel: HistoryFragmentViewModel
 
     /** Array adapter for period list */
     private lateinit var periodAdapter : ArrayAdapter<String>
+
+    /** Variables for the selected date range */
     private var previousSelectedIndex: Int? = 0
     private var previousSelectedStartDate: Long = 0
     private var previousSelectedEndDate: Long = 0
@@ -64,8 +65,9 @@ class HistoryFragment : Fragment() {
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
         val viewModelFactory = HistoryFragmentViewModelFactory(application, databaseDao)
 
-        viewModel = ViewModelProvider(this, viewModelFactory)
+        interfaceViewModel = ViewModelProvider(this, viewModelFactory)
             .get(HistoryFragmentViewModel::class.java)
+        viewModel = interfaceViewModel as HistoryFragmentViewModel
 
         /** Set up values for activity view model */
         activityViewModel.setTitle(getString(R.string.history))
