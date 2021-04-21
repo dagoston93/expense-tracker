@@ -189,9 +189,23 @@
     <string name="transaction_types">Transaction types:</string>
     <string name="filters">Filters</string>
     <string name="filter">Filter</string>
+
+    <!-- Strings for the statistic fragment -->
     <string name="statistic_type">Statistic type:</string>
     <string name="incomes_and_expenses">Incomes and expenses</string>
     <string name="by_categories">By categories</string>
     <string name="plans">Plans</string>
+
+    <!-- Strings for the home fragment -->
+    <string name="total_balance">Total balance:</string>
+    <string name="cash_colon">Cash:</string>
+    <string name="card_colon">Card:</string>
+    <string name="monthly_income">Monthly income</string>
+    <string name="planned_colon">Planned:</string>
+    <string name="total">Total:</string>
+    <string name="monthly_expenses">Monthly expenses</string>
+    <string name="savings">Savings</string>
+    <string name="planned_this_month">Planned this month:</string>
+    <string name="savings_so_far">Savings so far:</string>
 
 </resources>

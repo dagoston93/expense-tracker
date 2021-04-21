@@ -23,7 +23,7 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
     protected var selectedPeriodIndex: Int? = 0
     protected var calendarStartDate: Calendar = Calendar.getInstance()
     protected var calendarEndDate: Calendar = Calendar.getInstance()
-    private var currentCalendars = CurrentCalendars()
+    protected var calendars = CurrentCalendars()
 
     /**
      * The constructor
@@ -87,8 +87,8 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
                  * Current month selected
                  */
                 IDX_CURRENT_MONTH -> {
-                    calendarStartDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
-                    calendarEndDate.timeInMillis = currentCalendars.calendarEndOfMonth.timeInMillis
+                    calendarStartDate.timeInMillis = calendars.calendarStartOfMonth.timeInMillis
+                    calendarEndDate.timeInMillis = calendars.calendarEndOfMonth.timeInMillis
 
                     Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
                     Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
@@ -98,8 +98,8 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
                  * This year selected
                  */
                 IDX_THIS_YEAR -> {
-                    calendarStartDate.timeInMillis = currentCalendars.calendarStartOfYear.timeInMillis
-                    calendarEndDate.timeInMillis = currentCalendars.calendarEndOfYear.timeInMillis
+                    calendarStartDate.timeInMillis = calendars.calendarStartOfYear.timeInMillis
+                    calendarEndDate.timeInMillis = calendars.calendarEndOfYear.timeInMillis
 
                     Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
                     Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
@@ -109,10 +109,10 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
                  * Previous month selected
                  */
                 IDX_PREVIOUS_MONTH -> {
-                    calendarStartDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
+                    calendarStartDate.timeInMillis = calendars.calendarStartOfMonth.timeInMillis
                     calendarStartDate.add(Calendar.MONTH, -1)
 
-                    calendarEndDate.timeInMillis = currentCalendars.calendarStartOfMonth.timeInMillis
+                    calendarEndDate.timeInMillis = calendars.calendarStartOfMonth.timeInMillis
                     calendarEndDate.add(Calendar.DAY_OF_YEAR, - 1)
                     calendarEndDate.set(Calendar.SECOND, 59)
                     calendarEndDate.set(Calendar.MINUTE, 59)

@@ -15,13 +15,13 @@ abstract class DateRangeSelectorFragment: Fragment() {
     protected lateinit var periodAdapter : ArrayAdapter<String>
 
     /** Variables for the selected date range */
-    private var previousSelectedIndex: Int? = 0
+    private var previousSelectedPeriodIndex: Int? = 0
     private var previousSelectedStartDate: Long = 0
     private var previousSelectedEndDate: Long = 0
 
     protected fun onDateRangeSelected(idx: Int?, actvPeriod: AutoCompleteTextView)
     {
-        if(idx != previousSelectedIndex) {
+        if(idx != previousSelectedPeriodIndex) {
 
             if (idx == baseClassViewModel.periodStringList.value?.size!! - 1) {
                 /**
@@ -69,7 +69,7 @@ abstract class DateRangeSelectorFragment: Fragment() {
 
                 Log.d("GUS", "Show date range picker...")
             } else {
-                previousSelectedIndex = idx
+                previousSelectedPeriodIndex = idx
                 baseClassViewModel.onPeriodDropdownItemSelected(idx)
             }
         }
@@ -88,8 +88,8 @@ abstract class DateRangeSelectorFragment: Fragment() {
      */
     private fun resetSelection(actvPeriod: AutoCompleteTextView){
         /** If previous index is not null we need to select that item*/
-        if(previousSelectedIndex!= null) {
-            actvPeriod.setText(periodAdapter.getItem(previousSelectedIndex!!).toString(), false)
+        if(previousSelectedPeriodIndex!= null) {
+            actvPeriod.setText(periodAdapter.getItem(previousSelectedPeriodIndex!!).toString(), false)
         }else{
             /** If it is null, we need to set the text to the prev. date range */
             val rangeString = "${formatDate(previousSelectedStartDate)} - ${formatDate(previousSelectedEndDate)}"

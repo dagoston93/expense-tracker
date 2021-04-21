@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:background="@color/background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/Theme.ExpenseTracker.CardLayout"
+        android:background="@drawable/bg_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/tvStatCatTotalIncomes"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text=""
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView41"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="$1,1538.54" />
+
+        <TextView
+            android:id="@+id/textView41"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Total incomes:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvStatCatPlannedIncomes"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView42"
+            app:layout_constraintEnd_toEndOf="@+id/tvStatCatTotalIncomes"
+            tools:text="$130.50" />
+
+        <TextView
+            android:id="@+id/textView42"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Planned:"
+            app:layout_constraintStart_toStartOf="@+id/textView41"
+            app:layout_constraintTop_toBottomOf="@+id/textView41" />
+
+        <TextView
+            android:id="@+id/tvStatCatNotPlannedIncomes"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView43"
+            app:layout_constraintEnd_toEndOf="@+id/tvStatCatPlannedIncomes"
+            tools:text="$130.50" />
+
+        <TextView
+            android:id="@+id/textView43"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Not planned:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView42"
+            app:layout_constraintTop_toBottomOf="@+id/textView42" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/Theme.ExpenseTracker.CardLayout"
+        android:background="@drawable/bg_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/tvStatCatTotalExpenses"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text=""
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView44"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="$1,1538.54" />
+
+        <TextView
+            android:id="@+id/textView44"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Total expenses:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvStatCatPlannedExpenses"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView45"
+            app:layout_constraintEnd_toEndOf="@+id/tvStatCatTotalExpenses"
+            tools:text="$130.50" />
+
+        <TextView
+            android:id="@+id/textView45"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Planned:"
+            app:layout_constraintStart_toStartOf="@+id/textView44"
+            app:layout_constraintTop_toBottomOf="@+id/textView44" />
+
+        <TextView
+            android:id="@+id/tvStatCatNotPlannedExpenses"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView46"
+            app:layout_constraintEnd_toEndOf="@+id/tvStatCatPlannedExpenses"
+            tools:text="$130.50" />
+
+        <TextView
+            android:id="@+id/textView46"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Not planned:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView45"
+            app:layout_constraintTop_toBottomOf="@+id/textView45" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/Theme.ExpenseTracker.CardLayout"
+        android:background="@drawable/bg_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/tvStatCatSavings"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text=""
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCatSavingsLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="$1,1538.54" />
+
+        <TextView
+            android:id="@+id/tvStatCatSavingsLabel"
+            style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Savings during period:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

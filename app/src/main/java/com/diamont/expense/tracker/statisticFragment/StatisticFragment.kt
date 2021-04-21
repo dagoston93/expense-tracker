@@ -1,13 +1,19 @@
 package com.diamont.expense.tracker.statisticFragment
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.MainActivityViewModel
@@ -35,6 +41,13 @@ class StatisticFragment : DateRangeSelectorFragment() {
 
     /** Array adapter for statistic types */
     private lateinit var statisticTypeAdapter : ArrayAdapter<String>
+    private var previousSelectedStatisticTypeIndex: Int = 0
+
+    /**
+     * Declare variables
+     */
+    private lateinit var layout: LinearLayout
+    private val fadeIn = MutableLiveData<Boolean>(false)
 
     /**
      * onCreateView()
@@ -48,11 +61,16 @@ class StatisticFragment : DateRangeSelectorFragment() {
         binding.lifecycleOwner = this
 
         /**
+         * Show the default statistic type layout
+         */
+        showStatisticTypeLayout(0, inflater, false) // Do it before view model is created
+
+        /**
          *  Create the view model using a view model factory
          */
         val application = requireNotNull(this.activity).application
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
-        val viewModelFactory = StatisticFragmentViewModelFactory(application, databaseDao)
+        val viewModelFactory = StatisticFragmentViewModelFactory(application, databaseDao, activityViewModel.sharedPreferences)
 
         baseClassViewModel = ViewModelProvider(this, viewModelFactory)
             .get(StatisticFragmentViewModel::class.java)
@@ -82,6 +100,19 @@ class StatisticFragment : DateRangeSelectorFragment() {
         }
 
         /**
+         * Add text changed listener for the statistic type dropdown
+         */
+        binding.actvStatisticType.addTextChangedListener {
+            val idx = binding.actvStatisticType.getStringListIndexFromText(viewModel.statisticTypeStringList.value ?: listOf<String>())
+
+            if(previousSelectedStatisticTypeIndex != idx) {
+                viewModel.onSelectedStatisticTypeChanged(idx)
+                showStatisticTypeLayout(idx ?: 0, inflater)
+                previousSelectedStatisticTypeIndex = idx ?: 0
+            }
+        }
+
+        /**
          * Observe period string list
          */
         viewModel.periodStringList.observe(viewLifecycleOwner, Observer {
@@ -99,8 +130,76 @@ class StatisticFragment : DateRangeSelectorFragment() {
             binding.actvStatisticType.setText(statisticTypeAdapter.getItem(0).toString(), false)
         })
 
+        /**
+         * Observe UI live data for the different statistic types
+         *
+         * Incomes and expenses
+         * Total incomes
+         */
+        viewModel.totalIncomesPeriod.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
+                layout.findViewById<TextView>(R.id.tvStatCatTotalIncomes).text = it
+            }
+        })
+
+        /**
+         * Total expenses
+         */
+        viewModel.totalExpensesPeriod.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
+                layout.findViewById<TextView>(R.id.tvStatCatTotalExpenses).text = it
+            }
+        })
+
+
+
+
+
+
+
         /** Return the inflated layout */
         return binding.root
+    }
+
+    /**
+     * Call this method to display the required layout
+     */
+    private fun showStatisticTypeLayout(idx: Int, inflater: LayoutInflater, animate: Boolean = true){
+        val layoutId = when(idx){
+            StatisticFragmentViewModel.IDX_CATEGORIES -> R.layout.layout_statistic_categories
+            StatisticFragmentViewModel.IDX_PLAN -> R.layout.layout_statistic_plan
+            else -> R.layout.layout_statistic_income_expense
+        }
+
+        /** This local function adds the new layout */
+        fun addNewLayout(){
+            /** Add new layout */
+            binding.llStatisticContent.removeAllViews()
+            layout = inflater.inflate(layoutId, binding.llStatisticContent, true) as LinearLayout
+        }
+
+        /** If animation is on do animation */
+        if(animate) {
+            /**
+             * Fade out, when done add the new layout, and than fade in
+             */
+            val animDuration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
+            binding.llStatisticContent.animate()
+                .setDuration(animDuration)
+                .alpha(0f)
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator?) {
+                        addNewLayout()
+                        /** Fade in */
+                        binding.llStatisticContent.animate()
+                            .setDuration(animDuration)
+                            .alpha(1f)
+                    }
+                })
+        }else{
+            /** No animation, just add the layout */
+            addNewLayout()
+        }
     }
 
     /**

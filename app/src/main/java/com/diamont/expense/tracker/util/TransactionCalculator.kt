@@ -163,4 +163,23 @@ class TransactionCalculator(private val calendars: CurrentCalendars) {
         return firstDate
     }
 
+    /**
+     * Call this method to get the last transaction date
+     */
+    fun getLastTransactionDate(): Long{
+        var lastDate: Long = 0L
+
+        if(transactionList.isNotEmpty()){
+            lastDate = transactionList[0].date
+
+            for(transaction in transactionList)
+            {
+                if(transaction.date > lastDate){
+                    lastDate = transaction.date
+                }
+            }
+        }
+        return lastDate
+    }
+
 }
