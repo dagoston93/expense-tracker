@@ -2,7 +2,6 @@ package com.diamont.expense.tracker.homeFragment
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -210,13 +209,13 @@ class HomeFragmentViewModel(
         /**
          * Get total incomes and expenses before this month
          */
-        val actualIncomesSoFar = transactionCalculator.calculateTotalActualAmountWithinPeriod(
+        val actualIncomesSoFar = transactionCalculator.calculateTotalActualAmountWithinPeriodByType(
             startDate,
             endDate,
             TransactionType.INCOME
         )
 
-        val actualExpensesSoFar = transactionCalculator.calculateTotalActualAmountWithinPeriod(
+        val actualExpensesSoFar = transactionCalculator.calculateTotalActualAmountWithinPeriodByType(
             startDate,
             endDate,
             TransactionType.EXPENSE

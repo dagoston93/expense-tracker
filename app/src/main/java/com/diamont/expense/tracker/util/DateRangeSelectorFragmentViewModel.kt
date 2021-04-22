@@ -59,6 +59,11 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
     abstract fun filterItems()
 
     /**
+     * This method is called when a whole period is selected
+     */
+    abstract fun onWholePeriodSelected()
+
+    /**
      * Call this method if user selects a date range
      */
     fun onDateRangeSelected(startDate: Long?, endDate: Long?){
@@ -83,6 +88,13 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
             selectedPeriodIndex = index
 
             when(selectedPeriodIndex){
+                /**
+                 * Whole period
+                 */
+                IDX_WHOLE_PERIOD -> {
+                    onWholePeriodSelected()
+                }
+
                 /**
                  * Current month selected
                  */

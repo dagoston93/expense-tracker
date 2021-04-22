@@ -72,8 +72,6 @@ class HistoryFragmentViewModel(
      */
     init{
         getTransactionData()
-
-
     }
 
     /**
@@ -88,6 +86,11 @@ class HistoryFragmentViewModel(
 
         filterItems()
     }
+
+    /**
+     * This method is called by the base class when the whole period option is selected
+     */
+    override fun onWholePeriodSelected() {}
 
     /**
      * Call this method to filter the list

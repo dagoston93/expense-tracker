@@ -17,7 +17,7 @@
 
 
         <TextView
-            android:id="@+id/tvStatCatTotalIncomes"
+            android:id="@+id/tvStatIncExpTotalIncomes"
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,18 +34,18 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Total incomes:"
+            android:text="@string/total_incomes"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvStatCatPlannedIncomes"
+            android:id="@+id/tvStatIncExpPlannedIncomes"
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             app:layout_constraintBaseline_toBaselineOf="@+id/textView42"
-            app:layout_constraintEnd_toEndOf="@+id/tvStatCatTotalIncomes"
+            app:layout_constraintEnd_toEndOf="@+id/tvStatIncExpTotalIncomes"
             tools:text="$130.50" />
 
         <TextView
@@ -53,18 +53,18 @@
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Planned:"
+            android:text="@string/planned_colon"
             app:layout_constraintStart_toStartOf="@+id/textView41"
             app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
         <TextView
-            android:id="@+id/tvStatCatNotPlannedIncomes"
+            android:id="@+id/tvStatIncExpNotPlannedIncomes"
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             app:layout_constraintBaseline_toBaselineOf="@+id/textView43"
-            app:layout_constraintEnd_toEndOf="@+id/tvStatCatPlannedIncomes"
+            app:layout_constraintEnd_toEndOf="@+id/tvStatIncExpPlannedIncomes"
             tools:text="$130.50" />
 
         <TextView
@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Not planned:"
+            android:text="@string/not_planned_colon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView42"
             app:layout_constraintTop_toBottomOf="@+id/textView42" />
@@ -88,7 +88,7 @@
 
 
         <TextView
-            android:id="@+id/tvStatCatTotalExpenses"
+            android:id="@+id/tvStatIncExpTotalExpenses"
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -105,18 +105,18 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Total expenses:"
+            android:text="@string/total_expenses"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvStatCatPlannedExpenses"
+            android:id="@+id/tvStatIncExpPlannedExpenses"
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             app:layout_constraintBaseline_toBaselineOf="@+id/textView45"
-            app:layout_constraintEnd_toEndOf="@+id/tvStatCatTotalExpenses"
+            app:layout_constraintEnd_toEndOf="@+id/tvStatIncExpTotalExpenses"
             tools:text="$130.50" />
 
         <TextView
@@ -124,18 +124,18 @@
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Planned:"
+            android:text="@string/planned_colon"
             app:layout_constraintStart_toStartOf="@+id/textView44"
             app:layout_constraintTop_toBottomOf="@+id/textView44" />
 
         <TextView
-            android:id="@+id/tvStatCatNotPlannedExpenses"
+            android:id="@+id/tvStatIncExpNotPlannedExpenses"
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             app:layout_constraintBaseline_toBaselineOf="@+id/textView46"
-            app:layout_constraintEnd_toEndOf="@+id/tvStatCatPlannedExpenses"
+            app:layout_constraintEnd_toEndOf="@+id/tvStatIncExpPlannedExpenses"
             tools:text="$130.50" />
 
         <TextView
@@ -144,7 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Not planned:"
+            android:text="@string/not_planned_colon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView45"
             app:layout_constraintTop_toBottomOf="@+id/textView45" />
@@ -159,25 +159,25 @@
 
 
         <TextView
-            android:id="@+id/tvStatCatSavings"
+            android:id="@+id/tvStatIncExpSavings"
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text=""
-            app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCatSavingsLabel"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvStatIncExpSavingsLabel"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="$1,1538.54" />
 
         <TextView
-            android:id="@+id/tvStatCatSavingsLabel"
+            android:id="@+id/tvStatIncExpSavingsLabel"
             style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Savings during period:"
+            android:text="@string/savings_during_period"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

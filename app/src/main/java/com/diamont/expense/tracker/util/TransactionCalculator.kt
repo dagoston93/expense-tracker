@@ -46,7 +46,7 @@ class TransactionCalculator(private val calendars: CurrentCalendars) {
     /**
      * Call this method to get total amount of transactions during a period
      */
-    fun calculateTotalActualAmountWithinPeriod(
+    fun calculateTotalActualAmountWithinPeriodByType(
         startDate: Calendar,
         endDate: Calendar,
         transactionType:TransactionType
@@ -69,10 +69,72 @@ class TransactionCalculator(private val calendars: CurrentCalendars) {
     }
 
     /**
+     * Call this method to get total amount of transactions during a period for a given plan
+     */
+    fun calculateTotalActualAmountWithinPeriodByPlanIdAndType(
+        startDate: Calendar,
+        endDate: Calendar,
+        transactionType:TransactionType,
+        planId: Int
+    ): Float{
+
+        var total: Float = 0f
+
+        /**
+         * Iterate through the list and add amount to total if within period
+         */
+        for(transaction in transactionList){
+            if (transaction.date in startDate.timeInMillis..endDate.timeInMillis) {
+                if (transaction.transactionType == transactionType && transaction.planId == planId ) {
+                    total += transaction.amount
+                }
+            }
+        }
+
+        return total
+    }
+
+    /**
+     * Call this method to get total amount of planned transactions during a period
+     */
+    fun calculateTotalActualPlannedAmountWithinPeriodByType(
+        startDate: Calendar,
+        endDate: Calendar,
+        transactionType:TransactionType,
+    ): Float{
+
+        var total: Float = 0f
+
+        /**
+         * Iterate through the list and add amount to total if within period
+         */
+        for(transaction in transactionList){
+            if (transaction.date in startDate.timeInMillis..endDate.timeInMillis) {
+                if (transaction.transactionType == transactionType && transaction.planId != -1) {
+                    total += transaction.amount
+                }
+            }
+        }
+
+        return total
+    }
+
+    /**
+     * Returns the total amount of non planned transactions within period
+     */
+    fun calculateTotalActualNotPlannedAmountWithinPeriodByType(
+        startDate: Calendar,
+        endDate: Calendar,
+        transactionType:TransactionType,
+    ): Float{
+        return calculateTotalActualAmountWithinPeriodByPlanIdAndType(startDate, endDate, transactionType, -1)
+    }
+
+    /**
      * Call this method to calculate the total actual amount this month
      */
     fun getCurrentMonthTotalActualAmount(transactionType:TransactionType): Float{
-        return calculateTotalActualAmountWithinPeriod(
+        return calculateTotalActualAmountWithinPeriodByType(
             calendars.calendarStartOfMonth,
             calendars.calendarEndOfMonth,
             transactionType

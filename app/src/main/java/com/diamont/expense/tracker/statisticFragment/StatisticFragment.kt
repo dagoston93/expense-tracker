@@ -3,7 +3,6 @@ package com.diamont.expense.tracker.statisticFragment
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +62,7 @@ class StatisticFragment : DateRangeSelectorFragment() {
         /**
          * Show the default statistic type layout
          */
-        showStatisticTypeLayout(0, inflater, false) // Do it before view model is created
+        showStatisticTypeLayout(0, inflater, false, false) // Do it before view model is created
 
         /**
          *  Create the view model using a view model factory
@@ -106,9 +105,8 @@ class StatisticFragment : DateRangeSelectorFragment() {
             val idx = binding.actvStatisticType.getStringListIndexFromText(viewModel.statisticTypeStringList.value ?: listOf<String>())
 
             if(previousSelectedStatisticTypeIndex != idx) {
-                viewModel.onSelectedStatisticTypeChanged(idx)
-                showStatisticTypeLayout(idx ?: 0, inflater)
                 previousSelectedStatisticTypeIndex = idx ?: 0
+                showStatisticTypeLayout(idx ?: 0, inflater)
             }
         }
 
@@ -138,7 +136,7 @@ class StatisticFragment : DateRangeSelectorFragment() {
          */
         viewModel.totalIncomesPeriod.observe(viewLifecycleOwner, Observer {
             if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
-                layout.findViewById<TextView>(R.id.tvStatCatTotalIncomes).text = it
+                layout.findViewById<TextView>(R.id.tvStatIncExpTotalIncomes).text = it
             }
         })
 
@@ -147,15 +145,63 @@ class StatisticFragment : DateRangeSelectorFragment() {
          */
         viewModel.totalExpensesPeriod.observe(viewLifecycleOwner, Observer {
             if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
-                layout.findViewById<TextView>(R.id.tvStatCatTotalExpenses).text = it
+                layout.findViewById<TextView>(R.id.tvStatIncExpTotalExpenses).text = it
             }
         })
 
+        /**
+         * Planned incomes
+         */
+        viewModel.plannedIncomesPeriod.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
+                layout.findViewById<TextView>(R.id.tvStatIncExpPlannedIncomes).text = it
+            }
+        })
 
+        /**
+         * Planned expenses
+         */
+        viewModel.plannedExpensesPeriod.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
+                layout.findViewById<TextView>(R.id.tvStatIncExpPlannedExpenses).text = it
+            }
+        })
 
+        /**
+         * Not planned incomes
+         */
+        viewModel.notPlannedIncomesPeriod.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
+                layout.findViewById<TextView>(R.id.tvStatIncExpNotPlannedIncomes).text = it
+            }
+        })
 
+        /**
+         * Not planned expenses
+         */
+        viewModel.notPlannedExpensesPeriod.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
+                layout.findViewById<TextView>(R.id.tvStatIncExpNotPlannedExpenses).text = it
+            }
+        })
 
+        /**
+         * Savings label
+         */
+        viewModel.savingsOrOverspendLabel.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
+                layout.findViewById<TextView>(R.id.tvStatIncExpSavingsLabel).text = it
+            }
+        })
 
+        /**
+         * Savings
+         */
+        viewModel.savingsOrOverspendPeriod.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_EXPENSE){
+                layout.findViewById<TextView>(R.id.tvStatIncExpSavings).text = it
+            }
+        })
 
         /** Return the inflated layout */
         return binding.root
@@ -164,7 +210,12 @@ class StatisticFragment : DateRangeSelectorFragment() {
     /**
      * Call this method to display the required layout
      */
-    private fun showStatisticTypeLayout(idx: Int, inflater: LayoutInflater, animate: Boolean = true){
+    private fun showStatisticTypeLayout(
+        idx: Int,
+        inflater: LayoutInflater,
+        animate: Boolean = true,
+        notifyViewModel: Boolean = true
+    ){
         val layoutId = when(idx){
             StatisticFragmentViewModel.IDX_CATEGORIES -> R.layout.layout_statistic_categories
             StatisticFragmentViewModel.IDX_PLAN -> R.layout.layout_statistic_plan
@@ -176,6 +227,10 @@ class StatisticFragment : DateRangeSelectorFragment() {
             /** Add new layout */
             binding.llStatisticContent.removeAllViews()
             layout = inflater.inflate(layoutId, binding.llStatisticContent, true) as LinearLayout
+
+            if(notifyViewModel){
+                viewModel.onSelectedStatisticTypeChanged(idx)
+            }
         }
 
         /** If animation is on do animation */
