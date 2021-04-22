@@ -3,12 +3,14 @@ package com.diamont.expense.tracker.statisticFragment
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
@@ -22,6 +24,11 @@ import com.diamont.expense.tracker.databinding.FragmentStatisticBinding
 import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.enums.TransactionType
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 import java.text.DecimalFormat
 
 
@@ -203,6 +210,23 @@ class StatisticFragment : DateRangeSelectorFragment() {
             }
         })
 
+        /**
+         * By categories
+         *
+         * Pie chart data
+         */
+        viewModel.pieChartData.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_CATEGORIES
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_CATEGORIES){
+
+                val chart = layout.findViewById<PieChart>(R.id.pcStatCatChart) as PieChart
+                val animDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
+                
+                chart.data = it
+                chart.animateXY(animDuration, animDuration)
+            }
+        })
+
         /** Return the inflated layout */
         return binding.root
     }
@@ -217,8 +241,8 @@ class StatisticFragment : DateRangeSelectorFragment() {
         notifyViewModel: Boolean = true
     ){
         val layoutId = when(idx){
-            StatisticFragmentViewModel.IDX_CATEGORIES -> R.layout.layout_statistic_categories
-            StatisticFragmentViewModel.IDX_PLAN -> R.layout.layout_statistic_plan
+            StatisticFragmentViewModel.IDX_EXPENSE_CATEGORIES, StatisticFragmentViewModel.IDX_INCOME_CATEGORIES -> R.layout.layout_statistic_categories
+            StatisticFragmentViewModel.IDX_EXPENSE_PLANS, StatisticFragmentViewModel.IDX_INCOME_PLANS -> R.layout.layout_statistic_plan
             else -> R.layout.layout_statistic_income_expense
         }
 
@@ -227,6 +251,36 @@ class StatisticFragment : DateRangeSelectorFragment() {
             /** Add new layout */
             binding.llStatisticContent.removeAllViews()
             layout = inflater.inflate(layoutId, binding.llStatisticContent, true) as LinearLayout
+
+            /** TEST */
+//            if(previousSelectedStatisticTypeIndex == 1){
+//                val chart = layout.findViewById<PieChart>(R.id.pcStatCatChart) as PieChart
+//                chart.setUsePercentValues(true)
+//
+//                val value: List<PieEntry> = listOf(
+//                    PieEntry(20f, "Cat1"),
+//                    PieEntry(25f, "Cat2"),
+//                    PieEntry(40f, "Cat3"),
+//                    PieEntry(15f, "Cat4")
+//                )
+//
+//                val dataSet = PieDataSet(value, "TestCats")
+//                dataSet.setColors(listOf(
+//                    ContextCompat.getColor(requireContext(), R.color.category_color1),
+//                    ContextCompat.getColor(requireContext(), R.color.category_color4),
+//                    ContextCompat.getColor(requireContext(),R.color.category_color7),
+//                    ContextCompat.getColor(requireContext(), R.color.category_color10))
+//                )
+//
+//                val data = PieData(dataSet)
+//
+//                val animDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
+//                chart.data = data
+//                chart.animateXY(animDuration, animDuration)
+//
+//
+//
+//            }
 
             if(notifyViewModel){
                 viewModel.onSelectedStatisticTypeChanged(idx)
@@ -249,6 +303,9 @@ class StatisticFragment : DateRangeSelectorFragment() {
                         binding.llStatisticContent.animate()
                             .setDuration(animDuration)
                             .alpha(1f)
+                            .setListener(object : AnimatorListenerAdapter() {
+                                override fun onAnimationEnd(animation: Animator?) {}
+                            })
                     }
                 })
         }else{

@@ -3,6 +3,7 @@ package com.diamont.expense.tracker.statisticFragment
 import android.app.Application
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -11,14 +12,19 @@ import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.Transaction
+import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import com.diamont.expense.tracker.util.enums.TransactionType
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 class StatisticFragmentViewModel (
     private val appContext: Application,
@@ -72,15 +78,21 @@ class StatisticFragmentViewModel (
     val savingsOrOverspendLabel: LiveData<String>
         get() = _savingsOrOverspendLabel
 
+    private val _pieChartData = MutableLiveData<PieData?>(null)
+    val pieChartData: LiveData<PieData?>
+        get() = _pieChartData
+
     /**
      * Declare some variables
      */
+    private var transactionCategories: List<TransactionCategory> = listOf<TransactionCategory>()
     private var transactionData = listOf<Transaction>()
     private var filteredTransactionData = listOf<Transaction>()
     private var incomePlans = mutableListOf<Plan>()
-    private var filteredIncomePlans = mutableListOf<Plan>()
+    //private var filteredIncomePlans = mutableListOf<Plan>()
     private var expensePlans = mutableListOf<Plan>()
-    private var filteredExpensePlans = mutableListOf<Plan>()
+    //private var filteredExpensePlans = mutableListOf<Plan>()
+    private var selectedTransactionType: TransactionType = TransactionType.EXPENSE
 
     private var transactionCalculator = TransactionCalculator(calendars)
     private var planCalculator = PlanCalculator(calendars)
@@ -106,8 +118,10 @@ class StatisticFragmentViewModel (
 
         _statisticTypeStringList.value = listOf(
             appContext.resources.getString(R.string.incomes_and_expenses),
-            appContext.resources.getString(R.string.by_categories),
-            appContext.resources.getString(R.string.plans)
+            appContext.resources.getString(R.string.incomes_by_categories),
+            appContext.resources.getString(R.string.expenses_by_categories),
+            appContext.resources.getString(R.string.income_plans),
+            appContext.resources.getString(R.string.expense_plans)
         )
     }
 
@@ -116,8 +130,10 @@ class StatisticFragmentViewModel (
      */
     companion object{
         const val IDX_INCOME_EXPENSE: Int = 0
-        const val IDX_CATEGORIES: Int = 1
-        const val IDX_PLAN: Int = 2
+        const val IDX_INCOME_CATEGORIES: Int = 1
+        const val IDX_EXPENSE_CATEGORIES: Int = 2
+        const val IDX_INCOME_PLANS: Int = 3
+        const val IDX_EXPENSE_PLANS: Int = 4
     }
 
     /**
@@ -125,12 +141,17 @@ class StatisticFragmentViewModel (
      */
     fun onSelectedStatisticTypeChanged(index: Int?){
         selectedStatisticTypeIndex = index ?: 0
+
+        if(index == IDX_EXPENSE_PLANS || index == IDX_EXPENSE_CATEGORIES){
+            selectedTransactionType = TransactionType.EXPENSE
+        }else if(index == IDX_INCOME_PLANS || index == IDX_INCOME_CATEGORIES){
+            selectedTransactionType = TransactionType.INCOME
+        }
+
         updateData()
     }
 
     override fun filterItems() {
-        Log.d("GUS", "sd: ${calendarToString(calendarStartDate)}")
-        Log.d("GUS", "ed: ${calendarToString(calendarEndDate)}")
         filteredTransactionData = transactionData.filter{
             var isItemDisplayed = true
 
@@ -178,7 +199,6 @@ class StatisticFragmentViewModel (
 
             IDX_INCOME_EXPENSE -> {
                 transactionCalculator.setCurrentTransactionList(filteredTransactionData)
-                Log.d("GUS", "fs: ${filteredTransactionData.size}")
                 _totalIncomesPeriod.value = transactionCalculator.calculateTotalActualAmountWithinPeriodByType(
                     calendarStartDate,
                     calendarEndDate,
@@ -225,6 +245,44 @@ class StatisticFragmentViewModel (
                 }
 
             }
+
+            IDX_INCOME_CATEGORIES, IDX_EXPENSE_CATEGORIES ->{
+                val amounts = transactionCalculator.getTransactionAmountByCategories(
+                    calendarStartDate,
+                    calendarEndDate,
+                    selectedTransactionType
+                )
+
+                val total = transactionCalculator.calculateTotalActualAmountWithinPeriodByType(
+                    calendarStartDate,
+                    calendarEndDate,
+                    selectedTransactionType
+                )
+
+
+                val values: MutableList<PieEntry> = mutableListOf<PieEntry>()
+                val colorList: MutableList<Int> = mutableListOf<Int>()
+
+                for(item in amounts){
+                    val category = transactionCategories.find{ it.categoryId == item.id }
+                    val description = category?.categoryName ?: ""
+                    val percentage = ((item.amount/total) * 100).roundToInt()
+                    val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.category_color1)
+                    values.add(PieEntry(percentage.toFloat(), description))
+
+                    ContextCompat.getColor(appContext, R.color.category_color1)
+                    colorList.add(color)
+                }
+
+                val dataSet = PieDataSet(values, "")
+                dataSet.setColors(colorList)
+                val data = PieData(dataSet)
+                _pieChartData.value = data
+
+                //Log.d("GUS", "$values")
+                //Log.d("GUS", "$amounts")
+                //Log.d("GUS", "$total")
+            }
         }
     }
 
@@ -243,6 +301,7 @@ class StatisticFragmentViewModel (
     private fun getDataFromDatabase(){
         uiScope.launch {
             transactionData = databaseDao.getAllTransactionsSuspend()
+            transactionCategories = databaseDao.getCategoriesSuspend()
             expensePlans = databaseDao.getExpensePlansSuspend().toMutableList()
             incomePlans = databaseDao.getIncomePlansSuspend().toMutableList()
 

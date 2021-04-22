@@ -207,6 +207,36 @@ class TransactionCalculator(private val calendars: CurrentCalendars) {
     }
 
     /**
+     * Call this method to get the transaction amounts within period
+     * by category ids
+     */
+    fun getTransactionAmountByCategories(
+        startDate: Calendar,
+        endDate: Calendar,
+        transactionType:TransactionType
+    ): List<AmountListItem> {
+        val list = mutableListOf<AmountListItem>()
+
+        for(transaction in transactionList){
+            if (transaction.date in startDate.timeInMillis..endDate.timeInMillis) {
+                if (transaction.transactionType == transactionType) {
+                    /** If list doesnt contain category yet, we add it*/
+                    var listItem = list.find { it.id == transaction.categoryId }
+
+                    if(listItem == null){
+                        list.add(AmountListItem(transaction.categoryId, 0f))
+                        listItem = list.find { it.id == transaction.categoryId }
+                    }
+
+                    listItem!!.amount += transaction.amount
+                }
+            }
+        }
+
+        return list
+    }
+
+    /**
      * Call this method to get the first transaction date
      */
     fun getFirstTransactionDate(): Long{

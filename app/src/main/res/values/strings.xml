@@ -205,8 +205,10 @@
     <!-- Strings for the statistic fragment -->
     <string name="statistic_type">Statistic type:</string>
     <string name="incomes_and_expenses">Incomes and expenses</string>
-    <string name="by_categories">By categories</string>
-    <string name="plans">Plans</string>
+    <string name="incomes_by_categories">Incomes by categories</string>
+    <string name="expenses_by_categories">Expenses by categories</string>
+    <string name="income_plans">Income plans</string>
+    <string name="expense_plans">Expense plans</string>
     <string name="total_incomes">Total incomes:</string>
     <string name="not_planned_colon">Not planned:</string>
     <string name="total_expenses">Total expenses:</string>
