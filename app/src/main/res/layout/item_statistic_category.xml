@@ -42,9 +42,9 @@
         style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCategoryItemAmountLabel"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvStatCategoryItemAmountLabel"
         tools:text="$1,250.14" />
 
     <TextView
@@ -63,8 +63,9 @@
         style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCategoryItemPercentageLabel"
-        app:layout_constraintEnd_toEndOf="@+id/tvStatCategoryItemAmount"
+        app:layout_constraintStart_toEndOf="@+id/tvStatCategoryItemPercentageLabel"
         tools:text="15 %" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

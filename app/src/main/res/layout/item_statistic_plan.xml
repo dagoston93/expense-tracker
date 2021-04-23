@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/bg_card">
+
+    <ImageView
+        android:id="@+id/ivStatPlanItemColorStrip"
+        android:layout_width="10dp"
+        android:layout_height="0dp"
+        android:src="@drawable/bg_card_start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvStatPlanItemName"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/ivStatPlanItemColorStrip"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Category1" />
+
+    <TextView
+        android:id="@+id/tvStatPlanItemPlannedAmountLabel"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/planned_sum"
+        app:layout_constraintStart_toStartOf="@+id/tvStatPlanItemName"
+        app:layout_constraintTop_toBottomOf="@+id/tvStatPlanItemName" />
+
+    <TextView
+        android:id="@+id/tvStatPlanItemActualAmountLabel"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/actual_sum"
+        app:layout_constraintStart_toStartOf="@+id/tvStatPlanItemName"
+        app:layout_constraintTop_toBottomOf="@+id/tvStatPlanItemPlannedAmountLabel" />
+
+    <TextView
+        android:id="@+id/tvStatPlanItemPlannedAmount"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanItemPlannedAmountLabel"
+        app:layout_constraintStart_toEndOf="@+id/tvStatPlanItemPlannedAmountLabel"
+        tools:text="$1,250.14" />
+
+    <TextView
+        android:id="@+id/tvStatPlanItemActualAmount"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanItemActualAmountLabel"
+        app:layout_constraintStart_toEndOf="@+id/tvStatPlanItemActualAmountLabel"
+        tools:text="$1,250.14" />
+
+    <TextView
+        android:id="@+id/tvStatPlanItemPercentagePlannedLabel"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/planned_percentage"
+        app:layout_constraintStart_toStartOf="@+id/tvStatPlanItemName"
+        app:layout_constraintTop_toBottomOf="@+id/tvStatPlanItemActualAmountLabel" />
+
+    <TextView
+        android:id="@+id/tvStatPlanItemPercentagePlanned"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanItemPercentagePlannedLabel"
+        app:layout_constraintStart_toEndOf="@+id/tvStatPlanItemPercentagePlannedLabel"
+        tools:text="15 %" />
+
+    <TextView
+        android:id="@+id/tvStatPlanItemActualPercentageLabel"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/actual_percentage"
+        app:layout_constraintStart_toStartOf="@+id/tvStatPlanItemName"
+        app:layout_constraintTop_toBottomOf="@+id/tvStatPlanItemPercentagePlannedLabel" />
+
+    <TextView
+        android:id="@+id/tvStatPlanItemActualPercentage"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanItemActualPercentageLabel"
+        app:layout_constraintStart_toEndOf="@+id/tvStatPlanItemActualPercentageLabel"
+        tools:text="15 %" />
+
+    <com.diamont.expense.tracker.util.view.CircularProgressBar
+        android:id="@+id/cpbStatPlanItemProgress"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:circularProgressBarForegroundColor="@color/colorGoalNotAchieved"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

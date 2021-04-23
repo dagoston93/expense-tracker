@@ -35,345 +35,377 @@ class PlanCalculator(private val calendars: CurrentCalendars) {
          */
         for(plan in planList){
 
+            total += calculatePlanAmountForPeriod(plan, startDate, endDate)
 
-            when(plan.frequency){
-                /**
-                 * One time
-                 */
-                TransactionFrequency.ONE_TIME -> {
-                    if(plan.nextExpectedDate in startDate.timeInMillis..endDate.timeInMillis){
-                        total += plan.amount
+        }
+
+        return total
+    }
+
+    /**
+     * Call this method to get the planned amounts in a list of AmountListItem
+     * for each plans within a period.
+     *
+     * @param startDate A calendar containing the start date of the period.
+     * @param endDate A calendar containing the end date of the period.
+     */
+    fun getPlannedAmountsByPlanIds(startDate: Calendar, endDate: Calendar) : MutableList<AmountListItem>{
+        val list = mutableListOf<AmountListItem>()
+
+        for(plan in planList){
+            list.add(AmountListItem(plan.id, calculatePlanAmountForPeriod(plan, startDate, endDate)))
+        }
+
+        return list
+    }
+
+    /**
+     * Call this method to calculate the planned expenses/incomes within an interval
+     * for an individual plan
+     *
+     * @param plan The plan to calculate.
+     * @param startDate A calendar containing the start date of the period.
+     * @param endDate A calendar containing the end date of the period.
+     */
+    fun calculatePlanAmountForPeriod(plan: Plan, startDate: Calendar, endDate: Calendar): Float {
+        var total: Float = 0f
+        when(plan.frequency){
+            /**
+             * One time
+             */
+            TransactionFrequency.ONE_TIME -> {
+                if(plan.nextExpectedDate in startDate.timeInMillis..endDate.timeInMillis){
+                    total += plan.amount
+                }
+            }
+
+            /** Weekly once */
+            TransactionFrequency.WEEKLY_ONCE -> {
+                total += calculateOneTimePlanAmountForPeriod(
+                    plan,
+                    startDate,
+                    endDate
+                ){ calendarNow: Calendar, firstPlanDate: Long ->
+                    calculateNextWeeklyPlanDate(calendarNow, firstPlanDate)
+                }
+            }
+
+            /**
+             * Fortnightly once
+             */
+            TransactionFrequency.FORTNIGHTLY_ONCE -> {
+                total += calculateOneTimePlanAmountForPeriod(
+                    plan,
+                    startDate,
+                    endDate
+                ){ calendarNow: Calendar, firstPlanDate: Long ->
+                    calculateNextFortnightlyPlanDate(calendarNow, firstPlanDate)
+                }
+            }
+
+            /**
+             * Monthly once
+             */
+            TransactionFrequency.MONTHLY_ONCE -> {
+                total += calculateOneTimePlanAmountForPeriod(
+                    plan,
+                    startDate,
+                    endDate
+                ){ calendarNow: Calendar, firstPlanDate: Long ->
+                    calculateNextMonthlyPlanDate(calendarNow, firstPlanDate)
+                }
+            }
+
+            /**
+             * Yearly once
+             */
+            TransactionFrequency.YEARLY_ONCE ->{
+                total += calculateOneTimePlanAmountForPeriod(
+                    plan,
+                    startDate,
+                    endDate
+                ){ calendarNow: Calendar, firstPlanDate: Long ->
+                    calculateNextYearlyPlanDate(calendarNow, firstPlanDate)
+                }
+            }
+
+            /**
+             * Weekly sum
+             */
+            TransactionFrequency.WEEKLY_SUM -> {
+                /** Only calculate if plan is active within period */
+                if(!((!plan.isStatusActive
+                            && plan.cancellationDate < startDate.timeInMillis)
+                            || endDate.timeInMillis < plan.firstExpectedDate)){
+
+                    val calendar = Calendar.getInstance()
+                    val cancellationDate = Calendar.getInstance()
+
+                    /** Set initial plan date to the later of the first date of the plan or the first date of period */
+                    calendar.timeInMillis = if (startDate.timeInMillis >= plan.firstExpectedDate) {
+                        startDate.timeInMillis
+                    } else {
+                        plan.firstExpectedDate
+                    }
+
+                    cancellationDate.timeInMillis = plan.cancellationDate
+
+                    /** Calculate the last day of the required period */
+                    val lastDate = Calendar.getInstance()
+                    lastDate.timeInMillis = if(!plan.isStatusActive
+                        && plan.cancellationDate <= endDate.timeInMillis){
+                        plan.cancellationDate
+                    }else{
+                        endDate.timeInMillis
+                    }
+
+                    /** Calculate the next expected date */
+                    val nextDate = calculateNextWeeklyPlanDate(calendar, plan.firstExpectedDate)
+
+                    /** Check if period is over before next date */
+                    if(nextDate >= lastDate.timeInMillis){
+                        /** If so calculate the amount for those few days*/
+                        total += calculateSumTypePlanSubPeriodAmount(
+                            calendar.timeInMillis,
+                            lastDate.timeInMillis,
+                            plan.amount,
+                            7)
+                    }else{
+                        /** Calculate the amount and days between start date of period and the start of the first full week*/
+                        var difference =  nextDate - calendar.timeInMillis
+                        var days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+                        total += calculateSumTypePlanSubPeriodAmount(
+                            calendar.timeInMillis,
+                            nextDate,
+                            plan.amount,
+                            7)
+
+                        /** Calculate how many days left till end of period */
+                        calendar.add(Calendar.DAY_OF_YEAR, days)
+                        difference = lastDate.timeInMillis - calendar.timeInMillis
+                        days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+
+                        /** Calculate the amount for the full weeks */
+                        val fullWeeks = days / 7
+                        total += fullWeeks * plan.amount
+
+                        /** Calculate the amount for the remaining days */
+                        val remainingDays = days - ( fullWeeks * 7)
+                        total += (plan.amount / 7) * remainingDays
                     }
                 }
+            }
 
-                /** Weekly once */
-                TransactionFrequency.WEEKLY_ONCE -> {
-                    total += calculateOneTimePlanAmountForPeriod(
-                        plan,
-                        startDate,
-                        endDate
-                    ){ calendarNow: Calendar, firstPlanDate: Long ->
-                        calculateNextWeeklyPlanDate(calendarNow, firstPlanDate)
+            /**
+             * Fortnightly sum
+             */
+            TransactionFrequency.FORTNIGHTLY_SUM -> {
+                /** Only calculate if plan is active within period */
+                if(!((!plan.isStatusActive
+                            && plan.cancellationDate < startDate.timeInMillis)
+                            || endDate.timeInMillis < plan.firstExpectedDate)){
+
+                    val calendar = Calendar.getInstance()
+                    val cancellationDate = Calendar.getInstance()
+
+                    /** Set initial plan date to the later of the first date of the plan or the first date of period */
+                    calendar.timeInMillis = if (startDate.timeInMillis >= plan.firstExpectedDate){
+                        startDate.timeInMillis
+                    } else {
+                        plan.firstExpectedDate
+                    }
+
+                    cancellationDate.timeInMillis = plan.cancellationDate
+
+                    /** Calculate the last day of the required period */
+                    val lastDate = Calendar.getInstance()
+                    lastDate.timeInMillis =if (!plan.isStatusActive && plan.cancellationDate <= endDate.timeInMillis){
+                        plan.cancellationDate
+                    } else {
+                        endDate.timeInMillis
+                    }
+
+                    /** Calculate the next expected date */
+                    val nextDate = calculateNextFortnightlyPlanDate(calendar, plan.firstExpectedDate)
+
+                    /** Check if period is over before next date */
+                    if(nextDate >= lastDate.timeInMillis){
+                        total += calculateSumTypePlanSubPeriodAmount(calendar.timeInMillis, lastDate.timeInMillis, plan.amount, 14)
+                    }else{
+                        /** Calculate the amount and days between start date of period and the start of the first full fortnight*/
+                        var difference =  nextDate - calendar.timeInMillis
+                        var days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+                        total += calculateSumTypePlanSubPeriodAmount(calendar.timeInMillis, nextDate, plan.amount, 14)
+
+                        /** Calculate how many days left till end of period */
+                        calendar.add(Calendar.DAY_OF_YEAR, days)
+                        difference = lastDate.timeInMillis - calendar.timeInMillis
+                        days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
+
+                        /** Calculate the amount for the full fortnights */
+                        val fullFortnights = days / 14
+                        total += fullFortnights * plan.amount
+
+                        /** Calculate the amount for the remaining days */
+                        val remainingDays = days - ( fullFortnights * 14)
+                        total += (plan.amount / 14) * remainingDays
                     }
                 }
+            }
 
-                /**
-                 * Fortnightly once
-                 */
-                TransactionFrequency.FORTNIGHTLY_ONCE -> {
-                    total += calculateOneTimePlanAmountForPeriod(
-                        plan,
-                        startDate,
-                        endDate
-                    ){ calendarNow: Calendar, firstPlanDate: Long ->
-                        calculateNextFortnightlyPlanDate(calendarNow, firstPlanDate)
+            /**
+             * Monthly sum
+             */
+            TransactionFrequency.MONTHLY_SUM -> {
+                /** Only calculate if plan is active within period */
+                if(!((!plan.isStatusActive
+                            && plan.cancellationDate < startDate.timeInMillis)
+                            || endDate.timeInMillis < plan.firstExpectedDate)){
+
+                    val calendar = Calendar.getInstance()
+                    val cancellationDate = Calendar.getInstance()
+
+                    /** Set initial plan date to the later of the first date of the plan or the first date of period */
+                    calendar.timeInMillis = if(startDate.timeInMillis >= plan.firstExpectedDate) {
+                        startDate.timeInMillis
+                    }else{
+                        plan.firstExpectedDate
                     }
-                }
 
-                /**
-                 * Monthly once
-                 */
-                TransactionFrequency.MONTHLY_ONCE -> {
-                    total += calculateOneTimePlanAmountForPeriod(
-                        plan,
-                        startDate,
-                        endDate
-                    ){ calendarNow: Calendar, firstPlanDate: Long ->
-                        calculateNextMonthlyPlanDate(calendarNow, firstPlanDate)
-                    }
-                }
+                    cancellationDate.timeInMillis = plan.cancellationDate
 
-                /**
-                 * Yearly once
-                 */
-                TransactionFrequency.YEARLY_ONCE ->{
-                    total += calculateOneTimePlanAmountForPeriod(
-                        plan,
-                        startDate,
-                        endDate
-                    ){ calendarNow: Calendar, firstPlanDate: Long ->
-                        calculateNextYearlyPlanDate(calendarNow, firstPlanDate)
-                    }
-                }
+                    while(calendar.timeInMillis <= endDate.timeInMillis){
+                        /** Check if plan is cancelled before the end of month */
+                        if(!plan.isStatusActive
+                            && calendar.get(Calendar.MONTH) == cancellationDate.get(Calendar.MONTH)
+                            && calendar.get(Calendar.YEAR) == cancellationDate.get(Calendar.YEAR)){
 
-                /**
-                 * Weekly sum
-                 */
-                TransactionFrequency.WEEKLY_SUM -> {
-                    /** Only calculate if plan is active within period */
-                    if(!((!plan.isStatusActive
-                                && plan.cancellationDate < startDate.timeInMillis)
-                                || endDate.timeInMillis < plan.firstExpectedDate)){
-
-                        val calendar = Calendar.getInstance()
-                        val cancellationDate = Calendar.getInstance()
-
-                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
-                        calendar.timeInMillis = if (startDate.timeInMillis >= plan.firstExpectedDate) {
-                            startDate.timeInMillis
-                        } else {
-                            plan.firstExpectedDate
-                        }
-
-                        cancellationDate.timeInMillis = plan.cancellationDate
-
-                        /** Calculate the last day of the required period */
-                        val lastDate = Calendar.getInstance()
-                        lastDate.timeInMillis = if(!plan.isStatusActive
-                            && plan.cancellationDate <= endDate.timeInMillis){
-                            plan.cancellationDate
-                        }else{
-                            endDate.timeInMillis
-                        }
-
-                        /** Calculate the next expected date */
-                        val nextDate = calculateNextWeeklyPlanDate(calendar, plan.firstExpectedDate)
-
-                        /** Check if period is over before next date */
-                        if(nextDate >= lastDate.timeInMillis){
-                            /** If so calculate the amount for those few days*/
+                            /** If cancelled we add the correct amount than break the loop*/
                             total += calculateSumTypePlanSubPeriodAmount(
                                 calendar.timeInMillis,
-                                lastDate.timeInMillis,
+                                plan.cancellationDate,
                                 plan.amount,
-                                7)
+                                calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+                            )
+
+                            break
                         }else{
-                            /** Calculate the amount and days between start date of period and the start of the first full week*/
-                            var difference =  nextDate - calendar.timeInMillis
-                            var days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
-                            total += calculateSumTypePlanSubPeriodAmount(
-                                calendar.timeInMillis,
-                                nextDate,
-                                plan.amount,
-                                7)
+                            /** Check if period is over this month */
+                            if(calendar.get(Calendar.MONTH) == endDate.get(Calendar.MONTH)
+                                && calendar.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)){
 
-                            /** Calculate how many days left till end of period */
-                            calendar.add(Calendar.DAY_OF_YEAR, days)
-                            difference = lastDate.timeInMillis - calendar.timeInMillis
-                            days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
-
-                            /** Calculate the amount for the full weeks */
-                            val fullWeeks = days / 7
-                            total += fullWeeks * plan.amount
-
-                            /** Calculate the amount for the remaining days */
-                            val remainingDays = days - ( fullWeeks * 7)
-                            total += (plan.amount / 7) * remainingDays
-                        }
-                    }
-                }
-
-                /**
-                 * Fortnightly sum
-                 */
-                TransactionFrequency.FORTNIGHTLY_SUM -> {
-                    /** Only calculate if plan is active within period */
-                    if(!((!plan.isStatusActive
-                                && plan.cancellationDate < startDate.timeInMillis)
-                                || endDate.timeInMillis < plan.firstExpectedDate)){
-
-                        val calendar = Calendar.getInstance()
-                        val cancellationDate = Calendar.getInstance()
-
-                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
-                        calendar.timeInMillis = if (startDate.timeInMillis >= plan.firstExpectedDate){
-                            startDate.timeInMillis
-                        } else {
-                            plan.firstExpectedDate
-                        }
-
-                        cancellationDate.timeInMillis = plan.cancellationDate
-
-                        /** Calculate the last day of the required period */
-                        val lastDate = Calendar.getInstance()
-                        lastDate.timeInMillis =if (!plan.isStatusActive && plan.cancellationDate <= endDate.timeInMillis){
-                            plan.cancellationDate
-                        } else {
-                            endDate.timeInMillis
-                        }
-
-                        /** Calculate the next expected date */
-                        val nextDate = calculateNextFortnightlyPlanDate(calendar, plan.firstExpectedDate)
-
-                        /** Check if period is over before next date */
-                        if(nextDate >= lastDate.timeInMillis){
-                            total += calculateSumTypePlanSubPeriodAmount(calendar.timeInMillis, lastDate.timeInMillis, plan.amount, 14)
-                        }else{
-                            /** Calculate the amount and days between start date of period and the start of the first full fortnight*/
-                            var difference =  nextDate - calendar.timeInMillis
-                            var days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
-                            total += calculateSumTypePlanSubPeriodAmount(calendar.timeInMillis, nextDate, plan.amount, 14)
-
-                            /** Calculate how many days left till end of period */
-                            calendar.add(Calendar.DAY_OF_YEAR, days)
-                            difference = lastDate.timeInMillis - calendar.timeInMillis
-                            days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS).toInt()
-
-                            /** Calculate the amount for the full fortnights */
-                            val fullFortnights = days / 14
-                            total += fullFortnights * plan.amount
-
-                            /** Calculate the amount for the remaining days */
-                            val remainingDays = days - ( fullFortnights * 14)
-                            total += (plan.amount / 14) * remainingDays
-                        }
-                    }
-                }
-
-                /**
-                 * Monthly sum
-                 */
-                TransactionFrequency.MONTHLY_SUM -> {
-                    /** Only calculate if plan is active within period */
-                    if(!((!plan.isStatusActive
-                                && plan.cancellationDate < startDate.timeInMillis)
-                                || endDate.timeInMillis < plan.firstExpectedDate)){
-
-                        val calendar = Calendar.getInstance()
-                        val cancellationDate = Calendar.getInstance()
-
-                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
-                        calendar.timeInMillis = if(startDate.timeInMillis >= plan.firstExpectedDate) {
-                            startDate.timeInMillis
-                        }else{
-                            plan.firstExpectedDate
-                        }
-
-                        cancellationDate.timeInMillis = plan.cancellationDate
-
-                        while(calendar.timeInMillis <= endDate.timeInMillis){
-                            /** Check if plan is cancelled before the end of month */
-                            if(!plan.isStatusActive
-                                && calendar.get(Calendar.MONTH) == cancellationDate.get(Calendar.MONTH)
-                                && calendar.get(Calendar.YEAR) == cancellationDate.get(Calendar.YEAR)){
-
-                                /** If cancelled we add the correct amount than break the loop*/
+                                /** If over we add the correct amount than break the loop*/
                                 total += calculateSumTypePlanSubPeriodAmount(
                                     calendar.timeInMillis,
-                                    plan.cancellationDate,
+                                    endDate.timeInMillis,
                                     plan.amount,
                                     calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
                                 )
-
-                                break
                             }else{
-                                /** Check if period is over this month */
-                                if(calendar.get(Calendar.MONTH) == endDate.get(Calendar.MONTH)
-                                    && calendar.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)){
+                                /** If sub-period begins on the 1st, we add full month amount */
+                                if(calendar.get(Calendar.DAY_OF_MONTH) == 1){
+                                    total += plan.amount
+                                }else{
+                                    /** If sub-period does NOT begin on the 1st, we add the correct amount */
+                                    val endOfMonth = Calendar.getInstance()
+                                    endOfMonth.timeInMillis = calendar.timeInMillis
 
-                                    /** If over we add the correct amount than break the loop*/
+                                    endOfMonth.set(Calendar.HOUR, 23)
+                                    endOfMonth.set(Calendar.MINUTE, 59)
+                                    endOfMonth.set(Calendar.SECOND, 59)
+                                    endOfMonth.set(
+                                        Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(
+                                            Calendar.DAY_OF_MONTH))
+
                                     total += calculateSumTypePlanSubPeriodAmount(
                                         calendar.timeInMillis,
-                                        endDate.timeInMillis,
+                                        endOfMonth.timeInMillis,
                                         plan.amount,
                                         calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
                                     )
-                                }else{
-                                    /** If sub-period begins on the 1st, we add full month amount */
-                                    if(calendar.get(Calendar.DAY_OF_MONTH) == 1){
-                                        total += plan.amount
-                                    }else{
-                                        /** If sub-period does NOT begin on the 1st, we add the correct amount */
-                                        val endOfMonth = Calendar.getInstance()
-                                        endOfMonth.timeInMillis = calendar.timeInMillis
 
-                                        endOfMonth.set(Calendar.HOUR, 23)
-                                        endOfMonth.set(Calendar.MINUTE, 59)
-                                        endOfMonth.set(Calendar.SECOND, 59)
-                                        endOfMonth.set(
-                                            Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(
-                                                Calendar.DAY_OF_MONTH))
-
-                                        total += calculateSumTypePlanSubPeriodAmount(
-                                            calendar.timeInMillis,
-                                            endOfMonth.timeInMillis,
-                                            plan.amount,
-                                            calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-                                        )
-
-                                        calendar.set(Calendar.DAY_OF_MONTH, 1)
-                                    }
+                                    calendar.set(Calendar.DAY_OF_MONTH, 1)
                                 }
                             }
-
-                            /** Jump to next month */
-                            calendar.add(Calendar.MONTH, 1)
                         }
+
+                        /** Jump to next month */
+                        calendar.add(Calendar.MONTH, 1)
                     }
                 }
+            }
 
-                /**
-                 * Yearly sum
-                 */
-                TransactionFrequency.YEARLY_SUM -> {
-                    /** Only calculate if plan is active within period */
-                    if(!((!plan.isStatusActive
-                                && plan.cancellationDate < startDate.timeInMillis)
-                                || endDate.timeInMillis < plan.firstExpectedDate)){
+            /**
+             * Yearly sum
+             */
+            TransactionFrequency.YEARLY_SUM -> {
+                /** Only calculate if plan is active within period */
+                if(!((!plan.isStatusActive
+                            && plan.cancellationDate < startDate.timeInMillis)
+                            || endDate.timeInMillis < plan.firstExpectedDate)){
 
-                        val calendar = Calendar.getInstance()
-                        val cancellationDate = Calendar.getInstance()
+                    val calendar = Calendar.getInstance()
+                    val cancellationDate = Calendar.getInstance()
 
-                        /** Set initial plan date to the later of the first date of the plan or the first date of period */
-                        calendar.timeInMillis = if(startDate.timeInMillis >= plan.firstExpectedDate) {
-                            startDate.timeInMillis
-                        }else{
-                            plan.firstExpectedDate
-                        }
+                    /** Set initial plan date to the later of the first date of the plan or the first date of period */
+                    calendar.timeInMillis = if(startDate.timeInMillis >= plan.firstExpectedDate) {
+                        startDate.timeInMillis
+                    }else{
+                        plan.firstExpectedDate
+                    }
 
-                        cancellationDate.timeInMillis = plan.cancellationDate
+                    cancellationDate.timeInMillis = plan.cancellationDate
 
-                        /** Calculate the last day of the required period */
-                        val lastDate = Calendar.getInstance()
-                        lastDate.timeInMillis = if(!plan.isStatusActive
-                            && plan.cancellationDate <= endDate.timeInMillis){
-                            plan.cancellationDate
-                        }else{
-                            endDate.timeInMillis
-                        }
+                    /** Calculate the last day of the required period */
+                    val lastDate = Calendar.getInstance()
+                    lastDate.timeInMillis = if(!plan.isStatusActive
+                        && plan.cancellationDate <= endDate.timeInMillis){
+                        plan.cancellationDate
+                    }else{
+                        endDate.timeInMillis
+                    }
 
-                        var nextDate = calculateNextYearlyPlanDate(calendar, plan.firstExpectedDate)
+                    var nextDate = calculateNextYearlyPlanDate(calendar, plan.firstExpectedDate)
 
-                        if(nextDate >= lastDate.timeInMillis){
-                            /** If period is over before next full year starts we calculate amount for the shorter period */
-                            total += calculateSumTypePlanSubPeriodAmount(
-                                calendar.timeInMillis,
-                                lastDate.timeInMillis,
-                                plan.amount,
-                                365
-                            )
-                        }else{
-                            /** Now calculate the amount for the days before the first full year */
-                            total += calculateSumTypePlanSubPeriodAmount(
-                                calendar.timeInMillis,
-                                nextDate,
-                                plan.amount,
-                                365)
+                    if(nextDate >= lastDate.timeInMillis){
+                        /** If period is over before next full year starts we calculate amount for the shorter period */
+                        total += calculateSumTypePlanSubPeriodAmount(
+                            calendar.timeInMillis,
+                            lastDate.timeInMillis,
+                            plan.amount,
+                            365
+                        )
+                    }else{
+                        /** Now calculate the amount for the days before the first full year */
+                        total += calculateSumTypePlanSubPeriodAmount(
+                            calendar.timeInMillis,
+                            nextDate,
+                            plan.amount,
+                            365)
 
-                            /** Calculate the date of the next full year */
+                        /** Calculate the date of the next full year */
+                        calendar.timeInMillis = nextDate
+                        calendar.add(Calendar.DAY_OF_YEAR, 1)
+                        nextDate = calculateNextYearlyPlanDate(calendar, plan.firstExpectedDate)
+
+                        /** As long as the date of next full year is before the end of period, we keep adding the yearly amount */
+                        while(nextDate <= lastDate.timeInMillis){
+                            total += plan.amount
+
                             calendar.timeInMillis = nextDate
                             calendar.add(Calendar.DAY_OF_YEAR, 1)
                             nextDate = calculateNextYearlyPlanDate(calendar, plan.firstExpectedDate)
+                            calendar.add(Calendar.DAY_OF_YEAR, -1)
 
-                            /** As long as the date of next full year is before the end of period, we keep adding the yearly amount */
-                            while(nextDate <= lastDate.timeInMillis){
-                                total += plan.amount
-
-                                calendar.timeInMillis = nextDate
-                                calendar.add(Calendar.DAY_OF_YEAR, 1)
-                                nextDate = calculateNextYearlyPlanDate(calendar, plan.firstExpectedDate)
-                                calendar.add(Calendar.DAY_OF_YEAR, -1)
-
-                            }
-
-                            /** Now we add the amount for the remaining days till the end of period */
-                            total += calculateSumTypePlanSubPeriodAmount(
-                                calendar.timeInMillis,
-                                lastDate.timeInMillis,
-                                plan.amount,
-                                365
-                            )
                         }
+
+                        /** Now we add the amount for the remaining days till the end of period */
+                        total += calculateSumTypePlanSubPeriodAmount(
+                            calendar.timeInMillis,
+                            lastDate.timeInMillis,
+                            plan.amount,
+                            365
+                        )
                     }
                 }
             }

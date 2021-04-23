@@ -2,6 +2,7 @@ package com.diamont.expense.tracker.statisticFragment
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -77,9 +78,9 @@ class StatisticFragmentViewModel (
     val savingsOrOverspendLabel: LiveData<String>
         get() = _savingsOrOverspendLabel
 
-    private val _pieChartData = MutableLiveData<PieData?>(null)
-    val pieChartData: LiveData<PieData?>
-        get() = _pieChartData
+    private val _categoryPieChartData = MutableLiveData<PieData?>(null)
+    val categoryPieChartData: LiveData<PieData?>
+        get() = _categoryPieChartData
 
     private val _catPageTotalIncomeOrExpense = MutableLiveData<Float?>(null)
     val catPageTotalIncomeOrExpense: LiveData<String> = Transformations.map(_catPageTotalIncomeOrExpense){
@@ -89,6 +90,33 @@ class StatisticFragmentViewModel (
     private val _catPageTotalIncomeOrExpenseLabel = MutableLiveData<String>("")
     val catPageTotalIncomeOrExpenseLabel: LiveData<String>
         get() = _catPageTotalIncomeOrExpenseLabel
+
+    private val _planPlannedPieChartData = MutableLiveData<PieData?>(null)
+    val planPlannedPieChartData: LiveData<PieData?>
+        get() = _planPlannedPieChartData
+
+    private val _planActualPieChartData = MutableLiveData<PieData?>(null)
+    val planActualPieChartData: LiveData<PieData?>
+        get() = _planActualPieChartData
+
+    private val _planPageTotalPlanned = MutableLiveData<Float?>(null)
+    val planPageTotalPlanned: LiveData<String> = Transformations.map(_planPageTotalPlanned){
+        formatAmount(_planPageTotalPlanned.value)
+    }
+
+    private val _planPageSelectedPlannedAmount = MutableLiveData<Float?>(null)
+    val planPageSelectedPlannedAmount: LiveData<String> = Transformations.map(_planPageSelectedPlannedAmount){
+        formatAmount(_planPageSelectedPlannedAmount.value)
+    }
+
+    private val _planPageSelectedActualAmount = MutableLiveData<Float?>(null)
+    val planPageSelectedActualAmount: LiveData<String> = Transformations.map(_planPageSelectedActualAmount){
+        formatAmount(_planPageSelectedActualAmount.value)
+    }
+
+    private val _planPageTotalPlannedIncomeOrExpenseLabel = MutableLiveData<String>("")
+    val planPageTotalPlannedIncomeOrExpenseLabel: LiveData<String>
+        get() = _planPageTotalPlannedIncomeOrExpenseLabel
 
     /**
      * Declare some variables
@@ -111,13 +139,21 @@ class StatisticFragmentViewModel (
     private var calendarFirstTransactionDate: Calendar = Calendar.getInstance()
     private var calendarLastTransactionDate: Calendar = Calendar.getInstance()
 
-    private var _amountList: List<AmountListItem> = listOf()
-    val amountList: List<AmountListItem>
-        get() = _amountList
+    private var _actualAmountList: List<AmountListItem> = listOf()
+    val actualAmountList: List<AmountListItem>
+        get() = _actualAmountList
 
-    private var _pieEntries: MutableList<PieEntry> = mutableListOf<PieEntry>()
-    val pieEntries: MutableList<PieEntry>
-        get() = _pieEntries
+    private var _actualPieEntries: MutableList<PieEntry> = mutableListOf<PieEntry>()
+    val actualPieEntries: MutableList<PieEntry>
+        get() = _actualPieEntries
+
+    private var _plannedAmountList: List<AmountListItem> = listOf()
+    val plannedAmountList: List<AmountListItem>
+        get() = _plannedAmountList
+
+    private var _plannedPieEntries: MutableList<PieEntry> = mutableListOf<PieEntry>()
+    val plannedPieEntries: MutableList<PieEntry>
+        get() = _plannedPieEntries
 
     private var _dataColorList: MutableList<Int> = mutableListOf<Int>()
     val dataColorList: MutableList<Int>
@@ -164,8 +200,10 @@ class StatisticFragmentViewModel (
 
         if(index == IDX_EXPENSE_PLANS || index == IDX_EXPENSE_CATEGORIES){
             selectedTransactionType = TransactionType.EXPENSE
+            planCalculator.setCurrentPlanList(expensePlans)
         }else if(index == IDX_INCOME_PLANS || index == IDX_INCOME_CATEGORIES){
             selectedTransactionType = TransactionType.INCOME
+            planCalculator.setCurrentPlanList(incomePlans)
         }
 
         updateData()
@@ -267,7 +305,7 @@ class StatisticFragmentViewModel (
             }
 
             IDX_INCOME_CATEGORIES, IDX_EXPENSE_CATEGORIES ->{
-                _amountList = transactionCalculator.getTransactionAmountByCategories(
+                _actualAmountList = transactionCalculator.getTransactionAmountByCategories(
                     calendarStartDate,
                     calendarEndDate,
                     selectedTransactionType
@@ -280,19 +318,18 @@ class StatisticFragmentViewModel (
                 )
 
 
-                _pieEntries = mutableListOf<PieEntry>()
+                _actualPieEntries = mutableListOf<PieEntry>()
                 _dataColorList = mutableListOf<Int>()
                 val percentTextColorList: MutableList<Int> = mutableListOf<Int>()
 
-                for(dataIndex in _amountList.indices){
-                    val category = transactionCategories.find{ it.categoryId == _amountList[dataIndex].id }
+                for(dataIndex in _actualAmountList.indices){
+                    val category = transactionCategories.find{ it.categoryId == _actualAmountList[dataIndex].id }
                     val description = category?.categoryName ?: ""
-                    val percentage = ((_amountList[dataIndex].amount/total) * 100).roundToInt()
+                    val percentage = ((_actualAmountList[dataIndex].amount/total) * 100).roundToInt()
                     val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.category_color1)
 
-                    _pieEntries.add(PieEntry(percentage.toFloat(), description, dataIndex))
+                    _actualPieEntries.add(PieEntry(percentage.toFloat(), description, dataIndex))
 
-                    ContextCompat.getColor(appContext, R.color.category_color1)
                     _dataColorList.add(color)
 
                     percentTextColorList.add(ContextCompat.getColor(appContext,
@@ -307,7 +344,7 @@ class StatisticFragmentViewModel (
                     )
                 }
 
-                val dataSet = PieDataSet(_pieEntries, "")
+                val dataSet = PieDataSet(_actualPieEntries, "")
                 dataSet.setColors(_dataColorList)
                 dataSet.valueTextSize = 14f
                 dataSet.setValueTextColors(percentTextColorList)
@@ -315,7 +352,7 @@ class StatisticFragmentViewModel (
                 val data = PieData(dataSet)
                 data.setValueFormatter(PercentageFormatter())
 
-                _pieChartData.value = data
+                _categoryPieChartData.value = data
                 _catPageTotalIncomeOrExpense.value = total
                 _catPageTotalIncomeOrExpenseLabel.value = appContext.resources.getString(
                     if(selectedTransactionType == TransactionType.EXPENSE){
@@ -328,6 +365,29 @@ class StatisticFragmentViewModel (
                 //Log.d("GUS", "v: $values")
                 //Log.d("GUS", "$amounts")
                 //Log.d("GUS", "$total")
+            }
+
+            IDX_INCOME_PLANS, IDX_EXPENSE_PLANS -> {
+                _actualAmountList = transactionCalculator.getTransactionAmountByPlans(
+                    calendarStartDate,
+                    calendarEndDate,
+                    selectedTransactionType
+                )
+
+                val totalActual = transactionCalculator.calculateTotalActualAmountWithinPeriodByType(
+                    calendarStartDate,
+                    calendarEndDate,
+                    selectedTransactionType
+                )
+
+                _plannedAmountList = planCalculator.getPlannedAmountsByPlanIds(calendarStartDate, calendarEndDate)
+
+                val totalPlanned = planCalculator.calculateTotalPlannedAmountWithinPeriod(calendarStartDate, calendarEndDate)
+
+                Log.d("GUS", "tP: $totalPlanned")
+                Log.d("GUS", "tA: $totalActual")
+                Log.d("GUS", "actList: $_actualAmountList")
+                Log.d("GUS", "plnList: $_plannedAmountList")
             }
         }
     }
@@ -372,7 +432,7 @@ class StatisticFragmentViewModel (
      * Call this method to get a formatted amount from the amount list
      */
     fun getAmountStringFromList(idx: Int): String{
-        return formatAmount(_amountList[idx].amount)
+        return formatAmount(_actualAmountList[idx].amount)
     }
 
     /**

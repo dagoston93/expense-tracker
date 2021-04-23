@@ -218,7 +218,7 @@ class StatisticFragment : DateRangeSelectorFragment() {
          *
          * Pie chart data
          */
-        viewModel.pieChartData.observe(viewLifecycleOwner, Observer {
+        viewModel.categoryPieChartData.observe(viewLifecycleOwner, Observer {
             if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_CATEGORIES
                 || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_CATEGORIES){
 
@@ -263,7 +263,7 @@ class StatisticFragment : DateRangeSelectorFragment() {
                 mainContainer.removeAllViews()
 
                 /** Add category cards */
-                for(i in viewModel.pieEntries.indices){
+                for(i in viewModel.actualPieEntries.indices){
 
                     val categoryLayout = inflater.inflate(
                         R.layout.item_statistic_category,
@@ -277,13 +277,13 @@ class StatisticFragment : DateRangeSelectorFragment() {
                     )
 
                     categoryLayout.findViewById<TextView>(R.id.tvStatCategoryItemName).text =
-                        viewModel.pieEntries[i].label
+                        viewModel.actualPieEntries[i].label
 
                     categoryLayout.findViewById<TextView>(R.id.tvStatCategoryItemAmount).text =
                         viewModel.getAmountStringFromList(i)
 
                     categoryLayout.findViewById<TextView>(R.id.tvStatCategoryItemPercentage).text =
-                        "%.0f%%".format(viewModel.pieEntries[i].value)
+                        "%.0f%%".format(viewModel.actualPieEntries[i].value)
 
                     mainContainer.addView(categoryLayout)
 

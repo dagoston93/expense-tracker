@@ -1,8 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/category_color6">
+    android:background="@color/background"
+    android:clipToPadding="false"
+    android:paddingBottom="100dp">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clStatPlanChartContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvStatPlanTotalPlannedLabel"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textAlignment="viewStart"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Total planned expenses:" />
+
+            <TextView
+                android:id="@+id/tvStatPlanActualLabel"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanSelectedPlanActualAmount"
+                app:layout_constraintStart_toStartOf="@+id/tvStatPlanPlannedLabel"
+                android:text=" actual:" />
+
+            <TextView
+                android:id="@+id/tvStatPlanPlannedLabel"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" planned:"
+                android:textAlignment="viewStart"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanNameLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvStatPlanNameLabel" />
+
+            <TextView
+                android:id="@+id/tvStatPlanTotalPlannedAmount"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textAlignment="viewStart"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanTotalPlannedLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="$1,528.28" />
+
+            <TextView
+                android:id="@+id/tvStatPlanNameLabel"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textAlignment="viewStart"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanTotalPlannedLabel"
+                tools:text="Plan name"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tvStatPlanSelectedPlanPlannedAmount"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
+                android:visibility="gone"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanNameLabel"
+                app:layout_constraintEnd_toEndOf="@+id/tvStatPlanTotalPlannedAmount"
+                tools:text="$528.28"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tvStatPlanSelectedPlanActualAmount"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/tvStatPlanTotalPlannedAmount"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanSelectedPlanPlannedAmount"
+                tools:text="$528.28"
+                tools:visibility="visible" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pcStatPlanPlannedChart"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanSelectedPlanActualAmount" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pcStatActualChart"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanSelectedPlanActualAmount" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llStatPlanMainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/background"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="8dp" />
+
+    </LinearLayout>
+</ScrollView>

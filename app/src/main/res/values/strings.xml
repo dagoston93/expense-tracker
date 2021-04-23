@@ -214,7 +214,11 @@
     <string name="total_expenses">Total expenses:</string>
     <string name="savings_during_period">Savings during period:</string>
     <string name="overspend_during_period">Overspend during period:</string>
-    <string name="percentage">Percenteage:</string>
+    <string name="percentage">Percentage:</string>
     <string name="sum">Sum:</string>
+    <string name="planned_sum">Planned sum:</string>
+    <string name="actual_sum">Actual sum:</string>
+    <string name="planned_percentage">Planned percentage:</string>
+    <string name="actual_percentage">Actual percentage:</string>
 
 </resources>
