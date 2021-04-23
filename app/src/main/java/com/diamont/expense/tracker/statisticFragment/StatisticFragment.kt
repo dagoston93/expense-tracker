@@ -2,25 +2,23 @@ package com.diamont.expense.tracker.statisticFragment
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.motion.widget.MotionScene
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
@@ -30,14 +28,10 @@ import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.github.mikephil.charting.utils.ColorTemplate
 import java.text.DecimalFormat
 
 
@@ -265,7 +259,35 @@ class StatisticFragment : DateRangeSelectorFragment() {
                 chart.invalidate()
                 chart.animateXY(animDuration, animDuration)
 
+                val mainContainer = layout.findViewById<LinearLayout>(R.id.llStatCatMainContainer)
+                mainContainer.removeAllViews()
 
+                /** Add category cards */
+                for(i in viewModel.pieEntries.indices){
+
+                    val categoryLayout = inflater.inflate(
+                        R.layout.item_statistic_category,
+                        mainContainer,
+                        false
+                    ) as ConstraintLayout
+
+                    ImageViewCompat.setImageTintList(
+                        categoryLayout.findViewById<ImageView>(R.id.ivStatCategoryItemColorStrip),
+                        ColorStateList.valueOf(viewModel.dataColorList[i])
+                    )
+
+                    categoryLayout.findViewById<TextView>(R.id.tvStatCategoryItemName).text =
+                        viewModel.pieEntries[i].label
+
+                    categoryLayout.findViewById<TextView>(R.id.tvStatCategoryItemAmount).text =
+                        viewModel.getAmountStringFromList(i)
+
+                    categoryLayout.findViewById<TextView>(R.id.tvStatCategoryItemPercentage).text =
+                        "%.0f%%".format(viewModel.pieEntries[i].value)
+
+                    mainContainer.addView(categoryLayout)
+
+                }
             }
         })
 

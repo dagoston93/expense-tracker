@@ -111,7 +111,17 @@ class StatisticFragmentViewModel (
     private var calendarFirstTransactionDate: Calendar = Calendar.getInstance()
     private var calendarLastTransactionDate: Calendar = Calendar.getInstance()
 
-    private var amountList: List<AmountListItem> = listOf()
+    private var _amountList: List<AmountListItem> = listOf()
+    val amountList: List<AmountListItem>
+        get() = _amountList
+
+    private var _pieEntries: MutableList<PieEntry> = mutableListOf<PieEntry>()
+    val pieEntries: MutableList<PieEntry>
+        get() = _pieEntries
+
+    private var _dataColorList: MutableList<Int> = mutableListOf<Int>()
+    val dataColorList: MutableList<Int>
+        get() = _dataColorList
 
     /**
      * Set up coroutine job and the scope
@@ -257,7 +267,7 @@ class StatisticFragmentViewModel (
             }
 
             IDX_INCOME_CATEGORIES, IDX_EXPENSE_CATEGORIES ->{
-                amountList = transactionCalculator.getTransactionAmountByCategories(
+                _amountList = transactionCalculator.getTransactionAmountByCategories(
                     calendarStartDate,
                     calendarEndDate,
                     selectedTransactionType
@@ -270,20 +280,20 @@ class StatisticFragmentViewModel (
                 )
 
 
-                val values: MutableList<PieEntry> = mutableListOf<PieEntry>()
-                val dataColorList: MutableList<Int> = mutableListOf<Int>()
+                _pieEntries = mutableListOf<PieEntry>()
+                _dataColorList = mutableListOf<Int>()
                 val percentTextColorList: MutableList<Int> = mutableListOf<Int>()
 
-                for(dataIndex in amountList.indices){
-                    val category = transactionCategories.find{ it.categoryId == amountList[dataIndex].id }
+                for(dataIndex in _amountList.indices){
+                    val category = transactionCategories.find{ it.categoryId == _amountList[dataIndex].id }
                     val description = category?.categoryName ?: ""
-                    val percentage = ((amountList[dataIndex].amount/total) * 100).roundToInt()
+                    val percentage = ((_amountList[dataIndex].amount/total) * 100).roundToInt()
                     val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.category_color1)
 
-                    values.add(PieEntry(percentage.toFloat(), description, dataIndex))
+                    _pieEntries.add(PieEntry(percentage.toFloat(), description, dataIndex))
 
                     ContextCompat.getColor(appContext, R.color.category_color1)
-                    dataColorList.add(color)
+                    _dataColorList.add(color)
 
                     percentTextColorList.add(ContextCompat.getColor(appContext,
                         when(category?.categoryColorResId){
@@ -297,8 +307,8 @@ class StatisticFragmentViewModel (
                     )
                 }
 
-                val dataSet = PieDataSet(values, "")
-                dataSet.setColors(dataColorList)
+                val dataSet = PieDataSet(_pieEntries, "")
+                dataSet.setColors(_dataColorList)
                 dataSet.valueTextSize = 14f
                 dataSet.setValueTextColors(percentTextColorList)
 
@@ -362,7 +372,7 @@ class StatisticFragmentViewModel (
      * Call this method to get a formatted amount from the amount list
      */
     fun getAmountStringFromList(idx: Int): String{
-        return formatAmount(amountList[idx].amount)
+        return formatAmount(_amountList[idx].amount)
     }
 
     /**

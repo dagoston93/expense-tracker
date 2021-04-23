@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:clipToPadding="false"
+    android:paddingBottom="100dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,75 +16,84 @@
         android:paddingTop="8dp"
         android:paddingEnd="8dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clStatCatChartContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_card"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clStatCatChartContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tvStatCatTotalLabel"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textAlignment="viewStart"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Total expenses:" />
 
-                <TextView
-                    android:id="@+id/tvStatCatTotalLabel"
-                    style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    tools:text="Total expenses:"
-                    android:textAlignment="viewStart"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/tvStatCatTotalAmount"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textAlignment="viewStart"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCatTotalLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="$1,528.28" />
 
-                <TextView
-                    android:id="@+id/tvStatCatTotalAmount"
-                    style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    tools:text="$1,528.28"
-                    android:textAlignment="viewStart"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCatTotalLabel"
-                    app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/tvStatCatCategoryLabel"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textAlignment="viewStart"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatCatTotalLabel"
+                tools:text="Category:"
+                tools:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/tvStatCatCategoryLabel"
-                    style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    tools:text="Category:"
-                    tools:visibility="visible"
-                    android:visibility="gone"
-                    android:textAlignment="viewStart"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvStatCatTotalLabel" />
-
-                <TextView
-                    android:id="@+id/tvStatCatCategoryAmount"
-                    style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="$528.28"
-                    tools:visibility="visible"
-                    android:visibility="gone"
-                    android:textAlignment="viewStart"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCatCategoryLabel"
-                    app:layout_constraintEnd_toEndOf="@+id/tvStatCatTotalAmount" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tvStatCatCategoryAmount"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
+                android:visibility="gone"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCatCategoryLabel"
+                app:layout_constraintEnd_toEndOf="@+id/tvStatCatTotalAmount"
+                tools:text="$528.28"
+                tools:visibility="visible" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pcStatCatChart"
                 android:layout_width="250dp"
-                android:layout_height="250dp" />
+                android:layout_height="250dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatCatCategoryLabel" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llStatCatMainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/background"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="8dp" />
 
     </LinearLayout>
 </ScrollView>

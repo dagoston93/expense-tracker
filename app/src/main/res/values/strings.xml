@@ -214,5 +214,7 @@
     <string name="total_expenses">Total expenses:</string>
     <string name="savings_during_period">Savings during period:</string>
     <string name="overspend_during_period">Overspend during period:</string>
+    <string name="percentage">Percenteage:</string>
+    <string name="sum">Sum:</string>
 
 </resources>

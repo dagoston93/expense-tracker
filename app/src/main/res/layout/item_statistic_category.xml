@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/bg_card">
+
+    <ImageView
+        android:id="@+id/ivStatCategoryItemColorStrip"
+        android:layout_width="10dp"
+        android:layout_height="0dp"
+        android:src="@drawable/bg_card_start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvStatCategoryItemName"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/ivStatCategoryItemColorStrip"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Category1" />
+
+    <TextView
+        android:id="@+id/tvStatCategoryItemAmountLabel"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sum"
+        app:layout_constraintStart_toStartOf="@+id/tvStatCategoryItemName"
+        app:layout_constraintTop_toBottomOf="@+id/tvStatCategoryItemName" />
+
+    <TextView
+        android:id="@+id/tvStatCategoryItemAmount"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCategoryItemAmountLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="$1,250.14" />
+
+    <TextView
+        android:id="@+id/tvStatCategoryItemPercentageLabel"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/percentage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvStatCategoryItemName"
+        app:layout_constraintTop_toBottomOf="@+id/tvStatCategoryItemAmountLabel" />
+
+    <TextView
+        android:id="@+id/tvStatCategoryItemPercentage"
+        style="@style/Theme.ExpenseTracker.TextAppearance.DetailTransactionDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvStatCategoryItemPercentageLabel"
+        app:layout_constraintEnd_toEndOf="@+id/tvStatCategoryItemAmount"
+        tools:text="15 %" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
