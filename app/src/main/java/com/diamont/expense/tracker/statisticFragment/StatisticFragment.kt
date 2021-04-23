@@ -3,6 +3,7 @@ package com.diamont.expense.tracker.statisticFragment
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.motion.widget.MotionScene
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
@@ -17,6 +20,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.transition.Transition
+import androidx.transition.TransitionManager
 import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
@@ -25,9 +30,13 @@ import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import java.text.DecimalFormat
 
@@ -220,10 +229,65 @@ class StatisticFragment : DateRangeSelectorFragment() {
                 || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_CATEGORIES){
 
                 val chart = layout.findViewById<PieChart>(R.id.pcStatCatChart) as PieChart
+
+                chart.description.isEnabled = false
+                chart.legend.isEnabled = false
+                chart.setUsePercentValues(true)
+                chart.setDrawEntryLabels(false)
+                chart.isHighlightPerTapEnabled = true
+
                 val animDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
-                
+
+                val listener = object : OnChartValueSelectedListener{
+                    override fun onValueSelected(e: Entry?, h: Highlight?) {
+
+                        val tvLabel = layout.findViewById<TextView>(R.id.tvStatCatCategoryAmount)
+                        tvLabel.text = viewModel.getAmountStringFromList((e?.data as? Int) ?: 0)
+
+                        val tvAmount = layout.findViewById<TextView>(R.id.tvStatCatCategoryLabel)
+                        tvAmount.text = (e as? PieEntry)?.label ?: ""
+
+
+                        TransitionManager.beginDelayedTransition(layout.findViewById<ConstraintLayout>(R.id.clStatCatChartContainer))
+                        tvLabel.visibility = View.VISIBLE
+                        tvAmount.visibility = View.VISIBLE
+                    }
+
+                    override fun onNothingSelected() {
+                        TransitionManager.beginDelayedTransition(layout.findViewById<ConstraintLayout>(R.id.clStatCatChartContainer))
+                        layout.findViewById<TextView>(R.id.tvStatCatCategoryAmount).visibility = View.GONE
+                        layout.findViewById<TextView>(R.id.tvStatCatCategoryLabel).visibility = View.GONE
+                    }
+                }
+
                 chart.data = it
+                chart.setOnChartValueSelectedListener(listener)
+                chart.invalidate()
                 chart.animateXY(animDuration, animDuration)
+
+
+            }
+        })
+
+        /**
+         * Total expense/income label
+         */
+        viewModel.catPageTotalIncomeOrExpenseLabel.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_CATEGORIES
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_CATEGORIES){
+
+                layout.findViewById<TextView>(R.id.tvStatCatTotalLabel).text = it
+            }
+        })
+
+        /**
+         * Total expenses/incomes
+         */
+        viewModel.catPageTotalIncomeOrExpense.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_CATEGORIES
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_CATEGORIES){
+
+                layout.findViewById<TextView>(R.id.tvStatCatTotalAmount).text = it
             }
         })
 
@@ -251,36 +315,6 @@ class StatisticFragment : DateRangeSelectorFragment() {
             /** Add new layout */
             binding.llStatisticContent.removeAllViews()
             layout = inflater.inflate(layoutId, binding.llStatisticContent, true) as LinearLayout
-
-            /** TEST */
-//            if(previousSelectedStatisticTypeIndex == 1){
-//                val chart = layout.findViewById<PieChart>(R.id.pcStatCatChart) as PieChart
-//                chart.setUsePercentValues(true)
-//
-//                val value: List<PieEntry> = listOf(
-//                    PieEntry(20f, "Cat1"),
-//                    PieEntry(25f, "Cat2"),
-//                    PieEntry(40f, "Cat3"),
-//                    PieEntry(15f, "Cat4")
-//                )
-//
-//                val dataSet = PieDataSet(value, "TestCats")
-//                dataSet.setColors(listOf(
-//                    ContextCompat.getColor(requireContext(), R.color.category_color1),
-//                    ContextCompat.getColor(requireContext(), R.color.category_color4),
-//                    ContextCompat.getColor(requireContext(),R.color.category_color7),
-//                    ContextCompat.getColor(requireContext(), R.color.category_color10))
-//                )
-//
-//                val data = PieData(dataSet)
-//
-//                val animDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
-//                chart.data = data
-//                chart.animateXY(animDuration, animDuration)
-//
-//
-//
-//            }
 
             if(notifyViewModel){
                 viewModel.onSelectedStatisticTypeChanged(idx)
@@ -325,6 +359,4 @@ class StatisticFragment : DateRangeSelectorFragment() {
 
         super.onResume()
     }
-
-
 }
