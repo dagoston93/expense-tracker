@@ -132,7 +132,6 @@
                 android:id="@+id/pcStatPlanActualChart"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -142,11 +141,50 @@
                 android:id="@+id/pcStatPlannedChart"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/pcStatPlanActualChart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanSelectedPlanActualAmount" />
+                app:layout_constraintTop_toTopOf="@+id/pcStatPlanActualChart" />
+
+            <TextView
+                android:id="@+id/tvStatPlanOuterChartLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/outer_chart_actual_expenses"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pcStatPlanActualChart" />
+
+            <TextView
+                android:id="@+id/tvStatPlanInnerChartLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/inner_chart_planned_expenses"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvStatPlanOuterChartLabel"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanOuterChartLabel" />
+
+            <TextView
+                android:id="@+id/tvStatPlanNoActualDataLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/no_data_found"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanOuterChartLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvStatPlanOuterChartLabel" />
+
+            <TextView
+                android:id="@+id/tvStatPlanNoPlannedDataLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/no_data_found"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanInnerChartLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvStatPlanInnerChartLabel" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

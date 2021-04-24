@@ -224,5 +224,11 @@
     <string name="actual_sum">Actual sum:</string>
     <string name="planned_percentage">Planned percentage:</string>
     <string name="actual_percentage">Actual percentage:</string>
+    <string name="outer_chart_actual_expenses">Outer chart: Actual expenses</string>
+    <string name="outer_chart_actual_incomes">Outer chart: Actual incomes</string>
+    <string name="inner_chart_planned_expenses">Inner chart: Planned expenses</string>
+    <string name="inner_chart_planned_incomes">Inner chart: Planned incomes</string>
+    <string name="no_data_found">(No data found.)</string>
+
 
 </resources>

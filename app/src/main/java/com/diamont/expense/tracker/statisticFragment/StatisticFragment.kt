@@ -319,6 +319,13 @@ class StatisticFragment : DateRangeSelectorFragment() {
                 setUpPieChart(chart, it, createPlanPagePieChartListener(R.id.pcStatPlannedChart))
                 chart.holeRadius = 60f
 
+                layout.findViewById<TextView>(R.id.tvStatPlanNoActualDataLabel).visibility =
+                    if(it?.dataSet?.entryCount == 0){
+                        View.VISIBLE
+                    }else{
+                        View.GONE
+                    }
+
                 /**
                  * Add plan cards
                  */
@@ -375,14 +382,6 @@ class StatisticFragment : DateRangeSelectorFragment() {
                             )
                         }
 
-
-
-
-
-
-
-
-
                         mainContainer.addView(planLayout)
 
                     }
@@ -400,6 +399,13 @@ class StatisticFragment : DateRangeSelectorFragment() {
 
                 val chart = layout.findViewById<PieChart>(R.id.pcStatPlannedChart) as PieChart
                 setUpPieChart(chart, it, createPlanPagePieChartListener(R.id.pcStatPlanActualChart))
+
+                layout.findViewById<TextView>(R.id.tvStatPlanNoPlannedDataLabel).visibility =
+                    if(it?.dataSet?.entryCount == 0){
+                        View.VISIBLE
+                    }else{
+                        View.GONE
+                    }
 
             }
         })
@@ -445,6 +451,26 @@ class StatisticFragment : DateRangeSelectorFragment() {
                 || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
 
                 layout.findViewById<TextView>(R.id.tvStatPlanTotalActualAmount).text = it
+            }
+        })
+
+        /**
+         * Outer chart label
+         */
+        viewModel.planPageOuterPieChartLabelLabel.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_PLANS
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
+                layout.findViewById<TextView>(R.id.tvStatPlanOuterChartLabel).text = it
+            }
+        })
+
+        /**
+         * Inner chart label
+         */
+        viewModel.planPageInnerPieChartLabelLabel.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_PLANS
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
+                layout.findViewById<TextView>(R.id.tvStatPlanInnerChartLabel).text = it
             }
         })
 

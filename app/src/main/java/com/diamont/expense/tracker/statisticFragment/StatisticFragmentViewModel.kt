@@ -127,6 +127,14 @@ class StatisticFragmentViewModel (
     val planPageTotalActualIncomeOrExpenseLabel: LiveData<String>
         get() = _planPageTotalActualIncomeOrExpenseLabel
 
+    private val _planPageOuterPieChartLabelLabel = MutableLiveData<String>("")
+    val planPageOuterPieChartLabelLabel: LiveData<String>
+        get() = _planPageOuterPieChartLabelLabel
+
+    private val _planPageInnerPieChartLabelLabel = MutableLiveData<String>("")
+    val planPageInnerPieChartLabelLabel: LiveData<String>
+        get() = _planPageInnerPieChartLabelLabel
+
     /**
      * Declare some variables
      */
@@ -516,13 +524,16 @@ class StatisticFragmentViewModel (
                 )
 
                 _planPageTotalPlanned.value = totalPlanned
-                _planPageTotalPlannedIncomeOrExpenseLabel.value = appContext.resources.getString(
-                    if(selectedTransactionType == TransactionType.EXPENSE){
-                        R.string.total_planned_expenses
-                    }else{
-                        R.string.total_planned_incomes
-                    }
-                )
+
+                if(selectedTransactionType == TransactionType.EXPENSE){
+                    _planPageTotalPlannedIncomeOrExpenseLabel.value = appContext.resources.getString(R.string.total_planned_expenses)
+                    _planPageInnerPieChartLabelLabel.value = appContext.resources.getString(R.string.inner_chart_planned_expenses)
+                    _planPageOuterPieChartLabelLabel.value = appContext.resources.getString(R.string.outer_chart_actual_expenses)
+                }else{
+                    _planPageTotalPlannedIncomeOrExpenseLabel.value = appContext.resources.getString(R.string.total_planned_incomes)
+                    _planPageInnerPieChartLabelLabel.value = appContext.resources.getString(R.string.inner_chart_planned_incomes)
+                    _planPageOuterPieChartLabelLabel.value = appContext.resources.getString(R.string.outer_chart_actual_incomes)
+                }
 
                 Log.d("GUS", "tP: $totalPlanned")
                 Log.d("GUS", "tA: $totalActual")
