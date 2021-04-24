@@ -39,6 +39,8 @@
     <color name="category_color15">#ff9100</color>
     <color name="category_color16">#ff3d00</color>
 
+    <color name="not_planned">#EF9A9A</color>
+
 
     <color name="settingsSeparatorColor">#8E8B8B</color>
     <color name="settingsDisabledTitle">#AEABAB</color>

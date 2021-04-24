@@ -104,6 +104,11 @@ class StatisticFragmentViewModel (
         formatAmount(_planPageTotalPlanned.value)
     }
 
+    private val _planPageTotalActual = MutableLiveData<Float?>(null)
+    val planPageTotalActual: LiveData<String> = Transformations.map(_planPageTotalActual){
+        formatAmount(_planPageTotalActual.value)
+    }
+
     private val _planPageSelectedPlannedAmount = MutableLiveData<Float?>(null)
     val planPageSelectedPlannedAmount: LiveData<String> = Transformations.map(_planPageSelectedPlannedAmount){
         formatAmount(_planPageSelectedPlannedAmount.value)
@@ -117,6 +122,10 @@ class StatisticFragmentViewModel (
     private val _planPageTotalPlannedIncomeOrExpenseLabel = MutableLiveData<String>("")
     val planPageTotalPlannedIncomeOrExpenseLabel: LiveData<String>
         get() = _planPageTotalPlannedIncomeOrExpenseLabel
+
+    private val _planPageTotalActualIncomeOrExpenseLabel = MutableLiveData<String>("")
+    val planPageTotalActualIncomeOrExpenseLabel: LiveData<String>
+        get() = _planPageTotalActualIncomeOrExpenseLabel
 
     /**
      * Declare some variables
@@ -159,6 +168,10 @@ class StatisticFragmentViewModel (
     val dataColorList: MutableList<Int>
         get() = _dataColorList
 
+    private var _planStatisticDataList: MutableList<PlanStatisticData> = mutableListOf<PlanStatisticData>()
+    val planStatisticDataList: MutableList<PlanStatisticData>
+        get() = _planStatisticDataList
+
     /**
      * Set up coroutine job and the scope
      */
@@ -182,7 +195,7 @@ class StatisticFragmentViewModel (
     }
 
     /**
-     * Create some constants for the statistic type indexes
+     * Create some constants for the statistic type indices
      */
     companion object{
         const val IDX_INCOME_EXPENSE: Int = 0
@@ -209,6 +222,9 @@ class StatisticFragmentViewModel (
         updateData()
     }
 
+    /**
+     * This method is called when filtering the items is needed
+     */
     override fun filterItems() {
         filteredTransactionData = transactionData.filter{
             var isItemDisplayed = true
@@ -325,29 +341,21 @@ class StatisticFragmentViewModel (
                 for(dataIndex in _actualAmountList.indices){
                     val category = transactionCategories.find{ it.categoryId == _actualAmountList[dataIndex].id }
                     val description = category?.categoryName ?: ""
-                    val percentage = ((_actualAmountList[dataIndex].amount/total) * 100).roundToInt()
+                    val percentage = getRoundedPercentage(total, _actualAmountList[dataIndex].amount)//((_actualAmountList[dataIndex].amount/total) * 100).roundToInt()
                     val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.category_color1)
 
-                    _actualPieEntries.add(PieEntry(percentage.toFloat(), description, dataIndex))
+                    _actualPieEntries.add(PieEntry(percentage, description, dataIndex))
 
                     _dataColorList.add(color)
 
-                    percentTextColorList.add(ContextCompat.getColor(appContext,
-                        when(category?.categoryColorResId){
-                            R.color.category_color8,
-                            R.color.category_color11,
-                            R.color.category_color12,
-                            R.color.category_color13,
-                            R.color.category_color14-> R.color.black
-                            else -> R.color.white
-                        })
-                    )
+                    percentTextColorList.add(getResolvedLabelColor(category?.categoryColorResId))
                 }
 
                 val dataSet = PieDataSet(_actualPieEntries, "")
                 dataSet.setColors(_dataColorList)
                 dataSet.valueTextSize = 14f
                 dataSet.setValueTextColors(percentTextColorList)
+                dataSet.setSliceSpace(4f)
 
                 val data = PieData(dataSet)
                 data.setValueFormatter(PercentageFormatter())
@@ -381,15 +389,178 @@ class StatisticFragmentViewModel (
                 )
 
                 _plannedAmountList = planCalculator.getPlannedAmountsByPlanIds(calendarStartDate, calendarEndDate)
-
                 val totalPlanned = planCalculator.calculateTotalPlannedAmountWithinPeriod(calendarStartDate, calendarEndDate)
+
+                _planStatisticDataList = mutableListOf<PlanStatisticData>()
+
+                val notPlanned = _actualAmountList.find { it.id == -1 }
+
+                _planStatisticDataList.add(
+                    PlanStatisticData(
+                    -1,
+                        appContext.resources.getString(R.string.not_planned),
+                        ContextCompat.getColor(appContext, R.color.not_planned),
+                        0f,
+                        notPlanned?.amount ?: 0f,
+                        0f,
+                        //((notPlanned?.amount ?: 0f / totalActual) * 100).roundToInt().toFloat()
+                        getRoundedPercentage(totalActual, notPlanned?.amount ?: 0f)
+                    )
+                )
+
+                for(planData in _plannedAmountList){
+                    if(planData.amount != 0f){
+                        val actualPlan = if(selectedTransactionType == TransactionType.EXPENSE){
+                            expensePlans.find{ it.id == planData.id }
+                        }else{
+                            incomePlans.find{ it.id == planData.id }
+                        }
+
+                        val category = transactionCategories.find{ it.categoryId == actualPlan?.categoryId }
+                        val actualData = _actualAmountList.find { it.id == planData.id }
+
+
+                        val statData = PlanStatisticData(
+                            planData.id,
+                            actualPlan?.description ?: "",
+                            ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.not_planned),
+                            planData.amount,
+                            actualData?.amount ?: 0f,
+                            getRoundedPercentage(totalPlanned, planData.amount),
+                            getRoundedPercentage(totalActual, actualData?.amount ?: 0f)
+                        )
+
+                        _planStatisticDataList.add(statData)
+                    }
+                }
+
+                /**
+                 * Generate actual pie entries
+                 */
+                _actualPieEntries = mutableListOf<PieEntry>()
+                _dataColorList = mutableListOf<Int>()
+                var percentTextColorList: MutableList<Int> = mutableListOf<Int>()
+
+                for(dataIndex in _actualAmountList.indices){
+                    if(_actualAmountList[dataIndex].amount != 0f){
+                        val plan = if(selectedTransactionType == TransactionType.EXPENSE){
+                            expensePlans.find{ it.id == _actualAmountList[dataIndex].id }
+                        }else{
+                            incomePlans.find{ it.id == _actualAmountList[dataIndex].id }
+                        }
+                        val category = transactionCategories.find{ it.categoryId == plan?.categoryId }
+                        val description = plan?.description ?: appContext.resources.getString(R.string.not_planned)
+                        val percentage = getRoundedPercentage(totalActual, _actualAmountList[dataIndex].amount)
+                        val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.not_planned)
+
+                        _actualPieEntries.add(PieEntry(percentage, description, dataIndex))
+                        _dataColorList.add(color)
+
+                        percentTextColorList.add(getResolvedLabelColor(category?.categoryColorResId))
+                    }
+                }
+
+                var dataSet = PieDataSet(_actualPieEntries, "")
+                dataSet.setColors(_dataColorList)
+                dataSet.valueTextSize = 14f
+                dataSet.setValueTextColors(percentTextColorList)
+                dataSet.setSliceSpace(5f)
+
+                var data = PieData(dataSet)
+                data.setValueFormatter(PercentageFormatter())
+                _planActualPieChartData.value = data
+
+                /**
+                 * Generate planned pie entries
+                 */
+                _plannedPieEntries = mutableListOf<PieEntry>()
+                _dataColorList = mutableListOf<Int>()
+                percentTextColorList = mutableListOf<Int>()
+
+                for(dataIndex in _plannedAmountList.indices){
+                    if(_plannedAmountList[dataIndex].amount != 0f){
+                        val plan = if(selectedTransactionType == TransactionType.EXPENSE){
+                            expensePlans.find{ it.id == _plannedAmountList[dataIndex].id }
+                        }else{
+                            incomePlans.find{ it.id == _plannedAmountList[dataIndex].id }
+                        }
+                        val category = transactionCategories.find{ it.categoryId == plan?.categoryId }
+                        val description = plan?.description ?: appContext.resources.getString(R.string.not_planned)
+                        val percentage = getRoundedPercentage(totalPlanned, _plannedAmountList[dataIndex].amount)
+                        val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.not_planned)
+
+                        _plannedPieEntries.add(PieEntry(percentage, description, dataIndex))
+                        _dataColorList.add(color)
+
+                        percentTextColorList.add(getResolvedLabelColor(category?.categoryColorResId))
+                    }
+                }
+
+                dataSet = PieDataSet(_plannedPieEntries, "")
+                dataSet.setColors(_dataColorList)
+                dataSet.valueTextSize = 14f
+                dataSet.setValueTextColors(percentTextColorList)
+                dataSet.setSliceSpace(5f)
+
+                data = PieData(dataSet)
+                data.setValueFormatter(PercentageFormatter())
+                _planPlannedPieChartData.value = data
+
+                _planPageTotalActual.value = totalActual
+                _planPageTotalActualIncomeOrExpenseLabel.value = appContext.resources.getString(
+                    if(selectedTransactionType == TransactionType.EXPENSE){
+                        R.string.total_actual_expenses
+                    }else{
+                        R.string.total_actual_incomes
+                    }
+                )
+
+                _planPageTotalPlanned.value = totalPlanned
+                _planPageTotalPlannedIncomeOrExpenseLabel.value = appContext.resources.getString(
+                    if(selectedTransactionType == TransactionType.EXPENSE){
+                        R.string.total_planned_expenses
+                    }else{
+                        R.string.total_planned_incomes
+                    }
+                )
 
                 Log.d("GUS", "tP: $totalPlanned")
                 Log.d("GUS", "tA: $totalActual")
                 Log.d("GUS", "actList: $_actualAmountList")
                 Log.d("GUS", "plnList: $_plannedAmountList")
+
+                Log.d("GUS", "sorted: $_planStatisticDataList")
             }
         }
+    }
+
+    /**
+     * Call this method to get a percentage rounded to whole numbers
+     */
+    fun getRoundedPercentage(total: Float, fraction: Float): Float{
+        var percent = 0f
+
+        if(total != 0f){ /** Avoid division by zero */
+            percent = ((fraction / total) * 100).roundToInt().toFloat()
+        }
+
+        return percent
+    }
+
+    /**
+     * Call this method to determine the label color of pie chart
+     */
+    fun getResolvedLabelColor(sliceColorId: Int?): Int{
+        return ContextCompat.getColor(appContext,
+            when(sliceColorId){
+                R.color.not_planned,
+                R.color.category_color8,
+                R.color.category_color11,
+                R.color.category_color12,
+                R.color.category_color13,
+                R.color.category_color14-> R.color.black
+                else -> R.color.white
+            })
     }
 
 

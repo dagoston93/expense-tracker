@@ -210,8 +210,12 @@
     <string name="income_plans">Income plans</string>
     <string name="expense_plans">Expense plans</string>
     <string name="total_incomes">Total incomes:</string>
+    <string name="total_actual_incomes">Total actual incomes:</string>
+    <string name="total_planned_incomes_colon">Total planned incomes:</string>
     <string name="not_planned_colon">Not planned:</string>
     <string name="total_expenses">Total expenses:</string>
+    <string name="total_actual_expenses">Total actual expenses:</string>
+    <string name="total_planned_expenses_colon">Total planned expenses:</string>
     <string name="savings_during_period">Savings during period:</string>
     <string name="overspend_during_period">Overspend during period:</string>
     <string name="percentage">Percentage:</string>

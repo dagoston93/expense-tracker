@@ -29,6 +29,7 @@ import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
@@ -224,14 +225,6 @@ class StatisticFragment : DateRangeSelectorFragment() {
 
                 val chart = layout.findViewById<PieChart>(R.id.pcStatCatChart) as PieChart
 
-                chart.description.isEnabled = false
-                chart.legend.isEnabled = false
-                chart.setUsePercentValues(true)
-                chart.setDrawEntryLabels(false)
-                chart.isHighlightPerTapEnabled = true
-
-                val animDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
-
                 val listener = object : OnChartValueSelectedListener{
                     override fun onValueSelected(e: Entry?, h: Highlight?) {
 
@@ -254,10 +247,7 @@ class StatisticFragment : DateRangeSelectorFragment() {
                     }
                 }
 
-                chart.data = it
-                chart.setOnChartValueSelectedListener(listener)
-                chart.invalidate()
-                chart.animateXY(animDuration, animDuration)
+                setUpPieChart(chart, it, listener)
 
                 val mainContainer = layout.findViewById<LinearLayout>(R.id.llStatCatMainContainer)
                 mainContainer.removeAllViews()
@@ -310,6 +300,78 @@ class StatisticFragment : DateRangeSelectorFragment() {
                 || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_CATEGORIES){
 
                 layout.findViewById<TextView>(R.id.tvStatCatTotalAmount).text = it
+            }
+        })
+
+        /**
+         * By plans
+         *
+         * Actual pie data
+         */
+        viewModel.planActualPieChartData.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_PLANS
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
+
+                val chart = layout.findViewById<PieChart>(R.id.pcStatPlanActualChart) as PieChart
+                setUpPieChart(chart, it)
+                chart.holeRadius = 60f
+            }
+        })
+
+        /**
+         * Plan pie entries
+         */
+        viewModel.planPlannedPieChartData.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_PLANS
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
+
+                val chart = layout.findViewById<PieChart>(R.id.pcStatPlannedChart) as PieChart
+                setUpPieChart(chart, it)
+
+            }
+        })
+
+        /**
+         * Planned label
+         */
+        viewModel.planPageTotalPlannedIncomeOrExpenseLabel.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_PLANS
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
+
+                layout.findViewById<TextView>(R.id.tvStatPlanTotalPlannedLabel).text = it
+            }
+        })
+
+        /**
+         * Actual label
+         */
+        viewModel.planPageTotalActualIncomeOrExpenseLabel.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_PLANS
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
+
+                layout.findViewById<TextView>(R.id.tvStatPlanTotalActualLabel).text = it
+            }
+        })
+
+        /**
+         * Planned amount
+         */
+        viewModel.planPageTotalPlanned.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_PLANS
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
+
+                layout.findViewById<TextView>(R.id.tvStatPlanTotalPlannedAmount).text = it
+            }
+        })
+
+        /**
+         * Actual amount
+         */
+        viewModel.planPageTotalActual.observe(viewLifecycleOwner, Observer {
+            if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_INCOME_PLANS
+                || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
+
+                layout.findViewById<TextView>(R.id.tvStatPlanTotalActualAmount).text = it
             }
         })
 
@@ -368,6 +430,24 @@ class StatisticFragment : DateRangeSelectorFragment() {
             /** No animation, just add the layout */
             addNewLayout()
         }
+    }
+
+    /**
+     * Call this method to setup a PieChart
+     */
+    private fun setUpPieChart(chart: PieChart, data: PieData?, listener: OnChartValueSelectedListener? = null){
+        val animDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
+
+        chart.description.isEnabled = false
+        chart.legend.isEnabled = false
+        chart.setUsePercentValues(true)
+        chart.setDrawEntryLabels(false)
+        chart.isHighlightPerTapEnabled = true
+
+        chart.data = data
+        chart.setOnChartValueSelectedListener(listener)
+        chart.invalidate()
+        chart.animateXY(animDuration, animDuration)
     }
 
     /**

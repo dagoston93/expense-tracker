@@ -30,20 +30,43 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:text="Total planned expenses:"
                 android:textAlignment="viewStart"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Total planned expenses:" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvStatPlanActualLabel"
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text=" actual:"
                 android:textAlignment="viewStart"
+                android:visibility="gone"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanSelectedPlanActualAmount"
                 app:layout_constraintStart_toStartOf="@+id/tvStatPlanPlannedLabel"
-                android:text=" actual:" />
+                tools:visibility="visible" />
+
+
+            <TextView
+                android:id="@+id/tvStatPlanTotalActualLabel"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total actual expenses:"
+                android:textAlignment="viewStart"
+                app:layout_constraintStart_toStartOf="@+id/tvStatPlanTotalPlannedLabel"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanTotalPlannedLabel" />
+
+            <TextView
+                android:id="@+id/tvStatPlanTotalActualAmount"
+                style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanTotalActualLabel"
+                app:layout_constraintEnd_toEndOf="@+id/tvStatPlanTotalPlannedAmount"
+                tools:text="$1,528.28" />
 
             <TextView
                 android:id="@+id/tvStatPlanPlannedLabel"
@@ -52,8 +75,10 @@
                 android:layout_height="wrap_content"
                 android:text=" planned:"
                 android:textAlignment="viewStart"
+                android:visibility="gone"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanNameLabel"
-                app:layout_constraintStart_toEndOf="@+id/tvStatPlanNameLabel" />
+                app:layout_constraintStart_toEndOf="@+id/tvStatPlanNameLabel"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/tvStatPlanTotalPlannedAmount"
@@ -75,7 +100,7 @@
                 android:textAlignment="viewStart"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanTotalPlannedLabel"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanTotalActualLabel"
                 tools:text="Plan name"
                 tools:visibility="visible" />
 
@@ -104,7 +129,7 @@
                 tools:visibility="visible" />
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pcStatPlanPlannedChart"
+                android:id="@+id/pcStatPlanActualChart"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -114,7 +139,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvStatPlanSelectedPlanActualAmount" />
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pcStatActualChart"
+                android:id="@+id/pcStatPlannedChart"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 app:layout_constraintBottom_toBottomOf="parent"
