@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ import com.diamont.expense.tracker.databinding.FragmentStatisticBinding
 import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.enums.TransactionType
+import com.diamont.expense.tracker.util.view.CircularProgressBar
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
@@ -34,6 +36,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
 
 class StatisticFragment : DateRangeSelectorFragment() {
@@ -234,16 +237,15 @@ class StatisticFragment : DateRangeSelectorFragment() {
                         val tvAmount = layout.findViewById<TextView>(R.id.tvStatCatCategoryLabel)
                         tvAmount.text = (e as? PieEntry)?.label ?: ""
 
-
-                        TransitionManager.beginDelayedTransition(layout.findViewById<ConstraintLayout>(R.id.clStatCatChartContainer))
                         tvLabel.visibility = View.VISIBLE
                         tvAmount.visibility = View.VISIBLE
+                        TransitionManager.beginDelayedTransition(layout.findViewById<ConstraintLayout>(R.id.clStatCatChartContainer))
                     }
 
                     override fun onNothingSelected() {
-                        TransitionManager.beginDelayedTransition(layout.findViewById<ConstraintLayout>(R.id.clStatCatChartContainer))
                         layout.findViewById<TextView>(R.id.tvStatCatCategoryAmount).visibility = View.GONE
                         layout.findViewById<TextView>(R.id.tvStatCatCategoryLabel).visibility = View.GONE
+                        TransitionManager.beginDelayedTransition(layout.findViewById<ConstraintLayout>(R.id.clStatCatChartContainer))
                     }
                 }
 
@@ -313,8 +315,79 @@ class StatisticFragment : DateRangeSelectorFragment() {
                 || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
 
                 val chart = layout.findViewById<PieChart>(R.id.pcStatPlanActualChart) as PieChart
-                setUpPieChart(chart, it)
+
+                setUpPieChart(chart, it, createPlanPagePieChartListener(R.id.pcStatPlannedChart))
                 chart.holeRadius = 60f
+
+                /**
+                 * Add plan cards
+                 */
+                val mainContainer = layout.findViewById<LinearLayout>(R.id.llStatPlanMainContainer)
+                mainContainer.removeAllViews()
+
+                for(i  in viewModel.planStatisticDataList.indices){
+                    if(viewModel.planStatisticDataList[i].actualAmount != 0f || viewModel.planStatisticDataList[i].plannedAmount != 0f){
+                        val planLayout = inflater.inflate(
+                            R.layout.item_statistic_plan,
+                            mainContainer,
+                            false
+                        ) as ConstraintLayout
+
+                        ImageViewCompat.setImageTintList(
+                            planLayout.findViewById<ImageView>(R.id.ivStatPlanItemColorStrip),
+                            ColorStateList.valueOf(viewModel.planStatisticDataList[i].color)
+                        )
+
+                        planLayout.findViewById<TextView>(R.id.tvStatPlanItemName).text = viewModel.planStatisticDataList[i].desciption
+
+                        planLayout.findViewById<TextView>(R.id.tvStatPlanItemActualAmount).text =
+                            viewModel.formatAmount(viewModel.planStatisticDataList[i].actualAmount)
+
+                        planLayout.findViewById<TextView>(R.id.tvStatPlanItemActualPercentage).text =
+                            "%.0f%%".format(viewModel.planStatisticDataList[i].actualPercentage)
+
+                        val tvPlannedSum = planLayout.findViewById<TextView>(R.id.tvStatPlanItemPlannedAmount)
+                        val tvPlannedSumLabel = planLayout.findViewById<TextView>(R.id.tvStatPlanItemPlannedAmountLabel)
+                        val tvPlannedPercentage = planLayout.findViewById<TextView>(R.id.tvStatPlanItemPercentagePlanned)
+                        val tvPlannedPercentageLabel = planLayout.findViewById<TextView>(R.id.tvStatPlanItemPercentagePlannedLabel)
+                        val circularProgressbar = planLayout.findViewById<CircularProgressBar>(R.id.cpbStatPlanItemProgress)
+
+                        if(viewModel.planStatisticDataList[i].id == -1){
+                            tvPlannedSum.visibility = View.GONE
+                            tvPlannedSumLabel.visibility = View.GONE
+
+                            tvPlannedPercentage.visibility = View.GONE
+                            tvPlannedPercentageLabel.visibility = View.GONE
+
+                            circularProgressbar.visibility = View.GONE
+                        }else{
+                            tvPlannedSum.text = viewModel.formatAmount(viewModel.planStatisticDataList[i].plannedAmount)
+                            tvPlannedPercentage.text = "%.0f%%".format(viewModel.planStatisticDataList[i].plannedPercentage)
+                            circularProgressbar.setCircularProgressBarProgress(
+                                ((viewModel.planStatisticDataList[i].actualAmount/viewModel.planStatisticDataList[i].plannedAmount) * 100).roundToInt()
+                            )
+                            circularProgressbar.setCircularProgressBarForegroundColor(
+                                if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
+                                    R.color.colorGoalNotAchieved
+                                }else{
+                                    R.color.colorGoalAchieved
+                                }
+                            )
+                        }
+
+
+
+
+
+
+
+
+
+                        mainContainer.addView(planLayout)
+
+                    }
+                }
+
             }
         })
 
@@ -326,7 +399,7 @@ class StatisticFragment : DateRangeSelectorFragment() {
                 || previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
 
                 val chart = layout.findViewById<PieChart>(R.id.pcStatPlannedChart) as PieChart
-                setUpPieChart(chart, it)
+                setUpPieChart(chart, it, createPlanPagePieChartListener(R.id.pcStatPlanActualChart))
 
             }
         })
@@ -447,7 +520,66 @@ class StatisticFragment : DateRangeSelectorFragment() {
         chart.data = data
         chart.setOnChartValueSelectedListener(listener)
         chart.invalidate()
+        chart.highlightValue(null)
         chart.animateXY(animDuration, animDuration)
+    }
+
+    /**
+     * Call this method to create the listener for the plan page pie charts
+     */
+    private fun createPlanPagePieChartListener(otherChartId: Int): OnChartValueSelectedListener{
+        return object : OnChartValueSelectedListener{
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+
+                val tvPlanNameLabel = layout.findViewById<TextView>(R.id.tvStatPlanNameLabel)
+                val tvPlannedLabel = layout.findViewById<TextView>(R.id.tvStatPlanPlannedLabel)
+                val tvActualLabel = layout.findViewById<TextView>(R.id.tvStatPlanActualLabel)
+                val tvPlannedAmount = layout.findViewById<TextView>(R.id.tvStatPlanSelectedPlanPlannedAmount)
+                val tvActualAmount = layout.findViewById<TextView>(R.id.tvStatPlanSelectedPlanActualAmount)
+                val pcOtherPieChart = layout.findViewById<PieChart>(otherChartId)
+
+                pcOtherPieChart.highlightValue(null)
+
+                val statData = viewModel.planStatisticDataList.find { stat->
+                    stat.id == e?.data as Int
+                }
+
+                Log.d("GUS", "data: ${viewModel.planStatisticDataList}")
+                Log.d("GUS", "sel:$statData")
+
+                if(statData != null){
+                    tvActualLabel.visibility = View.VISIBLE
+                    tvPlanNameLabel.visibility = View.VISIBLE
+                    tvActualAmount.visibility = View.VISIBLE
+
+                    tvPlanNameLabel.text = statData.desciption
+                    tvActualAmount.text = viewModel.formatAmount(statData.actualAmount)
+
+
+                    if(statData.id == -1){
+                        tvPlannedAmount.visibility = View.GONE
+                        tvPlannedLabel.visibility = View.GONE
+                    }else{
+                        tvPlannedAmount.visibility = View.VISIBLE
+                        tvPlannedLabel.visibility = View.VISIBLE
+
+                        tvPlannedAmount.text = viewModel.formatAmount(statData.plannedAmount)
+                    }
+
+                    TransitionManager.beginDelayedTransition(layout.findViewById<ConstraintLayout>(R.id.clStatPlanChartContainer))
+                }
+            }
+
+            override fun onNothingSelected() {
+                layout.findViewById<TextView>(R.id.tvStatPlanNameLabel).visibility = View.GONE
+                layout.findViewById<TextView>(R.id.tvStatPlanPlannedLabel).visibility = View.GONE
+                layout.findViewById<TextView>(R.id.tvStatPlanActualLabel).visibility = View.GONE
+                layout.findViewById<TextView>(R.id.tvStatPlanSelectedPlanPlannedAmount).visibility = View.GONE
+                layout.findViewById<TextView>(R.id.tvStatPlanSelectedPlanActualAmount).visibility = View.GONE
+
+                TransitionManager.beginDelayedTransition(layout.findViewById<ConstraintLayout>(R.id.clStatPlanChartContainer))
+            }
+        }
     }
 
     /**

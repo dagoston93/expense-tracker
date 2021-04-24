@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat
 import com.diamont.expense.tracker.R
@@ -76,6 +77,31 @@ class CircularProgressBar(context: Context, attrs: AttributeSet) : LinearLayout(
          * Validate progress value before setting it on the progress bar
          * This way we are able to display as text over 100 %.
          */
+        setProgressBarValue()
+
+    }
+
+    /** Set progress */
+    fun setCircularProgressBarProgress(prog: Int) {
+        /** Check if within range */
+        //if (prog !in 0..100) return
+
+        progress = prog
+
+        /** Set the progress and text */
+        tvProgressText.text = "$progress %"
+
+        setProgressBarValue()
+    }
+
+    /** Set foreground color */
+    fun setCircularProgressBarForegroundColor(colorResId: Int){
+        foregroundColorValue = ContextCompat.getColor(context, colorResId)
+        pbProgressBar.progressTintList = ColorStateList.valueOf(foregroundColorValue)
+    }
+
+    /** This method sets the progress bar value */
+    private fun setProgressBarValue(){
         if (progress > 100) {
             pbProgressBar.progress = 100
         } else if (progress < 0) {
@@ -83,18 +109,5 @@ class CircularProgressBar(context: Context, attrs: AttributeSet) : LinearLayout(
         } else {
             pbProgressBar.progress = progress
         }
-
-    }
-
-    /** Set progress */
-    fun setCircularProgressBarProgress(prog: Int) {
-        /** Check if within range */
-        if (prog !in 0..100) return
-
-        progress = prog
-
-        /** Set the progress and text */
-        tvProgressText.text = "$progress %"
-        pbProgressBar.progress = progress
     }
 }

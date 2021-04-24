@@ -40,11 +40,11 @@
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" actual:"
+                android:text=" - actual:"
                 android:textAlignment="viewStart"
                 android:visibility="gone"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanSelectedPlanActualAmount"
-                app:layout_constraintStart_toStartOf="@+id/tvStatPlanPlannedLabel"
+                app:layout_constraintStart_toEndOf="@+id/tvStatPlanNameLabel"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanPlannedLabel"
                 tools:visibility="visible" />
 
 
@@ -73,11 +73,11 @@
                 style="@style/Theme.ExpenseTracker.TextAppearance.CardLayoutInfoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" planned:"
+                android:text=" - planned:"
                 android:textAlignment="viewStart"
                 android:visibility="gone"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanNameLabel"
                 app:layout_constraintStart_toEndOf="@+id/tvStatPlanNameLabel"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanTotalActualLabel"
                 tools:visibility="visible" />
 
             <TextView
@@ -123,8 +123,8 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="viewStart"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/tvStatPlanTotalPlannedAmount"
-                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanSelectedPlanPlannedAmount"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvStatPlanActualLabel"
+                app:layout_constraintEnd_toEndOf="@+id/tvStatPlanTotalActualAmount"
                 tools:text="$528.28"
                 tools:visibility="visible" />
 
@@ -136,7 +136,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanSelectedPlanActualAmount" />
+                app:layout_constraintTop_toBottomOf="@+id/tvStatPlanActualLabel" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pcStatPlannedChart"

@@ -409,7 +409,7 @@ class StatisticFragmentViewModel (
                 )
 
                 for(planData in _plannedAmountList){
-                    if(planData.amount != 0f){
+                    //if(planData.amount != 0f){
                         val actualPlan = if(selectedTransactionType == TransactionType.EXPENSE){
                             expensePlans.find{ it.id == planData.id }
                         }else{
@@ -431,7 +431,7 @@ class StatisticFragmentViewModel (
                         )
 
                         _planStatisticDataList.add(statData)
-                    }
+                    //}
                 }
 
                 /**
@@ -453,7 +453,7 @@ class StatisticFragmentViewModel (
                         val percentage = getRoundedPercentage(totalActual, _actualAmountList[dataIndex].amount)
                         val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.not_planned)
 
-                        _actualPieEntries.add(PieEntry(percentage, description, dataIndex))
+                        _actualPieEntries.add(PieEntry(percentage, description, _actualAmountList[dataIndex].id))
                         _dataColorList.add(color)
 
                         percentTextColorList.add(getResolvedLabelColor(category?.categoryColorResId))
@@ -489,7 +489,7 @@ class StatisticFragmentViewModel (
                         val percentage = getRoundedPercentage(totalPlanned, _plannedAmountList[dataIndex].amount)
                         val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.not_planned)
 
-                        _plannedPieEntries.add(PieEntry(percentage, description, dataIndex))
+                        _plannedPieEntries.add(PieEntry(percentage, description, _plannedAmountList[dataIndex].id))
                         _dataColorList.add(color)
 
                         percentTextColorList.add(getResolvedLabelColor(category?.categoryColorResId))
@@ -589,7 +589,7 @@ class StatisticFragmentViewModel (
     /**
      * Call this method to convert an amount to a formatted string
      */
-    private fun formatAmount(amount: Float?): String{
+    fun formatAmount(amount: Float?): String{
         var amountString: String = ""
 
         if (amount != null && decimalFormat != null) {
