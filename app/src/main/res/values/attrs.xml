@@ -3,6 +3,14 @@
     <!-- Custom theme attributes -->
     <declare-styleable name="expenseTrackerTheme">
         <attr name="expenseTrackerCardBackgroundColor" format="color"/>
+        <attr name="expenseTrackerBackgroundColor" format="color"/>
+        <attr name="expenseTrackerDropdownBackgroundColor" format="color"/>
+        <attr name="expenseTrackerIconOnPrimaryColor" format="color"/>
+        <attr name="expenseTrackerExposedDropdownOnPrimaryStyle" format="reference"/>
+        <attr name="expenseTrackerTabTextColorSelector" format="reference"/>
+        <attr name="expenseTrackerBottomNavItemColorSelector" format="reference"/>
+<!--        <attr name="expenseTrackerTabTextColorSelector" format="reference"/>-->
+
     </declare-styleable>
     <!-- Attributes for PinCodeInputView -->
     <declare-styleable name="PinCodeInputView">
@@ -50,4 +58,5 @@
         <attr name="transactionDetailLabelTextAppearance" format="reference"/>
         <attr name="transactionDetailViewStyle" format="reference"/>
     </declare-styleable>
+
 </resources>

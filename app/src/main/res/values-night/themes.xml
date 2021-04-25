@@ -2,10 +2,10 @@
     <!-- Base application theme. -->
     <style name="Theme.ExpenseTracker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryVariant">@color/primaryLight</item>
-        <item name="colorPrimaryDark">@color/primaryDark</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/primaryColorNight</item>
+        <item name="colorPrimaryVariant">@color/primaryLightNight</item>
+        <item name="colorPrimaryDark">@color/primaryDarkNight</item>
+        <item name="colorOnPrimary">@color/primaryColor</item>
 
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/secondaryColor</item>
@@ -14,7 +14,6 @@
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-
 
         <!-- Customize your theme here. -->
         <item name="bottomAppBarStyle">@style/Theme.ExpenseTracker.Widget.BottomAppBar</item>
@@ -26,6 +25,15 @@
         <item name="circularProgressBarStyle">@style/Theme.ExpenseTracker.Widget.CircularProgressBar</item>
         <item name="transactionDetailViewStyle">@style/Theme.ExpenseTracker.Widget.TransactionDetailsView</item>
 
-        <item name="expenseTrackerCardBackgroundColor">@color/white</item>
+        <item name="expenseTrackerCardBackgroundColor">@color/primaryColorNight</item>
+        <item name="expenseTrackerBackgroundColor">@color/backgroundNight</item>
+        <item name="expenseTrackerDropdownBackgroundColor">@color/backgroundNight</item>
+        <item name="expenseTrackerIconOnPrimaryColor">@color/circularProgressbarBackground</item>
+        <item name="expenseTrackerTabTextColorSelector">@drawable/sel_tab_text_color_dark</item>
+        <item name="expenseTrackerBottomNavItemColorSelector">@color/selector_bottom_nav_menu_item_dark</item>
+
+        <item name="materialAlertDialogTheme">@style/Theme.ExpenseTracker.ThemeOverlay.MaterialAlertDialog.Dark</item>
+
+
     </style>
 </resources>

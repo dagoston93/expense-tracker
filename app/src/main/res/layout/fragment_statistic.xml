@@ -13,7 +13,7 @@
             android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
+            android:background="?attr/colorPrimary"
             android:orientation="vertical"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
@@ -21,18 +21,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilStatisticPeriod"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                style="@style/Theme.ExpenseTracker.Widget.ExposedDropDownMenuOnPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_card"
                 android:hint="@string/period"
                 android:visibility="visible"
-                app:boxBackgroundColor="@color/white"
-                android:layout_marginBottom="8dp"
-                app:boxCornerRadiusBottomEnd="15dp"
-                app:boxCornerRadiusBottomStart="15dp"
-                app:boxCornerRadiusTopEnd="15dp"
-                app:boxCornerRadiusTopStart="15dp">
+                android:layout_marginBottom="8dp">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvStatisticPeriod"
@@ -44,17 +39,12 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilStatisticType"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                style="@style/Theme.ExpenseTracker.Widget.ExposedDropDownMenuOnPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_card"
                 android:hint="@string/statistic_type"
-                android:visibility="visible"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="15dp"
-                app:boxCornerRadiusBottomStart="15dp"
-                app:boxCornerRadiusTopEnd="15dp"
-                app:boxCornerRadiusTopStart="15dp">
+                android:visibility="visible">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvStatisticType"

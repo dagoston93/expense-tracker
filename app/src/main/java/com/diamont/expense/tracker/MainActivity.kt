@@ -3,6 +3,9 @@ package com.diamont.expense.tracker
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +26,9 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        /*** TEST DARK THEME **/
+        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
 
         /**  Inflate the layout using data binding */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)

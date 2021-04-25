@@ -137,6 +137,7 @@
     <string name="add_category">Add category</string>
     <string name="add_category_dialog_text">Enter a name and choose a color for the new category.</string>
     <string name="category_name">Category name:</string>
+    <string name="choose_color">Choose color</string>
 
     <!-- Strings for SettingsFragment -->
     <string name="settings_authentication_description">Requires authentication on app startup to protect your data.</string>
@@ -229,6 +230,7 @@
     <string name="inner_chart_planned_expenses">Inner chart: Planned expenses</string>
     <string name="inner_chart_planned_incomes">Inner chart: Planned incomes</string>
     <string name="no_data_found">(No data found.)</string>
+    c
 
 
 </resources>

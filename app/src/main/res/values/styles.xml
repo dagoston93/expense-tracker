@@ -60,8 +60,8 @@
 
     <!-- Style for the BottomNavigationView -->
     <style name="Theme.ExpenseTracker.Widget.BottomNavigationView" parent="">
-        <item name="itemIconTint">@color/selector_bottom_nav_menu_item</item>
-        <item name="itemTextColor">@color/selector_bottom_nav_menu_item</item>
+        <item name="itemIconTint">?attr/expenseTrackerBottomNavItemColorSelector</item>
+        <item name="itemTextColor">?attr/expenseTrackerBottomNavItemColorSelector</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
@@ -77,7 +77,7 @@
     <style name="Theme.ExpenseTracker.TextAppearance.DrawerLayoutTitle" parent="">
         <item name="android:textSize">28sp</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/primaryColor</item>
         <item name="android:textStyle">bold</item>
 
     </style>
@@ -109,7 +109,7 @@
 
     <style name="Theme.ExpenseTracker.TextAppearance.TotalBalance" parent="">
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/primaryColor</item>
     </style>
 
     <!-- Style for the TransactionDetailsView -->
@@ -168,4 +168,23 @@
         <item name="android:textAlignment">center</item>
     </style>
 
+    <!-- Style for exposed dropdown menus on primary color -->
+    <style name="Theme.ExpenseTracker.Widget.ExposedDropDownMenuOnPrimary" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu">
+        <item name="boxBackgroundColor">?attr/expenseTrackerDropdownBackgroundColor</item>
+        <item name="boxCornerRadiusBottomEnd">15dp</item>
+        <item name="boxCornerRadiusBottomStart">15dp</item>
+        <item name="boxCornerRadiusTopEnd">15dp</item>
+        <item name="boxCornerRadiusTopStart">15dp</item>
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Dialog outlined text field -->
+    <style name="Theme.ExpenseTracker.Widget.TextInputField.Outlined.Dark.OnDialog" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="hintTextColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="boxBackgroundColor">@color/primaryColorNight</item>
+    </style>
+    <style name="Theme.ExpenseTracker.ThemeOverlay.MaterialAlertDialog.Dark" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/primaryColor</item>
+    </style>
 </resources>

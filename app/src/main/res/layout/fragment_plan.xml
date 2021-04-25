@@ -14,16 +14,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
+        android:background="?attr/expenseTrackerBackgroundColor"
         android:orientation="vertical">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tlPlanTabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
-            app:tabIndicatorColor="@color/white"
-            app:tabTextColor="@drawable/sel_tab_text_color">
+            android:background="?attr/colorPrimary"
+            app:tabIndicatorColor="?attr/expenseTrackerIconOnPrimaryColor"
+            app:tabTextColor="?attr/expenseTrackerTabTextColorSelector">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabExpenses"
@@ -107,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/background"
+            android:background="?attr/expenseTrackerBackgroundColor"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:paddingEnd="8dp">

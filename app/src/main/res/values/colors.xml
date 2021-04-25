@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <color name="purple_200">#FFBB86FC</color>-->
-<!--    <color name="purple_500">#FF6200EE</color>-->
-<!--    <color name="purple_700">#FF3700B3</color>-->
-<!--    <color name="teal_200">#FF03DAC5</color>-->
-<!--    <color name="teal_700">#FF018786</color>-->
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="cardBackgroundNight">#939393</color>
 
     <color name="primaryColor">#46ba20</color>
     <color name="primaryLight">#7eed56</color>
     <color name="primaryDark">#008900</color>
+
+    <color name="primaryColorNight">#333333</color>
+    <color name="primaryLightNight">@color/black</color>
+    <color name="primaryDarkNight">@color/black</color>
 
     <color name="secondaryColor">#FF4A1C</color>
     <color name="secondaryLight">#ff5c33</color>
     <color name="drawer_header_background">#ECEFEB</color>
 
     <color name="circularProgressbarBackground">#8E8B8B</color>
-    <color name="background">#E0E6EB</color>
+    <color name="tabTextNotSelectedDark">#6C6B6B</color>
+
+    <color name="backgroundDay">#E0E6EB</color>
+    <color name="backgroundNight">@color/black</color>
+
     <color name="colorGoalAchieved">@color/primaryColor</color>
     <color name="colorGoalNotAchieved">#D13E3E</color>
 

@@ -26,5 +26,12 @@
         <item name="transactionDetailViewStyle">@style/Theme.ExpenseTracker.Widget.TransactionDetailsView</item>
 
         <item name="expenseTrackerCardBackgroundColor">@color/white</item>
+        <item name="expenseTrackerBackgroundColor">@color/backgroundDay</item>
+        <item name="expenseTrackerDropdownBackgroundColor">@color/white</item>
+        <item name="expenseTrackerIconOnPrimaryColor">@color/white</item>
+        <item name="expenseTrackerTabTextColorSelector">@drawable/sel_tab_text_color</item>
+        <item name="expenseTrackerBottomNavItemColorSelector">@color/selector_bottom_nav_menu_item</item>
+
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog</item>
     </style>
 </resources>

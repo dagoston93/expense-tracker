@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
@@ -542,6 +543,10 @@ class StatisticFragment : DateRangeSelectorFragment() {
         chart.setUsePercentValues(true)
         chart.setDrawEntryLabels(false)
         chart.isHighlightPerTapEnabled = true
+
+        chart.setHoleColor(
+            ContextCompat.getColor(requireContext(), android.R.color.transparent)
+        )
 
         chart.data = data
         chart.setOnChartValueSelectedListener(listener)
