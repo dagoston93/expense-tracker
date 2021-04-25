@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="app_name">Expense tracker</string>
+
+    <!-- Strings for the PinCodeInputView -->
+    <string name="pin_colon">PIN:</string>
+
+    <!-- Strings for the initial setup pages -->
+    <string name="welcome">Üdvözöli \naz  Expense Tracker!</string>
+    <string name="initial_setup_needed">Az alkalmazás használata előtt néhány egyszerű lépést el kell végezni!</string>
+    <string name="start">Kezdés</string>
+    <string name="authentication">Azonosítás</string>
+    <string name="want_create_pin">Szeretne létrehozni PIN kódot az adatai védelmére?</string>
+    <string name="recommended">(Ajánlott)</string>
+    <string name="no_thanks">Köszönöm nem</string>
+    <string name="yes">Igen</string>
+    <string name="set_pin_code">PIN kód beírása</string>
+    <string name="confirm_pin_code">PIN kód megerősítése</string>
+    <string name="pin_codes_do_not_match">A beírt PIN kódok nem egyeznek. \n Próbálja meg újra!</string>
+    <string name="fingerprint">Ujjlenyomat</string>
+    <string name="ask_fingerprint_auth">Szeretné bekapcsolni az ujjlenyomattal történő azonosítást?</string>
+    <string name="congratulations">Gratulálunk!</string>
+    <string name="initial_setup_complete">A szükséges beállítások elkészültek!\nMostmár készen áll az alkalmazás használatára. \nKöszönjük!</string>
+    <string name="finish">Befejezés</string>
+    <string name="choose_currency">Pénznem kiválasztása</string>
+    <string name="currency">Pénznem</string>
+    <string name="start_balance">Kezdeti egyenleg</string>
+    <string name="set_balance">Egyenleg mentése</string>
+    <string name="card">Bankkártya</string>
+    <string name="cash">Készpénz</string>
+    <string name="enter_balance_details">Kérjük adja meg a kezdő egynlegét.</string>
+    <string name="choose_currency_subtitle">Válassza ki a használni kívánt pénznemet.</string>
+
+    <!-- Strings for the authentication fragment -->
+    <string name="please_log_in">Bejelentkezés</string>
+    <string name="invalid_pin">Helytelen PIN kód.\nPróbálja meg újra!</string>
+    <string name="use_pin_code"> PIN kód használata</string>
+    <string name="biometric_prompt_title">Ujjlenyomat</string>
+    <string name="biometric_prompt_subtitle">Jelentkezzen be ujjlenyomatával.</string>
+
+    <!-- String for the bottom nav menu -->
+    <string name="home">Kezdőlap</string>
+    <string name="history">Történet</string>
+    <string name="plan">Tervezés</string>
+    <string name="statistics">Statisztika</string>
+    <string name="settings">Beállítások</string>
+    <string name="about">Az alkalmazásról</string>
+
+    <!-- Strings for the transaction frequencies -->
+    <string name="one_time">Egyszeri</string>
+    <string name="weekly_once">Hetente (egyszer)</string>
+    <string name="weekly_sum">Hetente (összesen)</string>
+    <string name="fortnightly_once">Két hetente (egyszer)</string>
+    <string name="fortnightly_sum">Két hetente (összesen)</string>
+    <string name="monthly_once">Havonta (egyszer)</string>
+    <string name="monthly_sum">Havonta (összesen)</string>
+    <string name="yearly_once">Évente (egyszer)</string>
+    <string name="yearly_sum">Évente (összesen)</string>
+
+    <!-- String for the transaction types -->
+    <string name="income">Bevétel</string>
+    <string name="expense">Kiadás</string>
+    <string name="withdraw">Készpénz felvét</string>
+    <string name="deposit">Készpénz befizetés</string>
+    <string name="plan_expense">Tervezett kiadás</string>
+    <string name="plan_income">Tervezett bevétel</string>
+
+    <!-- Strings for planned/unplanned transactions -->
+    <string name="planned">Tervezett</string>
+    <string name="not_planned">Nem tervezett:</string>
+
+    <!-- Strings for the TransactionDetailView -->
+    <string name="date">Dátum:</string>
+    <string name="first_date">Első dátum:</string>
+    <string name="next_date">Következő dátum:</string>
+    <string name="never">Soha</string>
+    <string name="expected_date">Várható dátum:</string>
+    <string name="category">Kategória:</string>
+    <string name="transaction_type">Tranzakció típus:</string>
+    <string name="plan_type">Terv típusa:</string>
+    <string name="plan_colon">Terv:</string>
+    <string name="frequency">Rendszeresség:</string>
+    <string name="status">Állapot:</string>
+    <string name="active">Aktív</string>
+    <string name="inactive">Inaktív</string>
+    <string name="cancelled">Felfüggesztve</string>
+    <string name="cancelled_on">Felfüggesztve:</string>
+    <string name="last_date">Utolsó dátum:</string>
+    <string name="completed">Teljesítve</string>
+    <string name="completed_on">Teljesítve:</string>
+    <string name="recipient_venue">Üzlet/kedvezményezett:</string>
+    <string name="payment_method">Fizetési mód:</string>
+    <string name="received_by">Tranzakció módja:</string>
+    <string name="receive_by">Tranzakció módja:</string>
+
+    <string name="source">Forrás:</string>
+    <string name="period">Időszak:</string>
+
+    <!-- Strings for AddOrEditFragment -->
+    <string name="description">Leírás:</string>
+    <string name="amount">Összeg:</string>
+    <string name="add_expense">Kiadás hozzáadása</string>
+    <string name="add_income">Bevétel hozzáadása</string>
+    <string name="add_withdrawal">Kp. felvét hozzáadása</string>
+    <string name="add_deposit">Kp. befizetés hozzáadása</string>
+    <string name="add_plan_income">Terv hozzáadása</string>
+    <string name="add_plan_expense">Terv hozzáadása</string>
+    <string name="edit_expense">Kiadás szerkesztése</string>
+    <string name="edit_income">Bevétel szerkesztése</string>
+    <string name="edit_withdrawal">Kp. felvét szerkesztése</string>
+    <string name="edit_deposit">Kp. befizetés szerkesztése</string>
+    <string name="edit_plan_income">Terv szerkesztése</string>
+    <string name="edit_plan_expense">Terv szerkesztése</string>
+    <string name="select_date">Dátum megadása</string>
+    <string name="description_error_message">A leírással már létezik terv</string>
+    <string name="add">Hozzáadás</string>
+    <string name="save">Mentés</string>
+
+    <!-- Confirm delete dialog -->
+    <string name="confirm_delete_dialog_title">Megerősítés</string>
+    <string name="confirm_delete_transaction_dialog_text">Biztosan törölni szeretné a következő tranzakciót?\n\nLeírás: %1$s\nTípus: %2$s\nDátum: %3$s</string>
+    <string name="confirm_delete_plan_dialog_text">Biztosan törölni szeretné a következő tervet?\n\nLeírás: %1$s\nTípus: %2$s\n%3$s %4$s</string>
+    <string name="confirm_cancel_plan_dialog_text">Biztosan fel szeretné függeszteni a következő tervet?\n\nLeírás: %1$s\nTípus: %2$s\nElső dátum: %3$s</string>
+    <string name="delete">Törlés</string>
+    <string name="cancel">Mégse</string>
+
+    <!-- Strings for ManageCategoriesFragment -->
+    <string name="manage_categories">Kategóriák kezelése</string>
+
+    <!-- Add or edit category dialog fragment -->
+    <string name="add_category_dialog_title">Kategória hozzáadása</string>
+    <string name="edit_category_dialog_title">Kategória szerkesztése</string>
+    <string name="category_already_exists">A kategória már lézeik!</string>
+    <string name="category_name_empty">Adjon meg egy nevet!</string>
+    <string name="confirm_delete_category_dialog_text">Biztosan törölni szeretné az alábbi kategóriát?\n\nKategória neve: %s</string>
+    <string name="add_category">Kategória hozzáadása</string>
+    <string name="add_category_dialog_text">Adja meg a kategória nevét és válasszon egy színt!</string>
+    <string name="category_name">Kategória neve:</string>
+    <string name="choose_color">Szín kiválasztása</string>
+
+    <!-- Strings for SettingsFragment -->
+    <string name="settings_authentication_description">Az adatai védelmében az alkalmazás indításakor azonosítás szükséges.</string>
+    <string name="fingerprint_authentication">Ujjlenyomatos azonosítás</string>
+    <string name="settings_fingerprint_description">Az eszköz ujjlenyomat érzékelőjét használja azonosításra.</string>
+    <string name="change_pin_code">PIN kód módosítása</string>
+    <string name="settings_change_pin_description">Az alkalmazás első elindításakor megadott PIN kód módosítása.</string>
+    <string name="enter_old_pin">Adja meg a régi PIN kódot</string>
+    <string name="enter_new_pin">Adja meg az új PIN kódot</string>
+    <string name="confirm_new_pin">Erősítse meg az új PIN kódot</string>
+    <string name="enter_pin_code">Enter pin code</string>
+    <string name="create_pin_code">PIN kód létrehozása</string>
+    <string name="reset_app">Alkalmazás visszaállítása</string>
+    <string name="settings_reset_app_description">Törli az összes megadott tranzakciót, kategóriát, tervet, visszaállítja az alapértelmezett kategóriákat, és megjeleníti a kezdeti beállításokat.</string>
+    <string name="confirm_reset_app">Biztosan vissza kívánja állítani az alkalmazást?\n\nAz összes megadott adat törlődik, melyeket a jövőben nem lehet majd visszaállítani.</string>
+    <string name="clear_data_successful">Az összes adat törölve.</string>
+    <string name="reset">Visszaállítás</string>
+    <string name="dark_theme">Sötét téma</string>
+    <string name="dark_theme_description">Az eszköz téma beállításaitól függetlenül az alkalmazás sötét témáját használja.</string>
+
+    <!-- Strings for Plan Fragment -->
+    <string name="expenses">Kiadások</string>
+    <string name="incomes">Bevételek</string>
+    <string name="total_planned_expenses">Összes tervezett kiadás</string>
+    <string name="total_planned_incomes">Összes tervezett bevétel</string>
+    <string name="this_year_colon">Ebben az évben:</string>
+    <string name="this_month">Ebben a hónapban:</string>
+    <string name="no">Nem</string>
+    <string name="no_plans">Nincs terv megadva.</string>
+
+    <!-- Strings for AboutFragment -->
+    <string name="about_string">Ez az Android készülékekre készült alkalmazás segít a kiadásai és bevételei nyomon követésében.\n\n Meg tudja tervezni a várható kiadásait, bevételeit, melyeket kategóriákba sorolhat és nyomon követhet.\n\n Ez egy nyílt forráskódú alkalmazás, melyet azért készítettem, hogy gyakoroljam az Android platformra történő programozást.\n\n A forráskód és a felhasználási feltételek az alábbi webcímen érhetők el:</string>
+    <string name="github_link">https://github.com/dagoston93/expense-tracker</string>
+    <string name="created_by_string">\nKészítette: Diamont Ágoston, 2021</string>
+
+    <!-- Strings for the default categories -->
+    <string name="unspecified">Nincs megadva</string>
+    <string name="food">Étel</string>
+    <string name="rent">Bérlet</string>
+    <string name="car_costs">Autóval kapcsolatos</string>
+
+    <!-- Strings for the history fragment -->
+    <string name="no_transactions">Nem található tranzakció.</string>
+    <string name="whole_period">Teljes időszak</string>
+    <string name="current_month">Aktuális hónap</string>
+    <string name="last_seven_days">Legutóbbi 7 nap</string>
+    <string name="previous_month">Előző hónap</string>
+    <string name="this_year">Aktuális év</string>
+    <string name="select_period">Időszak megadása</string>
+    <string name="categories">Kategóriák:</string>
+    <string name="all">Összes</string>
+    <string name="transaction_types">Tranzakció típusok:</string>
+    <string name="filters">Szűrők</string>
+    <string name="filter">Szűrés</string>
+
+    <!-- Strings for the home fragment -->
+    <string name="total_balance">Egyenleg:</string>
+    <string name="cash_colon">Készpénz:</string>
+    <string name="card_colon">Bankkártya:</string>
+    <string name="monthly_income">Havi bevétel</string>
+    <string name="planned_colon">Tervezett:</string>
+    <string name="total">Összes:</string>
+    <string name="monthly_expenses">Havi kiadások</string>
+    <string name="savings">Megtakarítások</string>
+    <string name="planned_this_month">Ehavi tervezett:</string>
+    <string name="savings_so_far">Eddigi megtakarítások:</string>
+
+    <!-- Strings for the statistic fragment -->
+    <string name="statistic_type">Statisztika típusa:</string>
+    <string name="incomes_and_expenses">Kiadások és bevételek</string>
+    <string name="incomes_by_categories">Bevételek kategóriánként</string>
+    <string name="expenses_by_categories">Kiadások kategóriánként</string>
+    <string name="income_plans">Tervezett bevételek</string>
+    <string name="expense_plans">Tervezett kiadások</string>
+    <string name="total_incomes">Összes bevétel:</string>
+    <string name="total_actual_incomes">Tényleges bevétel:</string>
+    <string name="total_planned_incomes_colon">Tervezett bevétel:</string>
+    <string name="not_planned_colon">Nem tervezett:</string>
+    <string name="total_expenses">Összes kiadás:</string>
+    <string name="total_actual_expenses">Tényleges kiadás:</string>
+    <string name="total_planned_expenses_colon">Tervezett kiadás:</string>
+    <string name="savings_during_period">Megtakarítás:</string>
+    <string name="overspend_during_period">Túlköltekezés:</string>
+    <string name="percentage">Arány:</string>
+    <string name="sum">Összes:</string>
+    <string name="planned_sum">Összes tervezett:</string>
+    <string name="actual_sum">Összes tényleges:</string>
+    <string name="planned_percentage">Tervezett arány:</string>
+    <string name="actual_percentage">Tényleges arány:</string>
+    <string name="outer_chart_actual_expenses">Külső diagram: Tényleges kiadások</string>
+    <string name="outer_chart_actual_incomes">Külső diagram: Tényleges  bevételek</string>
+    <string name="inner_chart_planned_expenses">Belső diagram: Tervezett kiadások</string>
+    <string name="inner_chart_planned_incomes">Belső diagram: Tervezett bevérelek</string>
+    <string name="no_data_found">(Nincs adat.)</string>
+
+</resources>
+

@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">Expense tracker</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- Strings for the PinCodeInputView -->
     <string name="pin_colon">PIN:</string>
 
@@ -90,7 +87,7 @@
     <string name="last_date">Last date:</string>
     <string name="completed">Completed</string>
     <string name="completed_on">Completed on:</string>
-    <string name="recipient_venue">Recipient/venue:</string>
+    <string name="recipient_venue">Recipient/shop:</string>
     <string name="payment_method">Payment method:</string>
     <string name="received_by">Received by:</string>
     <string name="receive_by">Receive by:</string>
@@ -232,7 +229,5 @@
     <string name="inner_chart_planned_expenses">Inner chart: Planned expenses</string>
     <string name="inner_chart_planned_incomes">Inner chart: Planned incomes</string>
     <string name="no_data_found">(No data found.)</string>
-    c
-
 
 </resources>
