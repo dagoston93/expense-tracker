@@ -40,7 +40,7 @@ class ChangeOrConfirmPinDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         /** Set full screen dialog style */
-        setStyle(STYLE_NORMAL, R.style.Theme_ExpenseTracker_Dialog_FullScreen)
+        //setStyle(STYLE_NORMAL, R.style.Theme_ExpenseTracker_Dialog_FullScreen)
     }
 
     /**

@@ -150,11 +150,21 @@
     </style>
 
     <!-- Style for ChangePinDialog -->
-    <style name="Theme.ExpenseTracker.Dialog.FullScreen" parent="Theme.MaterialComponents.Light.DialogWhenLarge">
+    <style name="Theme.ExpenseTracker.Dialog.FullScreen" parent="Theme.MaterialComponents.DayNight.DialogWhenLarge">
         <item name="android:statusBarColor">@color/primaryDark</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
         <item name="colorPrimary">@color/primaryColor</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker.Dialog.FullScreen.Dark" parent="Theme.MaterialComponents.DayNight.DialogWhenLarge">
+        <item name="android:statusBarColor">@color/primaryDark</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
+        <item name="colorPrimary">@color/primaryColorNight</item>
+        <item name="colorPrimaryVariant">@color/primaryLightNight</item>
+        <item name="colorPrimaryDark">@color/primaryDarkNight</item>
+        <item name="colorOnPrimary">@color/primaryColor</item>
     </style>
 
     <style name="Theme.ExpenseTracker.TextAppearance.ChangePinTitle" parent="">
@@ -194,6 +204,12 @@
     <!-- Theme for dialogs -->
     <style name="Theme.ExpenseTracker.ThemeOverlay.MaterialAlertDialog.Dark" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/primaryColor</item>
+    </style>
+
+    <!-- Theme for date picker -->
+    <style name="Theme.ExpenseTracker.ThemeOverlay.MaterialDatePicker.Dark" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 
 </resources>

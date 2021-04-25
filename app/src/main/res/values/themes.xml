@@ -33,6 +33,7 @@
         <item name="expenseTrackerBottomNavItemColorSelector">@color/selector_bottom_nav_menu_item</item>
         <item name="expenseTrackerDialogTextInputLayoutStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
 
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog</item>
+        <item name="android:dialogTheme">@style/Theme.ExpenseTracker.Dialog.FullScreen</item>
+        <item name="materialAlertDialogTheme">@style/Theme.ExpenseTracker.ThemeOverlay.MaterialDatePicker.Dark</item>
     </style>
 </resources>

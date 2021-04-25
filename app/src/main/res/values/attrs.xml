@@ -10,6 +10,7 @@
         <attr name="expenseTrackerTabTextColorSelector" format="reference"/>
         <attr name="expenseTrackerBottomNavItemColorSelector" format="reference"/>
         <attr name="expenseTrackerDialogTextInputLayoutStyle" format="reference"/>
+        <attr name="expenseTrackerFillScreenDialogTheme" format="reference"/>
 
     </declare-styleable>
     <!-- Attributes for PinCodeInputView -->
