@@ -9,7 +9,7 @@
         <attr name="expenseTrackerExposedDropdownOnPrimaryStyle" format="reference"/>
         <attr name="expenseTrackerTabTextColorSelector" format="reference"/>
         <attr name="expenseTrackerBottomNavItemColorSelector" format="reference"/>
-<!--        <attr name="expenseTrackerTabTextColorSelector" format="reference"/>-->
+        <attr name="expenseTrackerDialogTextInputLayoutStyle" format="reference"/>
 
     </declare-styleable>
     <!-- Attributes for PinCodeInputView -->

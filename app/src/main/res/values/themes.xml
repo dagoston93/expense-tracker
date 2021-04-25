@@ -31,6 +31,7 @@
         <item name="expenseTrackerIconOnPrimaryColor">@color/white</item>
         <item name="expenseTrackerTabTextColorSelector">@drawable/sel_tab_text_color</item>
         <item name="expenseTrackerBottomNavItemColorSelector">@color/selector_bottom_nav_menu_item</item>
+        <item name="expenseTrackerDialogTextInputLayoutStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
 
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog</item>
     </style>

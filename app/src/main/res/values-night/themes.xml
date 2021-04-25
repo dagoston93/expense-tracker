@@ -31,9 +31,9 @@
         <item name="expenseTrackerIconOnPrimaryColor">@color/circularProgressbarBackground</item>
         <item name="expenseTrackerTabTextColorSelector">@drawable/sel_tab_text_color_dark</item>
         <item name="expenseTrackerBottomNavItemColorSelector">@color/selector_bottom_nav_menu_item_dark</item>
+        <item name="expenseTrackerDialogTextInputLayoutStyle">@style/Theme.ExpenseTracker.Widget.TextInputField.Outlined.Dark.OnDialog</item>
 
         <item name="materialAlertDialogTheme">@style/Theme.ExpenseTracker.ThemeOverlay.MaterialAlertDialog.Dark</item>
-
 
     </style>
 </resources>

@@ -29,7 +29,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilDialogAddCategoryName"
-        theme="@style/Theme.ExpenseTracker.Widget.TextInputField.Outlined.Dark.OnDialog"
+        style="?attr/expenseTrackerDialogTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -41,6 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView37">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:theme="@style/Theme.ExpenseTracker.ThemeOverlay.DialogEditText"
             android:id="@+id/etDialogAddCategoryName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
