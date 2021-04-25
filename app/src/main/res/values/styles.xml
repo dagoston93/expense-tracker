@@ -212,4 +212,10 @@
         <item name="colorOnPrimary">@color/white</item>
     </style>
 
+    <!-- Fade in/out transitions to smooth out theme changes -->
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@anim/anim_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/anim_fade_out</item>
+    </style>
+
 </resources>

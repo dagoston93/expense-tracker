@@ -24,8 +24,8 @@ class MainActivityViewModel (appContext: Application) : AndroidViewModel(appCont
     val isUpButtonVisible : LiveData<Boolean>
         get() = _isUpButtonVisible
 
-    private val _isBottomNavBarVisible = MutableLiveData<Boolean>(false)
-    val isBottomNavBarVisible : LiveData<Boolean>
+    private val _isBottomNavBarVisible = MutableLiveData<Boolean?>(null)
+    val isBottomNavBarVisible : LiveData<Boolean?>
         get() = _isBottomNavBarVisible
 
     private val _isDrawerEnabled = MutableLiveData<Boolean>(false)

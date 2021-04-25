@@ -2,11 +2,9 @@ package com.diamont.expense.tracker.initialSetup
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.util.Log
 import android.view.View
 import androidx.biometric.BiometricManager
 import androidx.lifecycle.*
-import androidx.preference.PreferenceManager
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
@@ -139,6 +137,7 @@ class InitialSetupFragmentViewModel(
             putBoolean(KEY_PREF_INITIAL_SETUP_DONE, true)
             putBoolean(KEY_PREF_AUTHENTICATION_REQUIRED, isAuthenticationRequired)
             putBoolean(KEY_PREF_FINGERPRINT_ENABLED, isFingerprintEnabled)
+            putBoolean(KEY_PREF_DARK_THEME_ENABLED, false)
             putString(KEY_PREF_PIN_CODE, pinCode)
             putInt(KEY_PREF_CURRENCY_ID, selectedCurrency.id)
             putFloat(KEY_PREF_INITIAL_CARD, initialBalanceCard ?: 0f)

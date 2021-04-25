@@ -29,7 +29,11 @@
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:id="@+id/coordLoBottomNav"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:alpha="0.0"
+                tools:alpha="1.0"
+                tools:visibility="visible">
 
                 <com.google.android.material.bottomappbar.BottomAppBar
                     android:id="@+id/bottomAppBar"

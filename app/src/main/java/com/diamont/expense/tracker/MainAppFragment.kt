@@ -112,7 +112,7 @@ class MainAppFragment : Fragment(), BackPressHandlerFragment {
             /** Only do animation if visibility differs */
             if(isNowVisible != it){
                 val duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
-                if(it) {
+                if(it == true) {
                     binding.coordLoBottomNav.alpha = 0f
                     binding.coordLoBottomNav.visibility = View.VISIBLE
 

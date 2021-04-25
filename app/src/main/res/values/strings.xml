@@ -155,6 +155,8 @@
     <string name="confirm_reset_app">Are you sure you want to reset the application?\n\nThis will delete all the data you have entered so far. After deleting, you will not be able to recover the data.</string>
     <string name="clear_data_successful">All of your data has been deleted successfully.</string>
     <string name="reset">Reset</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="dark_theme_description">Turns on dark theme in the app regardless of the dark mode settings of the device.</string>
 
     <!-- Strings for Plan Fragment -->
     <string name="expenses">Expenses</string>

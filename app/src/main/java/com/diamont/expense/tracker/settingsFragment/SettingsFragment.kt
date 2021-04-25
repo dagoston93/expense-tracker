@@ -86,6 +86,12 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
             viewModel.onFingerprintSwitchClicked((binding.swSettingsFingerprint.isChecked))
         }
 
+        binding.swSettingsDarkTheme.setOnClickListener {
+            viewModel.onDarkThemeSwitchClicked((binding.swSettingsDarkTheme.isChecked))
+            requireActivity().recreate()
+            Log.d("GUS", "bind: here")
+        }
+
         /**
          * Observe the settings
          */
@@ -123,6 +129,15 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
                 /** Change state of the switch */
                 if(binding.swSettingsFingerprint.isChecked != it) {
                     binding.swSettingsFingerprint.isChecked = it
+                }
+            }
+        })
+
+        viewModel.isDarkThemeEnabled.observe(viewLifecycleOwner, Observer {
+            if(it != null){
+                /** Change state of the switch */
+                if(binding.swSettingsDarkTheme.isChecked != it) {
+                    binding.swSettingsDarkTheme.isChecked = it
                 }
             }
         })

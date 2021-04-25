@@ -30,6 +30,10 @@ class SettingsFragmentViewModel(
     val isFingerprintEnabled: LiveData<Boolean?>
         get() = _isFingerprintEnabled
 
+    private var _isDarkThemeEnabled = MutableLiveData<Boolean?>(null)
+    val isDarkThemeEnabled: LiveData<Boolean?>
+        get() = _isDarkThemeEnabled
+
     /**
      * Set up coroutine job and the scope
      */
@@ -42,6 +46,7 @@ class SettingsFragmentViewModel(
     init{
         _isAuthenticationRequired.value = sharedPreferences.getBoolean(KEY_PREF_AUTHENTICATION_REQUIRED, false)
         _isFingerprintEnabled.value = sharedPreferences.getBoolean(KEY_PREF_FINGERPRINT_ENABLED, false)
+        _isDarkThemeEnabled.value = sharedPreferences.getBoolean(KEY_PREF_DARK_THEME_ENABLED, false)
     }
 
     /**
@@ -68,6 +73,20 @@ class SettingsFragmentViewModel(
         /** Save the new state in shared prefs*/
         with(sharedPreferences.edit()){
             putBoolean(KEY_PREF_FINGERPRINT_ENABLED, isTurnedOn)
+            apply()
+        }
+    }
+
+    /**
+     * Call this method if user switches the fingerprint switch
+     */
+    fun onDarkThemeSwitchClicked(isTurnedOn: Boolean){
+        /** Save state to live data */
+        _isDarkThemeEnabled.value = isTurnedOn
+
+        /** Save the new state in shared prefs*/
+        with(sharedPreferences.edit()){
+            putBoolean(KEY_PREF_DARK_THEME_ENABLED, isTurnedOn)
             apply()
         }
     }
