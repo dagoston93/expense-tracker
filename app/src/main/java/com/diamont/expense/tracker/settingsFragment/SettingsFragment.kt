@@ -15,7 +15,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.diamont.expense.tracker.*
 import com.diamont.expense.tracker.databinding.FragmentSettingsBinding
+import com.diamont.expense.tracker.historyFragment.filterDialogFragment.FilterDialogFragment
 import com.diamont.expense.tracker.settingsFragment.changePinDialogFragment.ChangeOrConfirmPinDialogFragment
+import com.diamont.expense.tracker.settingsFragment.chooseLanguageDialogFragment.ChooseLanguageDialogFragment
+import com.diamont.expense.tracker.util.KEY_PREF_LOCALE
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -92,6 +95,13 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
         }
 
         /**
+         * Observe the language string
+         */
+        viewModel.selectedLanguageString.observe(viewLifecycleOwner, Observer {
+            binding.tvSettingsLanguageSelected.text = it
+        })
+
+        /**
          * Observe the settings
          */
         viewModel.isAuthenticationRequired.observe(viewLifecycleOwner, Observer {
@@ -148,6 +158,22 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
                 ChangeOrConfirmPinDialogFragment(activityViewModel.sharedPreferences).show(childFragmentManager, ChangeOrConfirmPinDialogFragment.TAG)
             }
         }
+
+        /**
+         * Set onLickListener for select language option
+         */
+        binding.clSettingsLanguage.setOnClickListener {
+            ChooseLanguageDialogFragment(viewModel.selectedLocale) { selectedLang ->
+                viewModel.onLanguageSelected(selectedLang)
+                requireActivity().recreate()
+            }.show(childFragmentManager,  ChooseLanguageDialogFragment.TAG)
+        }
+        /**
+         * TODO:
+         * -app freezes on lang change
+         * -my phone doesnt change language this way
+         * -radio buttons not working properly
+         */
 
         /** Set onClickListener for the Clear Data option */
         binding.clSettingsResetApp.setOnClickListener {

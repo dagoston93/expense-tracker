@@ -157,6 +157,8 @@
     <string name="reset">Visszaállítás</string>
     <string name="dark_theme">Sötét téma</string>
     <string name="dark_theme_description">Az eszköz téma beállításaitól függetlenül az alkalmazás sötét témáját használja.</string>
+    <string name="language">Alkalmazás nyelve</string>
+    <string name="language_selected">Választott nyelv:</string>
 
     <!-- Strings for Plan Fragment -->
     <string name="expenses">Kiadások</string>
@@ -234,6 +236,13 @@
     <string name="no_data_found">(Nincs adat.)</string>
     <string name="dash_planned">- tervezett:</string>
     <string name="dash_actual">- tényleges:</string>
+
+    <!-- Strings for languages -->
+    <string name="default_language">Alapértelmezett</string>
+    <string name="choose_language">Válasszon nyelvet</string>
+    <string name="english">Angol</string>
+    <string name="hungarian">Magyar</string>
+    <string name="choose">Kiválaszt</string>
 
 </resources>
 

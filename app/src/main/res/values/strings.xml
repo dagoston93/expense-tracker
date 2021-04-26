@@ -154,6 +154,8 @@
     <string name="reset">Reset</string>
     <string name="dark_theme">Dark theme</string>
     <string name="dark_theme_description">Turns on dark theme in the app regardless of the dark mode settings of the device.</string>
+    <string name="language">Language</string>
+    <string name="language_selected">Language selected:</string>
 
     <!-- Strings for Plan Fragment -->
     <string name="expenses">Expenses</string>
@@ -231,5 +233,12 @@
     <string name="no_data_found">(No data found.)</string>
     <string name="dash_planned">- planned:</string>
     <string name="dash_actual">- actual:</string>
+
+    <!-- Strings for languages -->
+    <string name="default_language">Default</string>
+    <string name="choose_language">Choose language</string>
+    <string name="english">English</string>
+    <string name="hungarian">Hungarian</string>
+    <string name="choose">Choose</string>
 
 </resources>

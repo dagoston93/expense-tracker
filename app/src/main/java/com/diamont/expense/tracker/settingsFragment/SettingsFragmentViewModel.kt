@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import kotlinx.coroutines.CoroutineScope
@@ -34,6 +35,14 @@ class SettingsFragmentViewModel(
     val isDarkThemeEnabled: LiveData<Boolean?>
         get() = _isDarkThemeEnabled
 
+    private var _selectedLanguageString = MutableLiveData<String>("")
+    val selectedLanguageString: LiveData<String>
+        get() = _selectedLanguageString
+
+    private var _selectedLocale: String = ""
+    val selectedLocale: String
+        get() = _selectedLocale
+
     /**
      * Set up coroutine job and the scope
      */
@@ -47,6 +56,9 @@ class SettingsFragmentViewModel(
         _isAuthenticationRequired.value = sharedPreferences.getBoolean(KEY_PREF_AUTHENTICATION_REQUIRED, false)
         _isFingerprintEnabled.value = sharedPreferences.getBoolean(KEY_PREF_FINGERPRINT_ENABLED, false)
         _isDarkThemeEnabled.value = sharedPreferences.getBoolean(KEY_PREF_DARK_THEME_ENABLED, false)
+        _selectedLocale = sharedPreferences.getString(KEY_PREF_LOCALE, "") ?: ""
+
+        updateLanguageString()
     }
 
     /**
@@ -89,6 +101,38 @@ class SettingsFragmentViewModel(
             putBoolean(KEY_PREF_DARK_THEME_ENABLED, isTurnedOn)
             apply()
         }
+    }
+
+    /**
+     * Call this method if user selects a language
+     */
+    fun onLanguageSelected(localeString: String){
+        /** Save state */
+        _selectedLocale = localeString
+
+        updateLanguageString()
+
+        /** Save the new state in shared prefs*/
+        with(sharedPreferences.edit()){
+            putString(KEY_PREF_LOCALE,  _selectedLocale)
+            apply()
+        }
+    }
+
+    /**
+     * This method updates the language live data
+     */
+    private fun updateLanguageString() {
+        /** Update string live data */
+        val appLocale = AppLocale.supportedLocales.find { it.localeString == _selectedLocale }
+
+        _selectedLanguageString.value = appContext.resources.getString(
+            if (appLocale == null) {
+                R.string.default_language
+            } else {
+                appLocale.stringResId
+            }
+        )
     }
 
     /**
