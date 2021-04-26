@@ -229,5 +229,7 @@
     <string name="inner_chart_planned_expenses">Inner chart: Planned expenses</string>
     <string name="inner_chart_planned_incomes">Inner chart: Planned incomes</string>
     <string name="no_data_found">(No data found.)</string>
+    <string name="dash_planned">- planned:</string>
+    <string name="dash_actual">- actual:</string>
 
 </resources>

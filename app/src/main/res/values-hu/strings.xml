@@ -232,6 +232,8 @@
     <string name="inner_chart_planned_expenses">Belső diagram: Tervezett kiadások</string>
     <string name="inner_chart_planned_incomes">Belső diagram: Tervezett bevérelek</string>
     <string name="no_data_found">(Nincs adat.)</string>
+    <string name="dash_planned">- tervezett:</string>
+    <string name="dash_actual">- tényleges:</string>
 
 </resources>
 

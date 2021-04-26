@@ -534,13 +534,6 @@ class StatisticFragmentViewModel (
                     _planPageInnerPieChartLabelLabel.value = appContext.resources.getString(R.string.inner_chart_planned_incomes)
                     _planPageOuterPieChartLabelLabel.value = appContext.resources.getString(R.string.outer_chart_actual_incomes)
                 }
-
-                Log.d("GUS", "tP: $totalPlanned")
-                Log.d("GUS", "tA: $totalActual")
-                Log.d("GUS", "actList: $_actualAmountList")
-                Log.d("GUS", "plnList: $_plannedAmountList")
-
-                Log.d("GUS", "sorted: $_planStatisticDataList")
             }
         }
     }

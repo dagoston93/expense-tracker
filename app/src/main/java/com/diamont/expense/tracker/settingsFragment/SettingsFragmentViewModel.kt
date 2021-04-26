@@ -95,7 +95,6 @@ class SettingsFragmentViewModel(
      * Call this method if user confirms to delete all data
      */
     fun resetApp(onSuccess: () -> Unit){
-        Log.d("GUS", "Let's clear the data...")
 
         /** Reset shared preferences */
         with(sharedPreferences.edit()) {

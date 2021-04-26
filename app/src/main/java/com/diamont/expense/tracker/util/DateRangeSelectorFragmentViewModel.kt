@@ -67,7 +67,7 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
      * Call this method if user selects a date range
      */
     fun onDateRangeSelected(startDate: Long?, endDate: Long?){
-        Log.d("GUS", "date range picked: $startDate, $endDate")
+        //Log.d("GUS", "date range picked: $startDate, $endDate")
 
         if(startDate != null && endDate != null) {
             calendarStartDate.timeInMillis = startDate
@@ -82,8 +82,6 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
      * Call this method if user selects an option from the dropdown menu
      */
     fun onPeriodDropdownItemSelected(index: Int?){
-        Log.d("GUS", "item: $index")
-
         if(index != null){
             selectedPeriodIndex = index
 
@@ -102,8 +100,8 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
                     calendarStartDate.timeInMillis = calendars.calendarStartOfMonth.timeInMillis
                     calendarEndDate.timeInMillis = calendars.calendarEndOfMonth.timeInMillis
 
-                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                    //Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+                    //Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
                 }
 
                 /**
@@ -113,8 +111,8 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
                     calendarStartDate.timeInMillis = calendars.calendarStartOfYear.timeInMillis
                     calendarEndDate.timeInMillis = calendars.calendarEndOfYear.timeInMillis
 
-                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                    //Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+                    //Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
                 }
 
                 /**
@@ -130,8 +128,8 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
                     calendarEndDate.set(Calendar.MINUTE, 59)
                     calendarEndDate.set(Calendar.HOUR, 23)
 
-                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                    //Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+                    //Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
                 }
 
                 /**
@@ -149,8 +147,8 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
                     calendarStartDate.set(Calendar.MINUTE, 0)
                     calendarStartDate.set(Calendar.HOUR, 0)
 
-                    Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
-                    Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
+                    //Log.d("GUS", "start: ${calendarToString(calendarStartDate)}")
+                    //Log.d("GUS", "end: ${calendarToString(calendarEndDate)}")
                 }
             }
 

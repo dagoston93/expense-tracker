@@ -96,7 +96,6 @@ class HistoryFragmentViewModel(
      * Call this method to filter the list
      */
     override fun filterItems(){
-        Log.d("GUS", "filtering...")
         filteredTransactionData = transactionData.filter{
             var isItemDisplayed = true
 

@@ -89,7 +89,6 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
         binding.swSettingsDarkTheme.setOnClickListener {
             viewModel.onDarkThemeSwitchClicked((binding.swSettingsDarkTheme.isChecked))
             requireActivity().recreate()
-            Log.d("GUS", "bind: here")
         }
 
         /**
@@ -170,8 +169,6 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
      * Call this method if user is sure about clearing all data
      */
     private fun resetApp(){
-        Log.d("GUS", "User clicked sure.")
-
         /** If authentication is on we ask for PIN before deleting */
         if(binding.swSettingsAuthentication.isChecked){
             ChangeOrConfirmPinDialogFragment(

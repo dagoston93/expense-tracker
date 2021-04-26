@@ -66,8 +66,6 @@ abstract class DateRangeSelectorFragment: Fragment() {
                 }
 
                 datePicker.show(childFragmentManager, "")
-
-                Log.d("GUS", "Show date range picker...")
             } else {
                 previousSelectedPeriodIndex = idx
                 baseClassViewModel.onPeriodDropdownItemSelected(idx)

@@ -20,8 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:background="?attr/expenseTrackerBackgroundColor">
+            android:paddingEnd="8dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilAddTransactionType"
@@ -120,7 +119,8 @@
                     android:layout_height="40dp"
                     android:layout_marginStart="8dp"
                     android:src="@drawable/ic_add"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:visibility="@{viewModel.isCategoryFieldVisible}"/>
 
             </LinearLayout>
 

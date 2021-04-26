@@ -105,7 +105,6 @@ class HistoryFragment : DateRangeSelectorFragment() {
                 adapter.categories = viewModel.categories.value ?: listOf<TransactionCategory>()
                 adapter.plans = viewModel.plans.value ?: listOf<Plan>()
                 adapter.items = it.toMutableList()
-                Log.d("GUS", "new list...")
             }
         })
 

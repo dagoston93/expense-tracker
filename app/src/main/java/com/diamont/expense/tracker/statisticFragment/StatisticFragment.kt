@@ -369,11 +369,16 @@ class StatisticFragment : DateRangeSelectorFragment() {
 
                             circularProgressbar.visibility = View.GONE
                         }else{
+                            if(viewModel.planStatisticDataList[i].plannedAmount == 0f){
+                                circularProgressbar.visibility = View.GONE
+                            }else{
+                                circularProgressbar.setCircularProgressBarProgress(
+                                    ((viewModel.planStatisticDataList[i].actualAmount/viewModel.planStatisticDataList[i].plannedAmount) * 100).roundToInt()
+                                )
+                            }
                             tvPlannedSum.text = viewModel.formatAmount(viewModel.planStatisticDataList[i].plannedAmount)
                             tvPlannedPercentage.text = "%.0f%%".format(viewModel.planStatisticDataList[i].plannedPercentage)
-                            circularProgressbar.setCircularProgressBarProgress(
-                                ((viewModel.planStatisticDataList[i].actualAmount/viewModel.planStatisticDataList[i].plannedAmount) * 100).roundToInt()
-                            )
+
                             circularProgressbar.setCircularProgressBarForegroundColor(
                                 if(previousSelectedStatisticTypeIndex == StatisticFragmentViewModel.IDX_EXPENSE_PLANS){
                                     R.color.colorGoalNotAchieved
@@ -575,8 +580,8 @@ class StatisticFragment : DateRangeSelectorFragment() {
                     stat.id == e?.data as Int
                 }
 
-                Log.d("GUS", "data: ${viewModel.planStatisticDataList}")
-                Log.d("GUS", "sel:$statData")
+                //Log.d("GUS", "data: ${viewModel.planStatisticDataList}")
+                //Log.d("GUS", "sel:$statData")
 
                 if(statData != null){
                     tvActualLabel.visibility = View.VISIBLE
