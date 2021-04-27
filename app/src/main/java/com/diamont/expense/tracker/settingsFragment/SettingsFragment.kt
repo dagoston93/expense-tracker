@@ -188,10 +188,7 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
         }
         /**
          * TODO:
-         * -app freezes on lang change
-         * -my phone doesnt change language this way
          * -radio buttons not working properly
-         * -dialog style...
          */
 
         /** Set onClickListener for the Clear Data option */

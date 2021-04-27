@@ -1,5 +1,6 @@
 package com.diamont.expense.tracker.settingsFragment.chooseLanguageDialogFragment
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -63,6 +64,7 @@ class ChooseLanguageDialogFragment(
     /**
      * onCreateView()
      */
+    @SuppressLint("ResourceType")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rgContainer = layout.findViewById<RadioGroup>(R.id.rgSelectLangDialogRadioGroup)
         var isLanguageCheckBoxChecked: Boolean = false
@@ -72,17 +74,20 @@ class ChooseLanguageDialogFragment(
          */
         val defaultRadioButton = RadioButton(context)
         defaultRadioButton.text = resources.getString(R.string.default_language)
+        defaultRadioButton.id = 1
         rgContainer.addView(defaultRadioButton)
 
         /**
          * Add a radio button for each locale
          */
-        for(locale in LocaleUtil.supportedLocales){
+        for(i in LocaleUtil.supportedLocales.indices){
             val langRadioButton = RadioButton(context)
-            langRadioButton.text = resources.getString(locale.stringResId)
+            langRadioButton.text = resources.getString(LocaleUtil.supportedLocales[i].stringResId)
+            langRadioButton.id = i + 2
 
-            if(locale.localeString == selectedLanguageString){
-                //langRadioButton.isChecked = true
+
+            if(LocaleUtil.supportedLocales[i].localeString == selectedLanguageString){
+                langRadioButton.isChecked = true
                 isLanguageCheckBoxChecked = true
             }
 
@@ -91,7 +96,7 @@ class ChooseLanguageDialogFragment(
         }
 
         if(!isLanguageCheckBoxChecked){
-            //defaultRadioButton.isChecked = true
+            defaultRadioButton.isChecked = true
         }
 
         return layout
