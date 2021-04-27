@@ -111,6 +111,7 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
                     }
 
                     requireActivity().recreate()
+                    //(requireActivity() as MainActivity).setLocale()
                 }
 
                 langTextInitialised = true

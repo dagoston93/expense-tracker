@@ -4,6 +4,7 @@ package com.diamont.expense.tracker
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -30,8 +31,6 @@ class MainActivity : AppCompatActivity() {
      */
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel : MainActivityViewModel
-    private lateinit var sysDefaultLocale: Locale
-
 
     /**
      * onCreate()
@@ -73,7 +72,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        Log.d("GUS", "onCreate()")
         /** Set the app language */
         setLocale()
     }
@@ -104,49 +102,45 @@ class MainActivity : AppCompatActivity() {
      */
     private fun getSavedLocale(context: Context?): Locale{
         val savedLocaleString = PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_PREF_LOCALE, "") ?: ""
-        //val savedLocaleString = viewModel.sharedPreferences.getString(KEY_PREF_LOCALE, "") ?: ""
-
         val appLocale = AppLocale.supportedLocales.find { it.localeString == savedLocaleString }
-
-        Log.d("GUS", "${sysDefaultLocale}")
 
         return if(appLocale != null){
             Locale(savedLocaleString)
         }else{
-
-            Locale(AppLocale.supportedLocales[0].localeString)
+            val systemLocale = if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
+                Resources.getSystem().configuration.locales.get(0)
+            }else{
+                Resources.getSystem().configuration.locale
+            }
+            systemLocale
         }
     }
 
     private fun setLocale(){
         /** Get locale from shared prefs */
         val locale = getSavedLocale(baseContext)
+
         val configuration = baseContext.resources.configuration
         Locale.setDefault(locale)
-        configuration.setLocale(locale);
+        configuration.setLocale(locale)
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
             applicationContext.createConfigurationContext(configuration);
         } else {
             resources.updateConfiguration(configuration, baseContext.resources.displayMetrics);
         }
-
-        //baseContext.resources.updateConfiguration(configuration, baseContext.resources.displayMetrics)
     }
 
     override fun attachBaseContext(newBase: Context?) {
-        sysDefaultLocale = Locale.getDefault()
-        Log.d("GUS", "attachBaseContext()")
         super.attachBaseContext(updateBaseContextLocale(newBase))
     }
 
     private fun updateBaseContextLocale(context: Context?): Context?{
         val locale = getSavedLocale(context)
-
-        return if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            updateResourcesLocale(context, locale)
-        }else{
-            updateResourcesLocaleLegacy(context, locale)
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+             return updateResourcesLocale(context, locale)
+        } else {
+             return updateResourcesLocaleLegacy(context, locale)
         }
     }
 
