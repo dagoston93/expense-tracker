@@ -34,7 +34,6 @@
         <item name="expenseTrackerDialogTextInputLayoutStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
 
         <item name="android:dialogTheme">@style/Theme.ExpenseTracker.Dialog.FullScreen</item>
-        <item name="materialAlertDialogTheme">@style/Theme.ExpenseTracker.ThemeOverlay.MaterialDatePicker.Dark</item>
 
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>

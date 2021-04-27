@@ -28,6 +28,7 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
     /** Data binding and view model*/
     private lateinit var binding : FragmentSettingsBinding
     private lateinit var viewModel: SettingsFragmentViewModel
+    private var chooseLanguageDialog = ChooseLanguageDialogFragment()
 
     /** Get the Activity View Model */
     private val activityViewModel : MainActivityViewModel by activityViewModels {
@@ -35,6 +36,8 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
             requireNotNull(this.activity).application
         )
     }
+
+    private var langTextInitialised: Boolean = false
 
     /**
      * onCreateView()
@@ -98,7 +101,20 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
          * Observe the language string
          */
         viewModel.selectedLanguageString.observe(viewLifecycleOwner, Observer {
-            binding.tvSettingsLanguageSelected.text = it
+            if(binding.tvSettingsLanguageSelected.text != it){
+                binding.tvSettingsLanguageSelected.text = it
+
+                if(langTextInitialised){
+                    /** Dismiss dialog if shown, otherwise it will pop up again after language change */
+                    if(chooseLanguageDialog.showsDialog){
+                        chooseLanguageDialog.dismiss()
+                    }
+
+                    requireActivity().recreate()
+                }
+
+                langTextInitialised = true
+            }
         })
 
         /**
@@ -163,16 +179,18 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
          * Set onLickListener for select language option
          */
         binding.clSettingsLanguage.setOnClickListener {
-            ChooseLanguageDialogFragment(viewModel.selectedLocale) { selectedLang ->
+            chooseLanguageDialog = ChooseLanguageDialogFragment(viewModel.selectedLocale) { selectedLang ->
                 viewModel.onLanguageSelected(selectedLang)
-                requireActivity().recreate()
-            }.show(childFragmentManager,  ChooseLanguageDialogFragment.TAG)
+            }
+
+            chooseLanguageDialog.show(childFragmentManager,  ChooseLanguageDialogFragment.TAG)
         }
         /**
          * TODO:
          * -app freezes on lang change
          * -my phone doesnt change language this way
          * -radio buttons not working properly
+         * -dialog style...
          */
 
         /** Set onClickListener for the Clear Data option */

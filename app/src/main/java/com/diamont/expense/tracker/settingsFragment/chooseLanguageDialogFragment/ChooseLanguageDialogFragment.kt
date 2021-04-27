@@ -17,6 +17,9 @@ class ChooseLanguageDialogFragment(
     private val selectedLanguageString: String,
     private val onPositiveButtonClicked: (selectedLangString: String) -> Unit
 ) : DialogFragment() {
+
+    constructor(): this("", {}) {}
+
     /**
      * The required views
      */

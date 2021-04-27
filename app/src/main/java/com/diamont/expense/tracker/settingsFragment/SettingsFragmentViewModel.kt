@@ -115,7 +115,7 @@ class SettingsFragmentViewModel(
         /** Save the new state in shared prefs*/
         with(sharedPreferences.edit()){
             putString(KEY_PREF_LOCALE,  _selectedLocale)
-            apply()
+            commit()
         }
     }
 

@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
      */
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel : MainActivityViewModel
+    private lateinit var sysDefaultLocale: Locale
+
 
     /**
      * onCreate()
@@ -69,6 +72,10 @@ class MainActivity : AppCompatActivity() {
                 binding.toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
             }
         })
+
+        Log.d("GUS", "onCreate()")
+        /** Set the app language */
+        setLocale()
     }
 
     /**
@@ -97,21 +104,25 @@ class MainActivity : AppCompatActivity() {
      */
     private fun getSavedLocale(context: Context?): Locale{
         val savedLocaleString = PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_PREF_LOCALE, "") ?: ""
+        //val savedLocaleString = viewModel.sharedPreferences.getString(KEY_PREF_LOCALE, "") ?: ""
 
         val appLocale = AppLocale.supportedLocales.find { it.localeString == savedLocaleString }
+
+        Log.d("GUS", "${sysDefaultLocale}")
 
         return if(appLocale != null){
             Locale(savedLocaleString)
         }else{
-            Locale.getDefault()
+
+            Locale(AppLocale.supportedLocales[0].localeString)
         }
     }
 
     private fun setLocale(){
         /** Get locale from shared prefs */
-        val locale = Locale("hu")
+        val locale = getSavedLocale(baseContext)
         val configuration = baseContext.resources.configuration
-
+        Locale.setDefault(locale)
         configuration.setLocale(locale);
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
@@ -119,11 +130,13 @@ class MainActivity : AppCompatActivity() {
         } else {
             resources.updateConfiguration(configuration, baseContext.resources.displayMetrics);
         }
-        //Locale.setDefault(locale)
+
         //baseContext.resources.updateConfiguration(configuration, baseContext.resources.displayMetrics)
     }
 
     override fun attachBaseContext(newBase: Context?) {
+        sysDefaultLocale = Locale.getDefault()
+        Log.d("GUS", "attachBaseContext()")
         super.attachBaseContext(updateBaseContextLocale(newBase))
     }
 
