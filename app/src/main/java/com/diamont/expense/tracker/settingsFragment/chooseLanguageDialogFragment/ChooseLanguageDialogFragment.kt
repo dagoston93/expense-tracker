@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.AppLocale
+import com.diamont.expense.tracker.util.LocaleUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ChooseLanguageDialogFragment(
@@ -48,7 +49,7 @@ class ChooseLanguageDialogFragment(
 
                 for(i in radioButtonList.indices){
                     if(radioButtonList[i].isChecked){
-                        selectedLang = AppLocale.supportedLocales[i].localeString
+                        selectedLang = LocaleUtil.supportedLocales[i].localeString
                     }
                 }
 
@@ -76,7 +77,7 @@ class ChooseLanguageDialogFragment(
         /**
          * Add a radio button for each locale
          */
-        for(locale in AppLocale.supportedLocales){
+        for(locale in LocaleUtil.supportedLocales){
             val langRadioButton = RadioButton(context)
             langRadioButton.text = resources.getString(locale.stringResId)
 

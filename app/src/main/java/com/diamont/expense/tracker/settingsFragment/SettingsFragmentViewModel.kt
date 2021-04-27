@@ -107,15 +107,18 @@ class SettingsFragmentViewModel(
      * Call this method if user selects a language
      */
     fun onLanguageSelected(localeString: String){
-        /** Save state */
-        _selectedLocale = localeString
+        /** Only act if a different language is selected */
+        if(_selectedLocale != localeString) {
+            /** Save state */
+            _selectedLocale = localeString
 
-        updateLanguageString()
+            updateLanguageString()
 
-        /** Save the new state in shared prefs*/
-        with(sharedPreferences.edit()){
-            putString(KEY_PREF_LOCALE,  _selectedLocale)
-            commit()
+            /** Save the new state in shared prefs*/
+            with(sharedPreferences.edit()) {
+                putString(KEY_PREF_LOCALE, _selectedLocale)
+                commit()
+            }
         }
     }
 
@@ -124,7 +127,7 @@ class SettingsFragmentViewModel(
      */
     private fun updateLanguageString() {
         /** Update string live data */
-        val appLocale = AppLocale.supportedLocales.find { it.localeString == _selectedLocale }
+        val appLocale = LocaleUtil.supportedLocales.find { it.localeString == _selectedLocale }
 
         _selectedLanguageString.value = appContext.resources.getString(
             if (appLocale == null) {

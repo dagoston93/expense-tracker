@@ -21,6 +21,7 @@ import com.diamont.expense.tracker.databinding.ActivityMainBinding
 import com.diamont.expense.tracker.util.AppLocale
 import com.diamont.expense.tracker.util.KEY_PREF_DARK_THEME_ENABLED
 import com.diamont.expense.tracker.util.KEY_PREF_LOCALE
+import com.diamont.expense.tracker.util.LocaleUtil
 import com.diamont.expense.tracker.util.interfaces.BackPressHandlerFragment
 import java.util.*
 
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         /** Set the app language */
-        setLocale()
+        LocaleUtil.setLocale(baseContext)
     }
 
     /**
@@ -98,65 +99,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Methods to set the locale
+     * attachBaseContext()
+     *
+     * Set locale
      */
-    private fun getSavedLocale(context: Context?): Locale{
-        val savedLocaleString = PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_PREF_LOCALE, "") ?: ""
-        val appLocale = AppLocale.supportedLocales.find { it.localeString == savedLocaleString }
-
-        return if(appLocale != null){
-            Locale(savedLocaleString)
-        }else{
-            val systemLocale = if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
-                Resources.getSystem().configuration.locales.get(0)
-            }else{
-                Resources.getSystem().configuration.locale
-            }
-            systemLocale
-        }
-    }
-
-    private fun setLocale(){
-        /** Get locale from shared prefs */
-        val locale = getSavedLocale(baseContext)
-
-        val configuration = baseContext.resources.configuration
-        Locale.setDefault(locale)
-        configuration.setLocale(locale)
-
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            applicationContext.createConfigurationContext(configuration);
-        } else {
-            resources.updateConfiguration(configuration, baseContext.resources.displayMetrics);
-        }
-    }
-
     override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(updateBaseContextLocale(newBase))
+        super.attachBaseContext(LocaleUtil.updateBaseContextLocale(newBase))
     }
-
-    private fun updateBaseContextLocale(context: Context?): Context?{
-        val locale = getSavedLocale(context)
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-             return updateResourcesLocale(context, locale)
-        } else {
-             return updateResourcesLocaleLegacy(context, locale)
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.N_MR1)
-    private fun updateResourcesLocale(context: Context?, locale: Locale): Context? {
-        val configuration = Configuration(context?.resources?.configuration)
-        configuration.setLocale(locale)
-        return context?.createConfigurationContext(configuration)
-    }
-
-    @Suppress("deprecation")
-    private fun updateResourcesLocaleLegacy(context: Context?, locale: Locale): Context? {
-        val configuration = context?.resources?.configuration
-        configuration?.locale = locale
-        context?.resources?.updateConfiguration(configuration, context.resources.displayMetrics)
-        return context
-    }
-
 }
