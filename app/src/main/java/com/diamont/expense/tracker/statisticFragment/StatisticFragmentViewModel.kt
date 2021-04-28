@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.statisticFragment
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.ContextCompat
@@ -27,10 +28,10 @@ import java.util.*
 import kotlin.math.roundToInt
 
 class StatisticFragmentViewModel (
-    private val appContext: Application,
+    private val context: Context,
     private val databaseDao: TransactionDatabaseDao,
     private val sharedPreferences: SharedPreferences
-) : DateRangeSelectorFragmentViewModel(appContext) {
+) : DateRangeSelectorFragmentViewModel(context) {
 
     /**
      * Set up some live data
@@ -194,11 +195,11 @@ class StatisticFragmentViewModel (
         getDataFromDatabase()
 
         _statisticTypeStringList.value = listOf(
-            appContext.resources.getString(R.string.incomes_and_expenses),
-            appContext.resources.getString(R.string.incomes_by_categories),
-            appContext.resources.getString(R.string.expenses_by_categories),
-            appContext.resources.getString(R.string.income_plans),
-            appContext.resources.getString(R.string.expense_plans)
+            context.resources.getString(R.string.incomes_and_expenses),
+            context.resources.getString(R.string.incomes_by_categories),
+            context.resources.getString(R.string.expenses_by_categories),
+            context.resources.getString(R.string.income_plans),
+            context.resources.getString(R.string.expense_plans)
         )
     }
 
@@ -321,9 +322,9 @@ class StatisticFragmentViewModel (
 
                 if( _savingsOrOverspendPeriod.value!! < 0){
                     _savingsOrOverspendPeriod.value = _savingsOrOverspendPeriod.value!! * -1
-                    _savingsOrOverspendLabel.value = appContext.resources.getString(R.string.overspend_during_period)
+                    _savingsOrOverspendLabel.value = context.resources.getString(R.string.overspend_during_period)
                 }else{
-                    _savingsOrOverspendLabel.value = appContext.resources.getString(R.string.savings_during_period)
+                    _savingsOrOverspendLabel.value = context.resources.getString(R.string.savings_during_period)
                 }
 
             }
@@ -350,7 +351,7 @@ class StatisticFragmentViewModel (
                     val category = transactionCategories.find{ it.categoryId == _actualAmountList[dataIndex].id }
                     val description = category?.categoryName ?: ""
                     val percentage = getRoundedPercentage(total, _actualAmountList[dataIndex].amount)//((_actualAmountList[dataIndex].amount/total) * 100).roundToInt()
-                    val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.category_color1)
+                    val color = ContextCompat.getColor(context, category?.categoryColorResId ?: R.color.category_color1)
 
                     _actualPieEntries.add(PieEntry(percentage, description, dataIndex))
 
@@ -370,7 +371,7 @@ class StatisticFragmentViewModel (
 
                 _categoryPieChartData.value = data
                 _catPageTotalIncomeOrExpense.value = total
-                _catPageTotalIncomeOrExpenseLabel.value = appContext.resources.getString(
+                _catPageTotalIncomeOrExpenseLabel.value = context.resources.getString(
                     if(selectedTransactionType == TransactionType.EXPENSE){
                         R.string.total_expenses
                     }else{
@@ -406,8 +407,8 @@ class StatisticFragmentViewModel (
                 _planStatisticDataList.add(
                     PlanStatisticData(
                     -1,
-                        appContext.resources.getString(R.string.not_planned),
-                        ContextCompat.getColor(appContext, R.color.not_planned),
+                        context.resources.getString(R.string.not_planned),
+                        ContextCompat.getColor(context, R.color.not_planned),
                         0f,
                         notPlanned?.amount ?: 0f,
                         0f,
@@ -431,7 +432,7 @@ class StatisticFragmentViewModel (
                         val statData = PlanStatisticData(
                             planData.id,
                             actualPlan?.description ?: "",
-                            ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.not_planned),
+                            ContextCompat.getColor(context, category?.categoryColorResId ?: R.color.not_planned),
                             planData.amount,
                             actualData?.amount ?: 0f,
                             getRoundedPercentage(totalPlanned, planData.amount),
@@ -457,9 +458,9 @@ class StatisticFragmentViewModel (
                             incomePlans.find{ it.id == _actualAmountList[dataIndex].id }
                         }
                         val category = transactionCategories.find{ it.categoryId == plan?.categoryId }
-                        val description = plan?.description ?: appContext.resources.getString(R.string.not_planned)
+                        val description = plan?.description ?: context.resources.getString(R.string.not_planned)
                         val percentage = getRoundedPercentage(totalActual, _actualAmountList[dataIndex].amount)
-                        val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.not_planned)
+                        val color = ContextCompat.getColor(context, category?.categoryColorResId ?: R.color.not_planned)
 
                         _actualPieEntries.add(PieEntry(percentage, description, _actualAmountList[dataIndex].id))
                         _dataColorList.add(color)
@@ -493,9 +494,9 @@ class StatisticFragmentViewModel (
                             incomePlans.find{ it.id == _plannedAmountList[dataIndex].id }
                         }
                         val category = transactionCategories.find{ it.categoryId == plan?.categoryId }
-                        val description = plan?.description ?: appContext.resources.getString(R.string.not_planned)
+                        val description = plan?.description ?: context.resources.getString(R.string.not_planned)
                         val percentage = getRoundedPercentage(totalPlanned, _plannedAmountList[dataIndex].amount)
-                        val color = ContextCompat.getColor(appContext, category?.categoryColorResId ?: R.color.not_planned)
+                        val color = ContextCompat.getColor(context, category?.categoryColorResId ?: R.color.not_planned)
 
                         _plannedPieEntries.add(PieEntry(percentage, description, _plannedAmountList[dataIndex].id))
                         _dataColorList.add(color)
@@ -515,7 +516,7 @@ class StatisticFragmentViewModel (
                 _planPlannedPieChartData.value = data
 
                 _planPageTotalActual.value = totalActual
-                _planPageTotalActualIncomeOrExpenseLabel.value = appContext.resources.getString(
+                _planPageTotalActualIncomeOrExpenseLabel.value = context.resources.getString(
                     if(selectedTransactionType == TransactionType.EXPENSE){
                         R.string.total_actual_expenses
                     }else{
@@ -526,13 +527,13 @@ class StatisticFragmentViewModel (
                 _planPageTotalPlanned.value = totalPlanned
 
                 if(selectedTransactionType == TransactionType.EXPENSE){
-                    _planPageTotalPlannedIncomeOrExpenseLabel.value = appContext.resources.getString(R.string.total_planned_expenses)
-                    _planPageInnerPieChartLabelLabel.value = appContext.resources.getString(R.string.inner_chart_planned_expenses)
-                    _planPageOuterPieChartLabelLabel.value = appContext.resources.getString(R.string.outer_chart_actual_expenses)
+                    _planPageTotalPlannedIncomeOrExpenseLabel.value = context.resources.getString(R.string.total_planned_expenses)
+                    _planPageInnerPieChartLabelLabel.value = context.resources.getString(R.string.inner_chart_planned_expenses)
+                    _planPageOuterPieChartLabelLabel.value = context.resources.getString(R.string.outer_chart_actual_expenses)
                 }else{
-                    _planPageTotalPlannedIncomeOrExpenseLabel.value = appContext.resources.getString(R.string.total_planned_incomes)
-                    _planPageInnerPieChartLabelLabel.value = appContext.resources.getString(R.string.inner_chart_planned_incomes)
-                    _planPageOuterPieChartLabelLabel.value = appContext.resources.getString(R.string.outer_chart_actual_incomes)
+                    _planPageTotalPlannedIncomeOrExpenseLabel.value = context.resources.getString(R.string.total_planned_incomes)
+                    _planPageInnerPieChartLabelLabel.value = context.resources.getString(R.string.inner_chart_planned_incomes)
+                    _planPageOuterPieChartLabelLabel.value = context.resources.getString(R.string.outer_chart_actual_incomes)
                 }
             }
         }
@@ -555,7 +556,7 @@ class StatisticFragmentViewModel (
      * Call this method to determine the label color of pie chart
      */
     fun getResolvedLabelColor(sliceColorId: Int?): Int{
-        return ContextCompat.getColor(appContext,
+        return ContextCompat.getColor(context,
             when(sliceColorId){
                 R.color.not_planned,
                 R.color.category_color8,

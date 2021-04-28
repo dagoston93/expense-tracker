@@ -2,18 +2,20 @@ package com.diamont.expense.tracker.settingsFragment.changePinDialogFragment
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.KEY_PREF_PIN_CODE
 
 class ChangeOrConfirmPinDialogFragmentViewModel(
-    private val appContext: Application,
+    private val resources: Resources,
     private val sharedPreferences: SharedPreferences,
     private val isConfirmMode: Boolean
-) : AndroidViewModel(appContext)  {
+) : ViewModel()  {
     /**
      * Setup some live data
      */
@@ -21,7 +23,7 @@ class ChangeOrConfirmPinDialogFragmentViewModel(
     val titleString: LiveData<String>
         get() = _titleString
 
-    private val _subtitleString = MutableLiveData<String>(appContext.resources.getString(R.string.enter_pin_code))
+    private val _subtitleString = MutableLiveData<String>(resources.getString(R.string.enter_pin_code))
     val subtitleString: LiveData<String>
         get() = _subtitleString
 
@@ -59,13 +61,13 @@ class ChangeOrConfirmPinDialogFragmentViewModel(
 
         /** Set the title */
         if(isCreateMode){
-            _titleString.value = appContext.resources.getString(R.string.create_pin_code)
+            _titleString.value = resources.getString(R.string.create_pin_code)
         }else{
             if (isConfirmMode) {
-                _titleString.value = appContext.resources.getString(R.string.confirm_pin_code)
+                _titleString.value = resources.getString(R.string.confirm_pin_code)
             } else {
-                _titleString.value = appContext.resources.getString(R.string.change_pin_code)
-                _subtitleString.value = appContext.resources.getString(R.string.enter_old_pin)
+                _titleString.value = resources.getString(R.string.change_pin_code)
+                _subtitleString.value = resources.getString(R.string.enter_old_pin)
             }
         }
     }
@@ -86,7 +88,7 @@ class ChangeOrConfirmPinDialogFragmentViewModel(
                  * First entry
                  */
                 firstPinEntered = pinCodeEntered
-                _subtitleString.value = appContext.getString(R.string.confirm_pin_code)
+                _subtitleString.value = resources.getString(R.string.confirm_pin_code)
                 _isErrorStringVisible.value = false
             }else{
                 /**
@@ -110,8 +112,8 @@ class ChangeOrConfirmPinDialogFragmentViewModel(
                      */
                     firstPinEntered = ""
                     _isErrorStringVisible.value = true
-                    _errorString.value = appContext.getString(R.string.pin_codes_do_not_match)
-                    _subtitleString.value = appContext.resources.getString(R.string.enter_pin_code)
+                    _errorString.value = resources.getString(R.string.pin_codes_do_not_match)
+                    _subtitleString.value = resources.getString(R.string.enter_pin_code)
                 }
             }
         }else{
@@ -129,7 +131,7 @@ class ChangeOrConfirmPinDialogFragmentViewModel(
                     /**
                      * Incorrect pin
                      */
-                    _errorString.value = appContext.getString(R.string.invalid_pin)
+                    _errorString.value = resources.getString(R.string.invalid_pin)
                     _isErrorStringVisible.value = true
                 }
             }else{
@@ -145,7 +147,7 @@ class ChangeOrConfirmPinDialogFragmentViewModel(
                          * First entry
                          */
                         firstPinEntered = pinCodeEntered
-                        _subtitleString.value = appContext.getString(R.string.confirm_new_pin)
+                        _subtitleString.value = resources.getString(R.string.confirm_new_pin)
                         _isErrorStringVisible.value = false
                     }else{
                         /**
@@ -169,8 +171,8 @@ class ChangeOrConfirmPinDialogFragmentViewModel(
                              */
                             firstPinEntered = ""
                             _isErrorStringVisible.value = true
-                            _errorString.value = appContext.getString(R.string.pin_codes_do_not_match)
-                            _subtitleString.value = appContext.resources.getString(R.string.enter_new_pin)
+                            _errorString.value = resources.getString(R.string.pin_codes_do_not_match)
+                            _subtitleString.value = resources.getString(R.string.enter_new_pin)
                         }
                     }
                 }else{
@@ -183,12 +185,12 @@ class ChangeOrConfirmPinDialogFragmentViewModel(
                          */
                         _isErrorStringVisible.value = false
                         isOldCodeEntered = true
-                        _subtitleString.value = appContext.resources.getString(R.string.enter_new_pin)
+                        _subtitleString.value = resources.getString(R.string.enter_new_pin)
                     }else{
                         /**
                          * Incorrect pin code
                          */
-                        _errorString.value = appContext.resources.getString(R.string.invalid_pin)
+                        _errorString.value = resources.getString(R.string.invalid_pin)
                         _isErrorStringVisible.value = true
                     }
                 }

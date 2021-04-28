@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
@@ -8,7 +9,7 @@ import com.diamont.expense.tracker.util.enums.TransactionType
 import java.lang.IllegalArgumentException
 
 class AddOrEditTransactionFragmentViewModelFactory(
-    private val application: Application,
+    private val context: Context,
     private val databaseDao: TransactionDatabaseDao,
     private val transactionIdToEdit: Int?,
     private val isTransactionToEdit: Boolean,
@@ -17,7 +18,7 @@ class AddOrEditTransactionFragmentViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(AddOrEditTransactionFragmentViewModel::class.java)){
             return AddOrEditTransactionFragmentViewModel(
-                application,
+                context,
                 databaseDao,
                 transactionIdToEdit,
                 isTransactionToEdit,

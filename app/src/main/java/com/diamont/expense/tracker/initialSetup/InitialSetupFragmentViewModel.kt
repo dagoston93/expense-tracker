@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.initialSetup
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import android.view.View
 import androidx.biometric.BiometricManager
@@ -14,10 +15,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class InitialSetupFragmentViewModel(
-    private val appContext: Application,
+    private val context: Context,
     private val sharedPreferences: SharedPreferences,
     private val databaseDao: TransactionDatabaseDao
-) : AndroidViewModel(appContext) {
+) : ViewModel() {
 
     /** Declare the required variables */
     private var isAuthenticationRequired : Boolean = false
@@ -36,7 +37,7 @@ class InitialSetupFragmentViewModel(
         get() = _isFingerprintSensorAvailable
 
     /** Create some live data for ui to observe */
-    private var _setOrConfirmPinStr = MutableLiveData<String>(appContext.getString(R.string.set_pin_code))
+    private var _setOrConfirmPinStr = MutableLiveData<String>(context.getString(R.string.set_pin_code))
     val setOrConfirmPinStr : LiveData<String>
         get() = _setOrConfirmPinStr
 
@@ -72,7 +73,7 @@ class InitialSetupFragmentViewModel(
      */
     init{
         /** Check if biometric authentication is available */
-        val biometricManager = BiometricManager.from(appContext)
+        val biometricManager = BiometricManager.from(context)
 
         if(biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
          == BiometricManager.BIOMETRIC_SUCCESS){
@@ -154,7 +155,7 @@ class InitialSetupFragmentViewModel(
      */
     private fun addDefaultCategories(){
         uiScope.launch {
-            databaseDao.addDefaultCategoriesSuspend(appContext)
+            databaseDao.addDefaultCategoriesSuspend(context)
             _isSetupProcessComplete = true
         }
     }
@@ -174,14 +175,14 @@ class InitialSetupFragmentViewModel(
             }else{
                 /** Codes don't match, we set the error message and restart process */
                 isFirstPinEntryAccepted = false
-                _setOrConfirmPinStr.value = appContext.getString(R.string.set_pin_code)
+                _setOrConfirmPinStr.value = context.getString(R.string.set_pin_code)
                 _isPinEntryErrorMessageVisible.value = true
             }
         }else{
             /** Set so we save the first entry and change text*/
             pinCode = code
             isFirstPinEntryAccepted = true
-            _setOrConfirmPinStr.value = appContext.getString(R.string.confirm_pin_code)
+            _setOrConfirmPinStr.value = context.getString(R.string.confirm_pin_code)
             _isPinEntryErrorMessageVisible.value = false
         }
     }

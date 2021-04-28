@@ -1,21 +1,23 @@
 package com.diamont.expense.tracker.addCategoryDialogFragment
 
 import android.app.Application
+import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import kotlinx.coroutines.*
 
 class AddCategoryDialogFragmentViewModel(
-    private val appContext: Application,
+    private val resources: Resources,
     private val databaseDao: TransactionDatabaseDao,
     private val editCategoryId: Int?,
     private val categoryListChangeCallBack: () -> Unit
-) : AndroidViewModel(appContext) {
+) : ViewModel() {
 
     private var _categories: List<TransactionCategory> = listOf<TransactionCategory>()
     private var _categoryToEdit = TransactionCategory()
@@ -62,16 +64,16 @@ class AddCategoryDialogFragmentViewModel(
             /** If we are in edit mode check if it is the current category name*/
             if(editCategoryId != null){
                 if(_categoryToEdit.categoryName != name){
-                    error = appContext.resources.getString(R.string.category_already_exists)
+                    error = resources.getString(R.string.category_already_exists)
                 }
             }else{
-                error = appContext.resources.getString(R.string.category_already_exists)
+                error = resources.getString(R.string.category_already_exists)
             }
         }
 
         /** Check if string is empty */
         if(name.isEmpty()){
-            error = appContext.resources.getString(R.string.category_name_empty)
+            error = resources.getString(R.string.category_name_empty)
         }
 
         return error

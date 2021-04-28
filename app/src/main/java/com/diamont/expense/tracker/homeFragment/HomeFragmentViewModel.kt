@@ -2,10 +2,7 @@ package com.diamont.expense.tracker.homeFragment
 
 import android.app.Application
 import android.content.SharedPreferences
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.Currency
 import com.diamont.expense.tracker.util.database.Plan
@@ -20,10 +17,9 @@ import java.text.DecimalFormat
 import java.util.*
 
 class HomeFragmentViewModel(
-    private val appContext: Application,
     private val databaseDao: TransactionDatabaseDao,
     private val sharedPreferences: SharedPreferences
-) : AndroidViewModel(appContext) {
+) : ViewModel() {
     /**
      * Set up some live data
      */

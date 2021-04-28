@@ -28,6 +28,14 @@ class LocaleUtil(base: Context) : ContextWrapper(base) {
             AppLocale("hu", R.string.hungarian)
         )
 
+        /**
+         * This retrieves the locale to use.
+         * If user selection is saved in shared prefs the user selection will be retrieved,
+         * otherwise the device default.
+         *
+         * This way if the user selected default or left it as default, if the device language is
+         * supported that will be used, if not, English. If user selected a language that one will be used.
+         */
         private fun getSavedLocale(context: Context?): Locale {
             val savedLocaleString = PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(KEY_PREF_LOCALE, "") ?: ""
@@ -45,6 +53,10 @@ class LocaleUtil(base: Context) : ContextWrapper(base) {
             }
         }
 
+        /**
+         * Call this method in activity's onCreate() method, otherwise
+         * language selection does not work on older devices. (Below API level 25.)
+         */
         fun setLocale(baseContext: Context) {
             /** Get locale from shared prefs */
             val locale = getSavedLocale(baseContext)
@@ -63,6 +75,11 @@ class LocaleUtil(base: Context) : ContextWrapper(base) {
             }
         }
 
+        /**
+         * Call this method from activity's and the application class's
+         * attachBaseContext() method otherwise language selection will not
+         * work on newer devices...
+         */
         fun updateBaseContextLocale(context: Context?): Context? {
             val locale = getSavedLocale(context)
 
@@ -73,6 +90,9 @@ class LocaleUtil(base: Context) : ContextWrapper(base) {
             }
         }
 
+        /**
+         * Update locale of resources on newer devices
+         */
         @TargetApi(Build.VERSION_CODES.N_MR1)
         private fun updateResourcesLocale(context: Context?, locale: Locale): Context? {
             val configuration = Configuration(context?.resources?.configuration)
@@ -80,6 +100,9 @@ class LocaleUtil(base: Context) : ContextWrapper(base) {
             return context?.createConfigurationContext(configuration)
         }
 
+        /**
+         * Update locale of resources on older devices
+         */
         @Suppress("deprecation")
         private fun updateResourcesLocaleLegacy(context: Context?, locale: Locale): Context? {
             val configuration = context?.resources?.configuration
@@ -88,9 +111,20 @@ class LocaleUtil(base: Context) : ContextWrapper(base) {
             return context
         }
 
+        /**
+         * Call this method to get localise resources
+         */
+        fun getLocalisedResources(context: Context): Resources{
+            /** Our input context cannot be null so the return value of updateBaseContextLocale() shall not be null either */
+            return updateBaseContextLocale(context)!!.resources
+        }
 
-
+        /**
+         * Call this method to get localise context
+         */
+        fun getLocalisedContext(context: Context): Context{
+            /** Our input context cannot be null so the return value of updateBaseContextLocale() shall not be null either */
+            return updateBaseContextLocale(context)!!
+        }
     }
-
-
 }

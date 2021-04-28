@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.util.LocaleUtil
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.view.ColorPicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -43,12 +44,13 @@ class AddCategoryDialogFragment(
          *  Create the view model using a view model factory
          */
         val application = requireNotNull(this.activity).application
+        val resources = LocaleUtil.getLocalisedResources(application)
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
 
         /**
          * Create the view model
          */
-        val viewModelFactory = AddCategoryDialogFragmentViewModelFactory(application, databaseDao, editCategoryId, categoryListChangeCallBack)
+        val viewModelFactory = AddCategoryDialogFragmentViewModelFactory(resources, databaseDao, editCategoryId, categoryListChangeCallBack)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddCategoryDialogFragmentViewModel::class.java)
 

@@ -12,6 +12,7 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentInitialSetupBinding
+import com.diamont.expense.tracker.util.LocaleUtil
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.interfaces.BackPressHandlerFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -30,10 +31,12 @@ class InitialSetupFragment : Fragment(), BackPressHandlerFragment {
 
     /** Get our View Model */
     private val viewModel : InitialSetupFragmentViewModel by activityViewModels {
+        val application = requireNotNull(this.activity).application
+
         InitialSetupFragmentViewModelFactory(
-            requireNotNull(this.activity).application,
+            LocaleUtil.getLocalisedContext(application),
             activityViewModel.sharedPreferences,
-            TransactionDatabase.getInstance(requireNotNull(this.activity).application).transactionDatabaseDao
+            TransactionDatabase.getInstance(application).transactionDatabaseDao
         )
     }
 

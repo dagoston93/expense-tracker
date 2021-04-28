@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.util.LocaleUtil
 import com.diamont.expense.tracker.util.boolToVisibility
 import com.diamont.expense.tracker.util.view.PinCodeInputView
 
@@ -35,15 +36,6 @@ class ChangeOrConfirmPinDialogFragment(
     private lateinit var pinCodeInput: PinCodeInputView
 
     /**
-     * onCreate()
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        /** Set full screen dialog style */
-        //setStyle(STYLE_NORMAL, R.style.Theme_ExpenseTracker_Dialog_FullScreen)
-    }
-
-    /**
      * onCreateView()
      */
     override fun onCreateView(
@@ -65,7 +57,8 @@ class ChangeOrConfirmPinDialogFragment(
          *  Create the view model using a view model factory
          */
         val application = requireNotNull(this.activity).application
-        val viewModelFactory = ChangeOrConfirmPinDialogFragmentViewModelFactory(application, sharedPreferences, isConfirmMode)
+        val resources = LocaleUtil.getLocalisedResources(application)
+        val viewModelFactory = ChangeOrConfirmPinDialogFragmentViewModelFactory(resources, sharedPreferences, isConfirmMode)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(ChangeOrConfirmPinDialogFragmentViewModel::class.java)

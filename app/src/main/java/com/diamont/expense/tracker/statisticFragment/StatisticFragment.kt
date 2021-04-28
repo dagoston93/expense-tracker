@@ -83,8 +83,9 @@ class StatisticFragment : DateRangeSelectorFragment() {
          *  Create the view model using a view model factory
          */
         val application = requireNotNull(this.activity).application
+        val localisedContext = LocaleUtil.getLocalisedContext(application)
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
-        val viewModelFactory = StatisticFragmentViewModelFactory(application, databaseDao, activityViewModel.sharedPreferences)
+        val viewModelFactory = StatisticFragmentViewModelFactory(localisedContext, databaseDao, activityViewModel.sharedPreferences)
 
         baseClassViewModel = ViewModelProvider(this, viewModelFactory)
             .get(StatisticFragmentViewModel::class.java)

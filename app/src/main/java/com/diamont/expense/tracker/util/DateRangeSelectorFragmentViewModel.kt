@@ -1,10 +1,12 @@
 package com.diamont.expense.tracker.util
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.diamont.expense.tracker.R
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.util.*
@@ -14,7 +16,7 @@ import java.util.*
  * in History fragment and Statistics fragment to select
  * periods
  */
-abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : AndroidViewModel(appContext) {
+abstract class DateRangeSelectorFragmentViewModel(context: Context) : ViewModel() {
 
     private val _periodStringList = MutableLiveData<List<String>>(listOf<String>())
     val periodStringList : LiveData<List<String>>
@@ -32,12 +34,12 @@ abstract class DateRangeSelectorFragmentViewModel(appContext: Application) : And
     init{
         /** Set up the array adapter */
         _periodStringList.value = listOf(
-            appContext.resources.getString(R.string.whole_period),
-            appContext.resources.getString(R.string.current_month),
-            appContext.resources.getString(R.string.last_seven_days),
-            appContext.resources.getString(R.string.previous_month),
-            appContext.resources.getString(R.string.this_year),
-            appContext.resources.getString(R.string.select_period)
+            context.resources.getString(R.string.whole_period),
+            context.resources.getString(R.string.current_month),
+            context.resources.getString(R.string.last_seven_days),
+            context.resources.getString(R.string.previous_month),
+            context.resources.getString(R.string.this_year),
+            context.resources.getString(R.string.select_period)
         )
     }
 

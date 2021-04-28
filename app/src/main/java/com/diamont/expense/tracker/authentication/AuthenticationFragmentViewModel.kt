@@ -3,20 +3,20 @@ package com.diamont.expense.tracker.authentication
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import androidx.biometric.BiometricManager
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import com.diamont.expense.tracker.util.KEY_PREF_FINGERPRINT_ENABLED
 import com.diamont.expense.tracker.util.KEY_PREF_PIN_CODE
 
-class AuthenticationFragmentViewModel(appContext: Application) : AndroidViewModel(appContext){
+class AuthenticationFragmentViewModel(
+    private val context: Context
+) : ViewModel(){
     /** We need shared prefs */
-    private var sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
+    private var sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var isFingerprintSensorAvailable : Boolean = false
 
     /** Declare some variables */
@@ -50,7 +50,7 @@ class AuthenticationFragmentViewModel(appContext: Application) : AndroidViewMode
         isFingerprintEnabled = sharedPreferences.getBoolean(KEY_PREF_FINGERPRINT_ENABLED, false)
 
         /** Check if biometric authentication is available */
-        val biometricManager = BiometricManager.from(appContext)
+        val biometricManager = BiometricManager.from(context)
 
         if(biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
             == BiometricManager.BIOMETRIC_SUCCESS){

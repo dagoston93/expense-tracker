@@ -19,6 +19,7 @@ import com.diamont.expense.tracker.historyFragment.filterDialogFragment.FilterDi
 import com.diamont.expense.tracker.settingsFragment.changePinDialogFragment.ChangeOrConfirmPinDialogFragment
 import com.diamont.expense.tracker.settingsFragment.chooseLanguageDialogFragment.ChooseLanguageDialogFragment
 import com.diamont.expense.tracker.util.KEY_PREF_LOCALE
+import com.diamont.expense.tracker.util.LocaleUtil
 import com.diamont.expense.tracker.util.database.TransactionDatabase
 import com.diamont.expense.tracker.util.interfaces.BackPressCallbackFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -54,8 +55,9 @@ class SettingsFragment: Fragment(), BackPressCallbackFragment {
          *  Create the view model using a view model factory
          */
         val application = requireNotNull(this.activity).application
+        val resources = LocaleUtil.getLocalisedResources(application)
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
-        val viewModelFactory = SettingsFragmentViewModelFactory(application, activityViewModel.sharedPreferences, databaseDao)
+        val viewModelFactory = SettingsFragmentViewModelFactory(resources, activityViewModel.sharedPreferences, databaseDao)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(SettingsFragmentViewModel::class.java)

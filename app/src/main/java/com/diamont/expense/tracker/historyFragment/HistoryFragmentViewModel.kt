@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.historyFragment
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,9 +14,9 @@ import com.diamont.expense.tracker.util.enums.TransactionType
 import kotlinx.coroutines.*
 
 class HistoryFragmentViewModel(
-    private val appContext: Application,
+    context: Context,
     private val databaseDao: TransactionDatabaseDao
-) : DateRangeSelectorFragmentViewModel(appContext) {
+) : DateRangeSelectorFragmentViewModel(context) {
 
     /**
      * Set up some live data

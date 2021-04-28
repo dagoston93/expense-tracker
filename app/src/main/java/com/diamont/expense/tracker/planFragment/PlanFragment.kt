@@ -1,6 +1,7 @@
 package com.diamont.expense.tracker.planFragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.diamont.expense.tracker.MainActivityViewModel
 import com.diamont.expense.tracker.MainActivityViewModelFactory
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentPlanBinding
+import com.diamont.expense.tracker.util.LocaleUtil
 import com.diamont.expense.tracker.util.database.*
 import com.diamont.expense.tracker.util.enums.TransactionType
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -53,8 +55,9 @@ class PlanFragment : Fragment() {
          *  Create the view model using a view model factory
          */
         val application = requireNotNull(this.activity).application
+        val resources = LocaleUtil.getLocalisedResources(application)
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
-        val viewModelFactory = PlanFragmentViewModelFactory(application, databaseDao, activityViewModel.sharedPreferences)
+        val viewModelFactory = PlanFragmentViewModelFactory(resources, databaseDao, activityViewModel.sharedPreferences)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(PlanFragmentViewModel::class.java)
@@ -121,6 +124,7 @@ class PlanFragment : Fragment() {
         })
 
         /** Return the inflated layout */
+        Log.d("GUS", "from fragm: ${resources.getString(R.string.total_planned_expenses)}")
         return binding.root
     }
 
@@ -158,7 +162,6 @@ class PlanFragment : Fragment() {
             .setNegativeButton(resources.getString(R.string.no)) { _, _ -> }
             .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                 viewModel.cancelPlan(id, position)
-                //(binding.rvPlanList.adapter as PlanRecyclerViewAdapter).itemCancelledAtPos(position)
             }
             .show()
     }

@@ -67,6 +67,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
          *  Get the application context and tha database dao
          */
         val application = requireNotNull(this.activity).application
+        val localisedContext = LocaleUtil.getLocalisedContext(application)
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
 
         /**
@@ -88,7 +89,7 @@ class AddOrEditTransactionFragment : Fragment(), BackPressCallbackFragment {
          * Create the view model
          */
         val viewModelFactory = AddOrEditTransactionFragmentViewModelFactory(
-            application,
+            localisedContext,
             databaseDao,
             id,
             isTransactionToEdit,

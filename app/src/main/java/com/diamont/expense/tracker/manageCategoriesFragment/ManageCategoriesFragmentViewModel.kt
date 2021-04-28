@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import kotlinx.coroutines.CoroutineScope
@@ -12,9 +13,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ManageCategoriesFragmentViewModel(
-    private val appContext: Application,
     private val databaseDao: TransactionDatabaseDao
-) : AndroidViewModel(appContext) {
+) : ViewModel() {
     /**
      * Declare the required variables
      */

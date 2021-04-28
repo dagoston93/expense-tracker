@@ -45,7 +45,7 @@ class ManageCategoriesFragment : Fragment() {
          */
         val application = requireNotNull(this.activity).application
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
-        val viewModelFactory = ManageCategoriesFragmentViewModelFactory(application, databaseDao)
+        val viewModelFactory = ManageCategoriesFragmentViewModelFactory(databaseDao)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(ManageCategoriesFragmentViewModel::class.java)

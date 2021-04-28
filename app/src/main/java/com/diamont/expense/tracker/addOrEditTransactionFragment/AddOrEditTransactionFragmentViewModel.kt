@@ -1,11 +1,10 @@
 package com.diamont.expense.tracker.addOrEditTransactionFragment
 
 import android.app.Application
+import android.content.Context
+import android.content.res.Resources
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.boolToVisibility
 import com.diamont.expense.tracker.util.database.*
@@ -18,12 +17,12 @@ import kotlinx.coroutines.*
 import java.util.*
 
 class AddOrEditTransactionFragmentViewModel(
-    private val appContext: Application,
+    private val context: Context,
     private val databaseDao: TransactionDatabaseDao,
     private val idToEdit: Int?,
     private val isTransactionToEdit: Boolean,
     private val defaultTransactionType: TransactionType
-) : AndroidViewModel(appContext) {
+) : ViewModel() {
 
     /**
      * Declare required variables
@@ -32,7 +31,7 @@ class AddOrEditTransactionFragmentViewModel(
     val date : Date
         get() = _date
 
-    private val dateFormat = android.text.format.DateFormat.getDateFormat(appContext)
+    private val dateFormat = android.text.format.DateFormat.getDateFormat(context)
 
     private var selectedTransactionType : TransactionType = TransactionType.EXPENSE
     private var selectedDate: Long = 0
@@ -87,15 +86,15 @@ class AddOrEditTransactionFragmentViewModel(
     /**
      * Live data for hint strings
      */
-    private val _recipientOrVenueHint = MutableLiveData<String>(appContext.resources.getString(R.string.recipient_venue))
+    private val _recipientOrVenueHint = MutableLiveData<String>(context.resources.getString(R.string.recipient_venue))
     val recipientOrVenueHint: LiveData<String>
         get() = _recipientOrVenueHint
 
-    private val _paymentMethodHint = MutableLiveData<String>(appContext.resources.getString(R.string.payment_method))
+    private val _paymentMethodHint = MutableLiveData<String>(context.resources.getString(R.string.payment_method))
     val paymentMethodHint: LiveData<String>
         get() = _paymentMethodHint
 
-    private val _dateHint = MutableLiveData<String>(appContext.resources.getString(R.string.date))
+    private val _dateHint = MutableLiveData<String>(context.resources.getString(R.string.date))
     val dateHint: LiveData<String>
         get() = _dateHint
 
@@ -217,9 +216,9 @@ class AddOrEditTransactionFragmentViewModel(
          */
         if(idToEdit != null) {
             isEditMode = true
-            _buttonText.value = appContext.resources.getString(R.string.save)
+            _buttonText.value = context.resources.getString(R.string.save)
         }else{
-            _buttonText.value = appContext.resources.getString(R.string.add)
+            _buttonText.value = context.resources.getString(R.string.add)
             /** Get the date for today */
             _dateString.value = dateFormat.format(_date)
             selectedDate = _date.time
@@ -259,7 +258,7 @@ class AddOrEditTransactionFragmentViewModel(
         {
             /** Set up the title */
             if(!isEditMode){
-                _titleString.value = appContext.resources.getString(R.string.add_income)
+                _titleString.value = context.resources.getString(R.string.add_income)
             }
 
             /** Set the field visibilities */
@@ -275,9 +274,9 @@ class AddOrEditTransactionFragmentViewModel(
             }
 
             /** Set up the hints */
-            _recipientOrVenueHint.value = appContext.resources.getString(R.string.source)
-            _paymentMethodHint.value = appContext.resources.getString(R.string.received_by)
-            _dateHint.value = appContext.resources.getString(R.string.date)
+            _recipientOrVenueHint.value = context.resources.getString(R.string.source)
+            _paymentMethodHint.value = context.resources.getString(R.string.received_by)
+            _dateHint.value = context.resources.getString(R.string.date)
 
             /** Set up the plan list */
             _currentPlanList.value = incomePlanStringList
@@ -297,7 +296,7 @@ class AddOrEditTransactionFragmentViewModel(
         }else if(selectedTransactionType == TransactionType.EXPENSE){
             /** Set up the title */
             if(!isEditMode) {
-                _titleString.value = appContext.resources.getString(R.string.add_expense)
+                _titleString.value = context.resources.getString(R.string.add_expense)
             }
 
             /** Set the field visibilities */
@@ -313,9 +312,9 @@ class AddOrEditTransactionFragmentViewModel(
             }
 
             /** Set up the hints */
-            _recipientOrVenueHint.value = appContext.resources.getString(R.string.recipient_venue)
-            _paymentMethodHint.value = appContext.resources.getString(R.string.payment_method)
-            _dateHint.value = appContext.resources.getString(R.string.date)
+            _recipientOrVenueHint.value = context.resources.getString(R.string.recipient_venue)
+            _paymentMethodHint.value = context.resources.getString(R.string.payment_method)
+            _dateHint.value = context.resources.getString(R.string.date)
 
             /** Set up the plan list */
             _currentPlanList.value = expensePlanStringList
@@ -335,7 +334,7 @@ class AddOrEditTransactionFragmentViewModel(
         }else if(selectedTransactionType == TransactionType.DEPOSIT){
             /** Set up the title */
             if(!isEditMode) {
-                _titleString.value = appContext.resources.getString(R.string.add_deposit)
+                _titleString.value = context.resources.getString(R.string.add_deposit)
             }
 
             /** Set the field visibilities */
@@ -349,10 +348,10 @@ class AddOrEditTransactionFragmentViewModel(
             _amountString.value = ""
 
             /** Set description */
-            _descriptionString.value = appContext.resources.getString(R.string.deposit)
+            _descriptionString.value = context.resources.getString(R.string.deposit)
 
             /** Set up the hints */
-            _dateHint.value = appContext.resources.getString(R.string.date)
+            _dateHint.value = context.resources.getString(R.string.date)
 
             /** Reset error string */
             _descriptionErrorMessage.value = null
@@ -367,7 +366,7 @@ class AddOrEditTransactionFragmentViewModel(
         }else if(selectedTransactionType == TransactionType.WITHDRAW){
             /** Set up the title */
             if(!isEditMode) {
-                _titleString.value = appContext.resources.getString(R.string.add_withdrawal)
+                _titleString.value = context.resources.getString(R.string.add_withdrawal)
             }
 
             /** Set the field visibilities */
@@ -381,10 +380,10 @@ class AddOrEditTransactionFragmentViewModel(
             _amountString.value = ""
 
             /** Set description */
-            _descriptionString.value = appContext.resources.getString(R.string.withdraw)
+            _descriptionString.value = context.resources.getString(R.string.withdraw)
 
             /** Set up the hints */
-            _dateHint.value = appContext.resources.getString(R.string.date)
+            _dateHint.value = context.resources.getString(R.string.date)
 
             /** Reset error string */
             _descriptionErrorMessage.value = null
@@ -399,7 +398,7 @@ class AddOrEditTransactionFragmentViewModel(
         }else if(selectedTransactionType == TransactionType.PLAN_EXPENSE){
             /** Set up the title */
             if(!isEditMode) {
-                _titleString.value = appContext.resources.getString(R.string.add_plan_expense)
+                _titleString.value = context.resources.getString(R.string.add_plan_expense)
             }
 
             /** Set the field visibilities */
@@ -415,9 +414,9 @@ class AddOrEditTransactionFragmentViewModel(
             }
 
             /** Set up the hints */
-            _recipientOrVenueHint.value = appContext.resources.getString(R.string.recipient_venue)
-            _paymentMethodHint.value = appContext.resources.getString(R.string.payment_method)
-            _dateHint.value = appContext.resources.getString(R.string.expected_date)
+            _recipientOrVenueHint.value = context.resources.getString(R.string.recipient_venue)
+            _paymentMethodHint.value = context.resources.getString(R.string.payment_method)
+            _dateHint.value = context.resources.getString(R.string.expected_date)
 
             /** Validate description if already entered */
             validateDescription()
@@ -437,7 +436,7 @@ class AddOrEditTransactionFragmentViewModel(
         }else if(selectedTransactionType == TransactionType.PLAN_INCOME){
             /** Set up the title */
             if(!isEditMode) {
-                _titleString.value = appContext.resources.getString(R.string.add_plan_income)
+                _titleString.value = context.resources.getString(R.string.add_plan_income)
             }
 
             /** Set the field visibilities */
@@ -453,9 +452,9 @@ class AddOrEditTransactionFragmentViewModel(
             }
 
             /** Set up the hints */
-            _recipientOrVenueHint.value = appContext.resources.getString(R.string.source)
-            _paymentMethodHint.value = appContext.resources.getString(R.string.receive_by)
-            _dateHint.value = appContext.resources.getString(R.string.expected_date)
+            _recipientOrVenueHint.value = context.resources.getString(R.string.source)
+            _paymentMethodHint.value = context.resources.getString(R.string.receive_by)
+            _dateHint.value = context.resources.getString(R.string.expected_date)
 
             /** Validate description if already entered */
             validateDescription()
@@ -563,9 +562,9 @@ class AddOrEditTransactionFragmentViewModel(
             || selectedFrequency == TransactionFrequency.WEEKLY_SUM
             || selectedFrequency == TransactionFrequency.YEARLY_SUM){
 
-            _dateHint.value = appContext.resources.getString(R.string.first_date)
+            _dateHint.value = context.resources.getString(R.string.first_date)
         }else{
-            _dateHint.value = appContext.resources.getString(R.string.expected_date)
+            _dateHint.value = context.resources.getString(R.string.expected_date)
         }
 
     }
@@ -735,7 +734,7 @@ class AddOrEditTransactionFragmentViewModel(
                  */
                 if((isEditMode && currentPlan.id != result.id) || !isEditMode){
                     _descriptionErrorMessage.value =
-                        appContext.resources.getString(R.string.description_error_message)
+                        context.resources.getString(R.string.description_error_message)
                 }else{
                     _descriptionErrorMessage.value = null
                 }
@@ -901,7 +900,7 @@ class AddOrEditTransactionFragmentViewModel(
             TransactionType.PLAN_INCOME -> R.string.edit_plan_income
         }
 
-        _titleString.value = appContext.resources.getString(titleStringRes)
+        _titleString.value = context.resources.getString(titleStringRes)
     }
 
     /**
@@ -1122,12 +1121,12 @@ class AddOrEditTransactionFragmentViewModel(
      * dropdown menus
      */
     private fun createPlanStringLists(){
-        incomePlanStringList.add(appContext.getString(R.string.not_planned))
+        incomePlanStringList.add(context.getString(R.string.not_planned))
         for(plan in incomePlans){
             incomePlanStringList.add(plan.description)
         }
 
-        expensePlanStringList.add(appContext.getString(R.string.not_planned))
+        expensePlanStringList.add(context.getString(R.string.not_planned))
         for(plan in expensePlans){
             expensePlanStringList.add(plan.description)
         }

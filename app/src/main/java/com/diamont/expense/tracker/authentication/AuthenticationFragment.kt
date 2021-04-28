@@ -1,9 +1,7 @@
 package com.diamont.expense.tracker.authentication
 
-import android.content.SharedPreferences
 import androidx.biometric.BiometricPrompt
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.databinding.FragmentAuthenticationBinding
-import com.diamont.expense.tracker.initialSetup.InitialSetupFragmentDirections
+import com.diamont.expense.tracker.util.LocaleUtil
 
 class AuthenticationFragment : Fragment() {
     /** Data binding */
@@ -39,7 +37,8 @@ class AuthenticationFragment : Fragment() {
          *  Create the view model using a view model factory
          */
         val application = requireNotNull(this.activity).application
-        val viewModelFactory = AuthenticationFragmentViewModelFactory(application)
+        val localisedContext = LocaleUtil.getLocalisedContext(application)
+        val viewModelFactory = AuthenticationFragmentViewModelFactory(localisedContext)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AuthenticationFragmentViewModel::class.java)

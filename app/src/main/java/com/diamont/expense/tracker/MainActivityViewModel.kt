@@ -1,10 +1,12 @@
 package com.diamont.expense.tracker
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.preference.PreferenceManager
 import com.diamont.expense.tracker.util.enums.TransactionType
 
@@ -14,9 +16,9 @@ import com.diamont.expense.tracker.util.enums.TransactionType
  * such as changing the title of the action bar,
  * showing the up button, or hiding the bottom navigation.
  */
-class MainActivityViewModel (appContext: Application) : AndroidViewModel(appContext){
+class MainActivityViewModel(context: Context) : ViewModel(){
     /** Declare some variables */
-    private val _actionbarTitle = MutableLiveData<String>(appContext.getString(R.string.app_name))
+    private val _actionbarTitle = MutableLiveData<String>(context.getString(R.string.app_name))
     val actionbarTitle : LiveData<String>
         get() = _actionbarTitle
 
@@ -33,7 +35,7 @@ class MainActivityViewModel (appContext: Application) : AndroidViewModel(appCont
         get() = _isDrawerEnabled
 
     /** We need the shared preferences */
-    private var _sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
+    private var _sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     val sharedPreferences: SharedPreferences
         get() = _sharedPreferences
 

@@ -2,15 +2,15 @@ package com.diamont.expense.tracker.planFragment
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.diamont.expense.tracker.R
+import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.Currency
-import com.diamont.expense.tracker.util.CurrentCalendars
-import com.diamont.expense.tracker.util.KEY_PREF_CURRENCY_ID
-import com.diamont.expense.tracker.util.PlanCalculator
 import com.diamont.expense.tracker.util.database.Plan
 import com.diamont.expense.tracker.util.database.TransactionCategory
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
@@ -26,10 +26,10 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class PlanFragmentViewModel (
-    private val appContext: Application,
+    private val resources: Resources,
     private val databaseDao: TransactionDatabaseDao,
     private val sharedPreferences: SharedPreferences
-) : AndroidViewModel(appContext) {
+) : ViewModel() {
     /**
      * Set up some live data
      */
@@ -41,7 +41,7 @@ class PlanFragmentViewModel (
     val plansToDisplay: LiveData<List<Plan>>
         get() = _plansToDisplay
 
-    private val _cardViewTitle = MutableLiveData<String>(appContext.resources.getString(R.string.total_planned_expenses))
+    private val _cardViewTitle = MutableLiveData<String>(resources.getString(R.string.total_planned_expenses))
     val cardViewTitle: LiveData<String>
         get() = _cardViewTitle
 
@@ -70,6 +70,8 @@ class PlanFragmentViewModel (
     private var expensePlans = mutableListOf<Plan>()
     private val planCalculator = PlanCalculator(CurrentCalendars())
 
+
+
     /**
      * Trigger this event when user clicks on an edit icon
      * by setting the plan id as the value.
@@ -90,6 +92,7 @@ class PlanFragmentViewModel (
     init{
         getCurrencyInUse()
         getPlanData()
+        Log.d("GUS", "from vm: $resources.getString(R.string.total_planned_expenses)}")
     }
 
     /**
@@ -164,7 +167,7 @@ class PlanFragmentViewModel (
             /**
              * Expense tab selected
              */
-            _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_expenses)
+            _cardViewTitle.value = resources.getString(R.string.total_planned_expenses)
             _plansToDisplay.value = expensePlans
             _selectedPlanType.value = TransactionType.PLAN_EXPENSE
             planCalculator.setCurrentPlanList(expensePlans)
@@ -173,7 +176,7 @@ class PlanFragmentViewModel (
             /**
              * Income tab selected
              */
-            _cardViewTitle.value = appContext.resources.getString(R.string.total_planned_incomes)
+            _cardViewTitle.value = resources.getString(R.string.total_planned_incomes)
             _plansToDisplay.value = incomePlans
             _selectedPlanType.value = TransactionType.PLAN_INCOME
             planCalculator.setCurrentPlanList(incomePlans)

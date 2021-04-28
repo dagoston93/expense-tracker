@@ -7,13 +7,11 @@ import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
 import java.lang.IllegalArgumentException
 
 class ManageCategoriesFragmentViewModelFactory(
-    private val application: Application,
     private val databaseDao: TransactionDatabaseDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(ManageCategoriesFragmentViewModel::class.java)){
             return ManageCategoriesFragmentViewModel(
-                application,
                 databaseDao
             ) as T
         }

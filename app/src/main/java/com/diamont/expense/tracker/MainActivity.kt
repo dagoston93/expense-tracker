@@ -46,7 +46,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         /** Get our viewModel */
-        val viewModelFactory = MainActivityViewModelFactory(application)
+        val localisedContext = LocaleUtil.getLocalisedContext(application)
+        val viewModelFactory = MainActivityViewModelFactory(localisedContext)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(MainActivityViewModel::class.java)

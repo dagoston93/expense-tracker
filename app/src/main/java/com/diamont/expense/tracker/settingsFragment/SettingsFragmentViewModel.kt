@@ -1,11 +1,14 @@
 package com.diamont.expense.tracker.settingsFragment
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.diamont.expense.tracker.R
 import com.diamont.expense.tracker.util.*
 import com.diamont.expense.tracker.util.database.TransactionDatabaseDao
@@ -15,10 +18,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class SettingsFragmentViewModel(
-    private val appContext: Application,
+    private val resources: Resources,
     private val sharedPreferences: SharedPreferences,
     private val databaseDao: TransactionDatabaseDao
-) : AndroidViewModel(appContext) {
+) : ViewModel() {
 
     /**
      * Create some live data
@@ -129,7 +132,7 @@ class SettingsFragmentViewModel(
         /** Update string live data */
         val appLocale = LocaleUtil.supportedLocales.find { it.localeString == _selectedLocale }
 
-        _selectedLanguageString.value = appContext.resources.getString(
+        _selectedLanguageString.value = resources.getString(
             if (appLocale == null) {
                 R.string.default_language
             } else {

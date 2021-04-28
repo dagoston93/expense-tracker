@@ -45,7 +45,7 @@ class HomeFragment : Fragment() {
          */
         val application = requireNotNull(this.activity).application
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
-        val viewModelFactory = HomeFragmentViewModelFactory(application, databaseDao, activityViewModel.sharedPreferences)
+        val viewModelFactory = HomeFragmentViewModelFactory(databaseDao, activityViewModel.sharedPreferences)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(HomeFragmentViewModel::class.java)

@@ -52,8 +52,9 @@ class HistoryFragment : DateRangeSelectorFragment() {
          *  Create the view model using a view model factory
          */
         val application = requireNotNull(this.activity).application
+        val localisedContext = LocaleUtil.getLocalisedContext(application)
         val databaseDao = TransactionDatabase.getInstance(application).transactionDatabaseDao
-        val viewModelFactory = HistoryFragmentViewModelFactory(application, databaseDao)
+        val viewModelFactory = HistoryFragmentViewModelFactory(localisedContext, databaseDao)
 
         baseClassViewModel = ViewModelProvider(this, viewModelFactory)
             .get(HistoryFragmentViewModel::class.java)
